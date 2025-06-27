@@ -1,0 +1,204 @@
+<!-- Start Sidebar -->
+<aside id="sidebar" th:fragment="sidebarFragment">
+    <!--Start Dashboard head -->
+    <!-- Start Navbar -->
+    <nav class="navbar fixed-top" th:fragment="topNavbarFragment">
+        <div class="container-fluid">
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <!-- <div class="sidebar-menu">
+                <a href="#" id="menu">Menu</a>
+            </div> -->
+                <a class="navbar-brand" href="/dashboard">
+                    <img src="images/bando1.png" alt="Bando-city-hotel">
+                </a>
+            </div>
+
+            <div>
+                <h2 class="ms-5 d-inline" style="color: sienna;"> Hi.. </h2>
+                <span class="fw-bold" style="color: sienna;" th:text="${loggedempname}"></span>
+            </div>
+
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-warning" type="submit">Search</button>
+            </form>
+
+            <!-- Start Profile button -->
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" id="btnuser" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span th:text="${loggedusername}">Profile</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/user">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                </ul>
+            </div>
+            <!-- End Profile button -->
+        </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <!-- Start Sidebar -->
+    <ul class="sidebar-nav">
+        <li class="sidebar-item">
+            <a href="/dashboard" class="sidebar-link">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <!-- Administration -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#admin"
+                aria-expanded="false" aria-controls="admin">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Administration</span>
+            </a>
+            <ul id="admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/employee" class="sidebar-link">Employee</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/privilege" class="sidebar-link">Privilege</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/user" class="sidebar-link">User</a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Order -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#order"
+                aria-expanded="false" aria-controls="order">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Order</span>
+            </a>
+            <ul id="order" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/order" class="sidebar-link">Customer Order</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/orderpayment" class="sidebar-link">Order Payment</a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Customer -->
+        <li class="sidebar-item">
+            <a href="/customer" class="sidebar-link">
+                <i class="fa-solid fa-hands-holding-child"></i>
+                <span>Customer</span>
+            </a>
+        </li>
+
+        <!-- Supplier -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#supplier"
+                aria-expanded="false" aria-controls="supplier">
+                <i class="fa-solid fa-truck"></i>
+                <span>Supplier</span>
+            </a>
+            <ul id="supplier" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/supplier" class="sidebar-link">Supplier</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/supplierorder" class="sidebar-link">Order</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/supplierpayment" class="sidebar-link">Payment</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/grn" class="sidebar-link">GRN</a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Authentication -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                aria-expanded="false" aria-controls="auth">
+                <i class="fa-solid fa-file-shield"></i>
+                <span>Authentication</span>
+            </a>
+            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/login" class="sidebar-link">Login</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/employee" class="sidebar-link">Register</a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Ingredients -->
+        <li class="sidebar-item">
+            <a href="/ingredient" class="sidebar-link">
+                <i class="fa-solid fa-carrot"></i>
+                <span>Ingredients</span>
+            </a>
+        </li>
+        <!-- Inventory -->
+        <li class="sidebar-item">
+            <a href="/inventory" class="sidebar-link">
+                <i class="fa-solid fa-store"></i>
+                <span>Inventory</span>
+            </a>
+        </li>
+
+        <!-- Reports -->
+        <li class="sidebar-item">
+            <a href="/reports" class="sidebar-link">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+
+        <!-- Multi items -->
+        <!-- <li class="sidebar-item">
+            <a href="/reports" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Reports</span>
+            </a>
+            <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/ingredient" class="sidebar-link">Inventory</a>
+                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi-two"
+                        aria-expanded="false" aria-controls="multi-two">
+                        Inventory
+                    </a>
+                    <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">
+                                Link 1
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li> -->
+
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link">
+                <i class="fa fa-gears"></i>
+                <span>Setting</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Footer / Logout -->
+    <div class="sidebar-footer">
+        <a href="/logout" class="sidebar-link">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log Out</span>
+        </a>
+    </div>
+
+    <!-- End Sidebar -->
+</aside>

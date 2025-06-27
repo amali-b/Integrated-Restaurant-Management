@@ -1,0 +1,192 @@
+body{
+   /* background-color: #fde8a3 !important; */
+   background:linear-gradient(to bottom,#fceab1,#fde8a3, #fae396,#f9c589);
+}
+
+#pageTitle{
+    margin-top: 90px;
+    font-size: 30px;
+    font-weight: bold;
+    background: linear-gradient(to right, #6f2f14, #974617, #da7925);
+    color: transparent;
+    background-clip: text;
+    /* text-decoration:underline #371a12; */
+    border-radius: 10px;
+    font-family:cursive;
+}
+
+.btnCollapse{
+    font-size:20px;
+    font-weight: 500;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color:#371a12;
+    color: transparent;
+    background-clip: text;
+    border: none;
+}
+
+.title{
+    border-radius: 10px;
+    border-left: 3px solid #6f2f14;
+    border-top: 3px solid  #974617;
+    border-right: 3px solid #ba661d;
+    border-bottom: 3px solid #BF7543;
+}
+
+h4{
+    color: #462117;
+    /* color: rgb(151, 4, 146); */
+    text-align: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#btnModal{
+    font-weight: 600;
+    color: #974617;
+    border-color: #974617;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#btnModal:hover{
+    background-color:  #974617;
+    color: aliceblue;
+}
+
+.crdbdy{
+    background-color:#fde8a3;
+}
+
+.btninput{
+    /* border-top-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    font-weight: 600; */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 5px 12px;
+    transition-duration: 0.4s;
+    height: 40px;
+}
+
+#btnsubmit{
+    color: black;
+    background-color: rgb(127, 201, 53);
+}
+
+#btnsubmit:hover{
+    color: darkgreen;
+    background-color:white;
+    font-size: 18px;
+}
+
+#btnupdate{
+    background-color: rgb(247, 222, 84);
+}
+
+#btnupdate:hover{
+    color: rgb(180, 123, 0);
+    background-color: white;
+    font-size: 18px;
+}
+
+#btnclr{
+    color: black;
+    background-color: rgb(223, 63, 95);   
+}
+#btnclr:hover{
+    color:  rgb(214, 25, 63);
+    background-color:white;
+    font-size: 18px;
+}
+
+.tablet{
+    border-style: groove;
+    width: 100%;
+    border-color: #6f2f14;
+    background-color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border-color: #884920;
+    text-align: center;
+}
+
+#tablehead{
+    text-align: center;
+    color:rgb(243, 243, 243);
+    background-color: #BF7543;
+}
+
+#tdbtn{
+    text-align: center;
+    /* height: 60px; */
+}
+
+.button{
+    border-radius: 5px;
+    background-color: transparent;
+    color:#6f2f14;
+    font-weight: bold;
+    font-size: 11px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    height: 55px;
+    width: 60px;
+    text-align: center;
+}
+.dropdown-menu.show {
+    min-width: 100%;
+}
+
+#btnedit:hover{
+    color: black;
+    background-color: goldenrod;
+    background: linear-gradient(to bottom, goldenrod, rgb(238, 216, 77), rgb(255, 255, 169));
+}
+#btnprint:hover{
+    color: white;
+    background: linear-gradient(to bottom, rgb(14, 71, 0), rgb(13, 153, 13), rgb(109, 222, 86));
+}
+#btndelete:hover{
+    color: white;
+    background: linear-gradient(to bottom, rgb(122, 7, 7), rgb(255, 37, 37), rgb(255, 148, 148));
+}
+.icon{
+    font-size: 20px;
+}
+
+/* ############ btnCategories Nav ############ */
+.btnCategories button{
+    color: #974617;
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.btnCategories{
+    border: 2px solid  rgb(152, 58, 0);
+    margin-left: -1px;
+    font-weight: 700;
+    /* display: block;
+    border-right: 2px solid grey; 
+    border-radius: 0px;
+    margin-right: -1px; */
+}
+
+.btnCategories:hover{
+    background-color:  #974617;
+}
+
+.btnCategories button:hover{
+    color:aliceblue !important;
+}
+
+/* ul li a.active{
+    background-color:  rgb(152, 58, 0);
+    background-image: url(nav-bg-active.d839411….png);
+    background-repeat: no-repeat;
+    background-position: inherit;
+    background-size: auto 100%;
+} */
+ 
+.btnCategories .nav-link:focus {
+    background-color:  #974617 !important;
+    border-radius: 0px;
+
+}
+
+.nav-link:focus{
+    color: aliceblue !important;
+}
