@@ -1,0 +1,78 @@
+
+body
+{
+  background-color:#fff;
+  background: radial-gradient(at 50% -20%, #908392, #0d060e) fixed;
+}
+
+
+#handboy
+{
+   animation: swing ease-in-out 1.3s infinite alternate;
+    transform-origin: 98% 98%;
+    transform-box: fill-box;
+    
+}
+
+
+#girllight
+{
+   animation: swing ease-in-out 1.3s infinite alternate;
+    transform-origin: 0% 97%;
+    transform-box: fill-box;
+}
+
+#hairgirl
+{
+    animation: swinghair ease-in-out 1.3s infinite alternate;
+   transform-origin: 60% 0%;
+    transform-box: fill-box;
+  
+}
+
+#zero
+{
+  transform-origin:bottom;
+  transform-box:fill-box;
+  
+}
+
+/*************swing************/
+@keyframes swing {
+    0% { transform: rotate(10deg); }
+    100% { transform: rotate(-10deg); }
+}
+
+
+/*************swing hair************/
+@keyframes swinghair {
+    0% { transform: rotate(6deg); }
+    100% { transform: rotate(-6deg); }
+}
+
+/* page-ms */
+.page-ms {transform: translateY(-50px);}
+
+.page-msg {
+	text-align: center;
+	color: #e6d3eb; 
+	font-size: 40px;
+	font-family: 'Combo', cursive;
+	margin-bottom: 20px;
+}
+button.go-back {
+	font-size: 30px;
+    font-family: 'Combo', cursive;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: 0.3s linear;
+    z-index: 9;
+    border-radius: 10px;
+    background: #370037;
+    color: #ffffff;
+    box-shadow: 0 0 10px 0 #c177c5;
+	margin-top: 20px;
+    margin-left: 50%;
+}
+button:hover {box-shadow: 0 0 20px 0 #c177c5;}

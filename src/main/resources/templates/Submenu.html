@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Manage Submenus </div>
+                </div>
+            </div>
+
+            <!--Add button for category modal-->
+            <div class="row m-0">
+                <h4 class="col mt-2 text-start">Categories</h4>
+            </div>
+
+            <!-- Categories -->
+            <nav class="nav shadow-down-1 mt-2">
+                <div class="container-fluid">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link" type="button" onclick="refreshSubmenutable()">All</button>
+                            <!-- <a aria-current="page" class="btn nav-link" href="/submenu" role="button">All</a> -->
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <!-- <a aria-current="page" class="nav-link" href="#">Meal Deals</a> -->
+                            <button class="btn nav-link category-btn" type="button">Meal
+                                Deals</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="1">Rice</button>
+                            <!-- <a aria-current="page" class="btn nav-link"
+                                href="/submenu/bycategory?category_id=1">Rice</a> -->
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="2">Noodles</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="3">Curries</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="4">Kottu</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="5">Desserts</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="6">Fruit
+                                Juice</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="7">Coffee</button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!--Add buttons for modal-->
+            <div class="row m-0">
+                <h4 class="text-start mt-3 col-3">Submenu Items</h4>
+                <div class="d-flex justify-content-md-end col-9">
+                    <button type="button" class="btn m-2" id="btnModal" data-bs-toggle="modal"
+                        data-bs-target="#modalSubmenu" aria-controls="modalSubmenu">
+                        <i class="fa-solid fa-plus"></i> Add Submenu </button>
+                </div>
+            </div>
+
+            <div class="row table m-0">
+                <!-- Start Table -->
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableSubmenu">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th>
+                                <th> Product </th>
+                                <th> Product Name </th>
+                                <th> Item Id </th>
+                                <th> Category </th>
+                                <th> Price </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody class="tableBody" id="tBodySubmenu">
+                            <tr>
+                                <td> 1 </td>
+                                <td> image </td>
+                                <td> Biriyani</td>
+                                <td> #2500001 </td>
+                                <td> Rice </td>
+                                <td> 1000.00 </td>
+                                <td> Available </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End of Table -->
+            </div>
+
+            <!-- Start modal-->
+            <div class="modal" id="modalSubmenu">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalSubmenuLabel">Submenu Form</h4>
+                            </div>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-md-center">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body crdbdy">
+                                            <!-- Start Form -->
+                                            <form id="formSubmenu" onsubmit="return false">
+                                                <!--  product image -->
+                                                <!-- Start image -->
+                                                <div class="row justify-content-md-center">
+                                                    <div class="col-3">
+                                                        <input type="file" class="form-control" id="imgProduct">
+                                                    </div>
+                                                </div>
+                                                <!-- End image -->
+
+                                                <div class="row mt-2">
+                                                    <!-- Main Form -->
+                                                    <div class="col-4">
+                                                        <!-- Product name & category -->
+                                                        <div class="row mt-1">
+                                                            <!-- Start Submenus Category-->
+                                                            <label for="selectCategory" class="form-lable fw-bold">
+                                                                Category <span class="text-danger">*</span></label>
+                                                            <div class="col">
+                                                                <select id="selectCategory" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'submenu', 'category_id')">
+                                                                    <option value="" selected disabled>Select Submenu
+                                                                        Category
+                                                                    </option>
+                                                                    <option>Rice</option>
+                                                                    <option>Noddles</option>
+                                                                    <option>Desserts</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Submenus Category -->
+
+                                                        <!-- Start Product Name-->
+                                                        <div class="row mt-1">
+                                                            <label for="txtProductname" class="form-lable fw-bold">
+                                                                Product Name <span class="text-danger">*</span></label>
+                                                            <div class="col">
+                                                                <input type="text" id="txtProductname"
+                                                                    class="form-control"
+                                                                    placeholder="Enter Product Name"
+                                                                    onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20}( [A-Z][a-z]{1,30})?)( [LM])?$', 'submenu', 'name')">
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Product Name-->
+
+                                                        <!-- Price & status -->
+                                                        <div class="row mt-1">
+                                                            <!-- Start Price -->
+                                                            <label for="txtPrice" class="form-lable fw-bold">Price
+                                                                <span class="text-danger">*</span></label>
+                                                            <div class="col">
+                                                                <input type="text"
+                                                                    onkeyup="txtValidator(txtPrice,'^[1-9][0-9]{1,5}[.][0-9]{2}$', 'submenu', 'price')"
+                                                                    class="form-control" id="txtPrice"
+                                                                    placeholder="Enter Product Price" required>
+                                                            </div>
+                                                            <!-- End Price -->
+                                                        </div>
+
+                                                        <!-- Start product Status -->
+                                                        <div class="row mt-1">
+                                                            <lable for="productStatus" class="form-lable fw-bold">Status
+                                                                <span class="text-danger">*</span>
+                                                            </lable>
+                                                            <div class="col">
+                                                                <select id="productStatus" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'submenu', 'submenustatus_id')">
+                                                                    <option value="" selected disabled>Select Status
+                                                                    </option>
+                                                                    <option value="">Available</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End product Status -->
+                                                    </div>
+
+                                                    <!-- Start Inner Form & Table -->
+                                                    <div class="col">
+                                                        <!-- Start Inner Form -->
+                                                        <div class="row justify-content-md-center">
+                                                            <div class="col">
+                                                                <div class="card">
+                                                                    <div class="card-body crdbdy">
+                                                                        <form id="innerFormSubemnuIngredient"
+                                                                            onsubmit="return false">
+                                                                            <!--Ingredient / Quantity -->
+                                                                            <div class="row">
+                                                                                <!-- Start Ingredient -->
+                                                                                <div class="col">
+                                                                                    <label for="SelectIngredint"
+                                                                                        class="form-lable fw-bold">Select
+                                                                                        Ingredients
+                                                                                        <span
+                                                                                            class="text-danger">*</span></label>
+                                                                                    <div class="col">
+                                                                                        <select class="form-select"
+                                                                                            id="SelectIngredint"
+                                                                                            onchange="selectDynamicElementValidator(this, 'submenuHasIngredient', 'ingredient_id'); checkIngredientExt();">
+                                                                                            <option value="" selected
+                                                                                                disabled>
+                                                                                                Select
+                                                                                                Ingredients
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="form-text text-end">
+                                                                                        Select Ingredients from Dropdown
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- End Ingredient -->
+
+                                                                                <!-- Start Quantity -->
+                                                                                <div class="col">
+                                                                                    <label for="txtQuantity"
+                                                                                        class="form-lable fw-bold">Quantity
+                                                                                        <span
+                                                                                            class="text-danger">*</span></label>
+                                                                                    <input type="text"
+                                                                                        onkeyup="txtValidator(txtQuantity,'^[1-9][0-9]{0,4}|([1-9][0-9]{0,4}[.][0-9]{0,3})$', 'submenuHasIngredient', 'quantity')"
+                                                                                        class="form-control"
+                                                                                        id="txtQuantity"
+                                                                                        placeholder="Enter Quantity"
+                                                                                        required>
+                                                                                    <div class="form-text text-end">
+                                                                                        (ex: 500g = KG-0.5)
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- End Quantity -->
+                                                                            </div>
+
+                                                                            <!-- Make Buttons -->
+                                                                            <div class="row mt-4 d-flex">
+                                                                                <div class="col text-start">
+                                                                                    <button
+                                                                                        class="btn btn-outline-danger"
+                                                                                        id="btnInnerClr" type="button"
+                                                                                        onclick="buttonInnerFormClear()">Clear
+                                                                                        <i
+                                                                                            class="fa-solid fa-arrows-rotate"></i></button>
+                                                                                </div>
+                                                                                <div class="col text-end">
+                                                                                    <button
+                                                                                        class="btn btn-outline-warning"
+                                                                                        id="btnInnerUpdate"
+                                                                                        type="button"
+                                                                                        onclick="buttonSubmenuIngredientUpdate()">Update
+                                                                                        <i
+                                                                                            class="fa-regular fa-pen-to-square"></i></button>
+                                                                                    <button
+                                                                                        class="btn btn-outline-success"
+                                                                                        id="btnInnerSubmit"
+                                                                                        type="button"
+                                                                                        onclick="buttonSubmenuIngredientSubmit()"><i
+                                                                                            class="fa-solid fa-plus"></i><br>Add
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- End Buttons -->
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Start Inner Form -->
+                                                        <hr>
+                                                        <!-- Start inner form Table -->
+                                                        <div class="row mt-1">
+                                                            <div class="col">
+                                                                <div class="card">
+                                                                    <div class="card-body crdbdy">
+                                                                        <table class="table tablet table-bordered"
+                                                                            id="tableSubemenuhasIngredient">
+                                                                            <thead>
+                                                                                <tr id="tablehead">
+                                                                                    <th> # </th>
+                                                                                    <th> Ingredients </th>
+                                                                                    <th> Quantity </th>
+                                                                                    <th> Modify </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="tableBody"
+                                                                                id="tBodySubemenuhasIngredient">
+                                                                                <tr>
+                                                                                    <td> 1 </td>
+                                                                                    <td> Onion </td>
+                                                                                    <td> 30kg </td>
+                                                                                    <td> - </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Inner form Table -->
+                                                    </div>
+                                                    <!-- End Inner Form & Table -->
+
+                                                    <!-- Make Buttons -->
+                                                    <div class="row mt-4 d-flex">
+                                                        <div class="col text-start">
+                                                            <button class="btn btn-danger btninput" type="button"
+                                                                id="btnclr" onclick="buttonProductClear()">Clear <i
+                                                                    class="fa-solid fa-arrows-rotate"></i></button>
+                                                        </div>
+                                                        <div class="col text-end">
+                                                            <button class="btn btn-warning btninput"
+                                                                onclick="buttonProductUpdate()" type="button"
+                                                                id="btnupdate">Update <i
+                                                                    class="fa-regular fa-pen-to-square"></i></button>
+                                                            <button class="btn btn-success btninput"
+                                                                onclick="buttonProductSubmit()" type="button"
+                                                                id="btnsubmit">
+                                                                Submit
+                                                                <i class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Buttons -->
+
+                                                    <!-- Make print/delete buttons-->
+                                                    <div class="row mt-3 text-end">
+                                                        <div class="d-none me-1" id="divModifybtn">
+                                                            <button class="button me-2 fw-bold" id="btnprint"
+                                                                type="button"
+                                                                onclick="productPrint(window['editob'], window['editrowno'])"><i
+                                                                    class="fa-solid fa-print icon"></i><br>
+                                                                Print</button>
+                                                            <button class="button me-2 fw-bold" id="btndelete"
+                                                                type="button"
+                                                                onclick="productDelete(window['editob'], window['editrowno'])"><i
+                                                                    class="fa-solid fa-trash icon"></i><br>
+                                                                Delete</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End print/delete buttons-->
+                                                </div>
+                                            </form>
+                                            <!-- End form -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End modal-->
+        </div>
+    </div>
+    <script src="uIControllers/submenu.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

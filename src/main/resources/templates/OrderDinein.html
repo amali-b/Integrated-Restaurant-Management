@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<head>
+    <style>
+        .body {
+            background-image: url("images/food1.jpg");
+            background-repeat: no-repeat;
+            background-size: 100%;
+            display: grid;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <!-- Start modal-->
+            <div class="modal" id="modalOrders">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalOrdersLabel">Order Form</h4>
+                            </div>
+                            <button type="button" class="btn-close"
+                                onclick="buttonModalClose(); window.location.href='/order'"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-md-center">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body crdbdy">
+                                            <!-- Start Form -->
+                                            <form id="formOrder" onsubmit="return false">
+                                                <!-- Start Main form -->
+                                                <div class="row mt-1">
+                                                    <!--Start Customer -->
+                                                    <div class="col">
+                                                        <label for="SelectCustomer" class="form-lable fw-bold">Select
+                                                            Customer <span class="text-danger">(if
+                                                                applicable)</span></label>
+                                                        <div class="col">
+                                                            <select id="SelectCustomer" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'order', 'customer_id');">
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-text text-end">Select Customer from
+                                                            Dropdown</div>
+                                                    </div>
+                                                    <!-- End Customer -->
+
+                                                    <!-- Start Customer Name -->
+                                                    <div class="col">
+                                                        <label for="txtCustName" class="form-lable fw-bold">Customer
+                                                            Name</label>
+                                                        <div class="col">
+                                                            <input type="text" id="txtCustName" class="form-control"
+                                                                placeholder="First Name"
+                                                                onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20})|([A-Z][a-z]{1,10}[ ][A-Z][a-z]{0,30})$', 'order', 'customername')">
+                                                            <div class="form-text text-end">Enter Customer Name
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Customer Name -->
+
+                                                    <!-- Start Customer Contact no -->
+                                                    <div class="col">
+                                                        <label for="txtNumber" class="form-lable fw-bold">Customer
+                                                            Contact</label>
+                                                        <div class="col">
+                                                            <input type="text"
+                                                                onkeyup="txtValidator(this,'^[0][7][01245678][0-9]{7}$', 'order', 'customercontact')"
+                                                                class="form-control" id="txtNumber"
+                                                                placeholder="Phone Number">
+                                                        </div>
+                                                        <div class="form-text text-end">Enter Customer Contact Number
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Customer Contact no -->
+                                                </div>
+
+                                                <div class="row mt-1">
+                                                    <!-- Start Order Type-->
+                                                    <div class="col">
+                                                        <label for="selectOrderType" class="form-lable fw-bold">
+                                                            Type <span class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <select id="selectOrderType" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'order', 'ordertype_id')">
+                                                                <option value="" selected disabled>Select Type
+                                                                </option>
+                                                                <option>Dine-in</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Order Type -->
+
+                                                    <!--Start Total Amount -->
+                                                    <div class="col">
+                                                        <label for="txtTotalAmount" class="form-lable fw-bold">Total
+                                                            Amount <span class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <input type="text"
+                                                                onkeyup="txtValidator(this,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'order', 'totalprice') "
+                                                                class="form-control" id="txtTotalAmount"
+                                                                placeholder="Total Amount will display here" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Total Amount -->
+
+                                                    <!--Start Service Charge -->
+                                                    <div class="col">
+                                                        <label for="txtServiceChg" class="form-lable fw-bold">Service
+                                                            Charge (10%)<span class="text-danger"> *</span></label>
+                                                        <div class="col">
+                                                            <input type="text"
+                                                                onkeyup="txtValidator(this,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'order', 'servicecharge')"
+                                                                class="form-control" id="txtServiceChg"
+                                                                placeholder="Service Charge will display here" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Service Charge -->
+                                                </div>
+
+                                                <div class="row mt-1">
+                                                    <!--Start Net Amount -->
+                                                    <div class="col">
+                                                        <label for="txtNetAmount" class="form-lable fw-bold">Net
+                                                            Amount <span class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <input type="text"
+                                                                onkeyup="txtValidator(this,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'order', 'netamount')"
+                                                                class="form-control" id="txtNetAmount"
+                                                                placeholder="Net Amount will display here" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Net Amount -->
+
+                                                    <!-- Start Order Status -->
+                                                    <div class="col">
+                                                        <lable for="orderStatus" class="form-lable fw-bold">
+                                                            Status <span class="text-danger">*</span>
+                                                        </lable>
+                                                        <div class="col">
+                                                            <select id="orderStatus" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'order', 'orderstatus_id')">
+                                                                <option value="" selected disabled>Select Status
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-text text-end">Select Status from
+                                                            Dropdown</div>
+                                                    </div>
+                                                    <!-- End Order Status -->
+
+                                                    <!-- Start Order Table -->
+                                                    <div class="col">
+                                                        <lable for="tableNO" class="form-lable fw-bold">
+                                                            Table <span class="text-danger">*</span>
+                                                        </lable>
+                                                        <div class="col">
+                                                            <select id="tableNO" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'order', 'tables_id')">
+                                                                <option value="" selected disabled>Select Table
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-text text-end">Select Table Number from
+                                                            Dropdown</div>
+                                                    </div>
+                                                    <!-- End Order Table -->
+                                                </div>
+                                                <!-- End Main form -->
+
+                                                <hr>
+
+                                                <!-- Start Inner Forms & Table -->
+                                                <div class="row">
+                                                    <!-- start Inner Submenu -->
+                                                    <div class="col">
+                                                        <div class="row title m-1">
+                                                            <!-- d-grid : to collapse by clicking anywhere in the button -->
+                                                            <div class="d-grid text-center">
+                                                                <button class="btnCollapse" type="button"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapsSubmenu"
+                                                                    aria-controls="collapsSubmenu">
+                                                                    Submenu
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- End Inner Form & Table -->
+                                                        <div class="collapse m-1" id="collapsSubmenu">
+                                                            <div class="row mt-1">
+                                                                <!-- Start Inner Form -->
+                                                                <div class="col justify-content-md-center">
+                                                                    <div class="card">
+                                                                        <div class="card-body crdbdy">
+                                                                            <form id="innerFormOrderSubmenu"
+                                                                                onsubmit="return false">
+                                                                                <!-- Start Submenus -->
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        <label for="SelectSubmenu"
+                                                                                            class="form-lable fw-bold">Select
+                                                                                            Submenu
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <select class="form-select"
+                                                                                            id="SelectSubmenu"
+                                                                                            onchange="selectDynamicElementValidator(this, 'orderHasSubmenu', 'submenu_id'); checkSubmenuExt();">
+                                                                                            <option value="" selected
+                                                                                                disabled>
+                                                                                                Select Items
+                                                                                            </option>
+                                                                                        </select>
+                                                                                        <div class="form-text text-end">
+                                                                                            Select Submenu from Dropdown
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- End Submenu -->
+
+                                                                                    <!-- Start Price -->
+                                                                                    <div class="col">
+                                                                                        <label for="txtPrice"
+                                                                                            class="form-lable fw-bold">Price
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            id="txtPrice"
+                                                                                            placeholder="Price will appear here"
+                                                                                            required>
+                                                                                    </div>
+                                                                                    <!-- End Price -->
+                                                                                </div>
+
+
+                                                                                <div class="row mt-1">
+                                                                                    <!-- Start Quantity -->
+                                                                                    <div class="col">
+                                                                                        <label for="txtQuantity"
+                                                                                            class="form-lable fw-bold">Quantity
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <input type="text"
+                                                                                            onkeyup="txtValidator(this,'^[1-9][0-9]{0,1}$', 'orderHasSubmenu', 'quantity'), generateLinepriceSmenu(); calculateTotal();"
+                                                                                            class="form-control"
+                                                                                            id="txtQuantity"
+                                                                                            placeholder="Enter Quantity"
+                                                                                            required min="1" max="50">
+                                                                                    </div>
+                                                                                    <!-- End Quantity -->
+
+                                                                                    <!-- Start Line Price -->
+                                                                                    <div class="col">
+                                                                                        <label for="txtLinePrice"
+                                                                                            class="form-lable fw-bold">Line
+                                                                                            Amount
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <input type="text"
+                                                                                            onkeyup="txtValidator(this,'^[1-9][0-9]{1,6}[.][0-9]{2}$', 'orderHasSubmenu', 'lineprice')"
+                                                                                            class="form-control"
+                                                                                            id="txtLinePrice"
+                                                                                            placeholder="Line Amount"
+                                                                                            required>
+                                                                                    </div>
+                                                                                    <!-- End Line Price -->
+                                                                                </div>
+
+                                                                                <!-- Make Buttons -->
+                                                                                <div class="row mt-4 d-flex">
+                                                                                    <div class="col text-start">
+                                                                                        <button
+                                                                                            class="btn btn-outline-danger"
+                                                                                            id="btnSmenuClr"
+                                                                                            type="button"
+                                                                                            onclick="buttonInnerFormClear()"><i
+                                                                                                class="fa-solid fa-arrows-rotate"></i></button>
+                                                                                    </div>
+                                                                                    <div class="col text-end">
+                                                                                        <button
+                                                                                            class="btn btn-outline-warning"
+                                                                                            id="btnSmenuUpdate"
+                                                                                            type="button"
+                                                                                            onclick="buttonorderSubemnuUpdate()"><i
+                                                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                                                        <button
+                                                                                            class="btn btn-outline-success"
+                                                                                            id="btnSmenuSubmit"
+                                                                                            type="button"
+                                                                                            onclick="buttonorderSubemnuSubmit()"><i
+                                                                                                class="fa-solid fa-cart-plus"></i></button>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- End Buttons -->
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End Inner Form -->
+                                                            </div>
+
+                                                            <!-- Start inner form Table -->
+                                                            <div class="row mt-1">
+                                                                <div class="col justify-content-md-center">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <table class="table tablet table-bordered"
+                                                                                id="tableOrderhasSubmenu">
+                                                                                <thead>
+                                                                                    <tr id="tablehead">
+                                                                                        <th> # </th>
+                                                                                        <th> Items </th>
+                                                                                        <th> Unit Price </th>
+                                                                                        <th> Quantity </th>
+                                                                                        <th> Line Price </th>
+                                                                                        <th> Modify </th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody class="tableBody"
+                                                                                    id="tBodyOrderhasSubmenu">
+                                                                                    <tr>
+                                                                                        <td> 1 </td>
+                                                                                        <td> Biriyani </td>
+                                                                                        <td> 1500.00 </td>
+                                                                                        <td> 2 </td>
+                                                                                        <td> 3000.00 </td>
+                                                                                        <td> -</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                                <tfoot id="tfootOrderhasSubmenu">
+                                                                                    <tr>
+                                                                                        <td colspan="4"
+                                                                                            class="text-start fw-bold">
+                                                                                            Total
+                                                                                            Amount</td>
+                                                                                        <td>7500.00</td>
+                                                                                    </tr>
+                                                                                </tfoot>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- End Inner form Table -->
+                                                        </div>
+                                                        <!-- End Inner Form & Table -->
+                                                    </div>
+
+                                                    <!-- start Inner Menu form & Table-->
+                                                    <div class="col">
+                                                        <div class="row title m-1">
+                                                            <!-- d-grid : to collapse by clicking anywhere in the button -->
+                                                            <div class="d-grid text-center">
+                                                                <button class="btnCollapse" type="button"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapsMenu"
+                                                                    aria-controls="collapsMenu">
+                                                                    Menu
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="collapse m-1" id="collapsMenu">
+                                                            <div class="row mt-1">
+                                                                <!-- Start Inner Form -->
+                                                                <div class="col justify-content-md-center">
+                                                                    <div class="card">
+                                                                        <div class="card-body crdbdy">
+                                                                            <form id="innerFormSupplierOrder"
+                                                                                onsubmit="return false">
+                                                                                <!-- Start Menus -->
+                                                                                <div class="row">
+                                                                                    <!-- Start Menus -->
+                                                                                    <div class="col">
+                                                                                        <label for="SelectMenu"
+                                                                                            class="form-lable fw-bold">Select
+                                                                                            Menu
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <div class="col">
+                                                                                            <select class="form-select"
+                                                                                                id="SelectMenu"
+                                                                                                onchange="selectDynamicElementValidator(this, 'orderHasMenuitem', 'menuitems_id'); checkMenuExt();">
+                                                                                                <option value=""
+                                                                                                    selected disabled>
+                                                                                                    Select Items
+                                                                                                </option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                        <div class="form-text text-end">
+                                                                                            Select Menu from
+                                                                                            Dropdown
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- End Menu -->
+
+                                                                                    <!-- Start Price -->
+                                                                                    <div class="col">
+                                                                                        <label for="txtPriceMenu"
+                                                                                            class="form-lable fw-bold">Price
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            id="txtPriceMenu"
+                                                                                            placeholder="Price will appear here"
+                                                                                            required>
+                                                                                    </div>
+                                                                                    <!-- End Price -->
+                                                                                </div>
+
+                                                                                <div class="row mt-1">
+                                                                                    <!-- Start Quantity -->
+                                                                                    <div class="col">
+                                                                                        <label for="txtQuantityMenu"
+                                                                                            class="form-lable fw-bold">Quantity
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <input type="text"
+                                                                                            onkeyup="txtValidator(this,'^[1-9][0-9]{0,3}$', 'orderHasMenuitem', 'quantity'), generateLineprice(); calculateTotal();"
+                                                                                            class="form-control"
+                                                                                            id="txtQuantityMenu"
+                                                                                            placeholder="Enter Quantity"
+                                                                                            required min="1" max="50">
+                                                                                    </div>
+                                                                                    <!-- End Quantity -->
+
+                                                                                    <!-- Start Line Price -->
+                                                                                    <div class="col">
+                                                                                        <label for="txtLinePriceMenu"
+                                                                                            class="form-lable fw-bold">Line
+                                                                                            Amount
+                                                                                            <span
+                                                                                                class="text-danger">*</span></label>
+                                                                                        <input type="text"
+                                                                                            onkeyup="txtValidator(this,'^[1-9][0-9]{1,6}[.][0-9]{2}$', 'orderHasMenuitem', 'lineprice')"
+                                                                                            class="form-control"
+                                                                                            id="txtLinePriceMenu"
+                                                                                            placeholder="Line Amount"
+                                                                                            required>
+                                                                                    </div>
+                                                                                    <!-- End Line Price -->
+                                                                                </div>
+
+                                                                                <!-- Make Buttons -->
+                                                                                <div class="row mt-4 d-flex">
+                                                                                    <div class="col text-start">
+                                                                                        <button
+                                                                                            class="btn btn-outline-danger"
+                                                                                            id="btnInnerClr"
+                                                                                            type="button"
+                                                                                            onclick="buttonInnerFormClear()"><i
+                                                                                                class="fa-solid fa-arrows-rotate"></i></button>
+                                                                                    </div>
+                                                                                    <div class="col text-end">
+                                                                                        <button
+                                                                                            class="btn btn-outline-warning"
+                                                                                            id="btnInnerUpdate"
+                                                                                            type="button"
+                                                                                            onclick="buttonorderItemUpdate()"><i
+                                                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                                                        <button
+                                                                                            class="btn btn-outline-success"
+                                                                                            id="btnInnerSubmit"
+                                                                                            type="button"
+                                                                                            onclick="buttonorderItemSubmit()"><i
+                                                                                                class="fa-solid fa-cart-plus"></i></button>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- End Buttons -->
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- End Inner Form -->
+                                                            </div>
+
+                                                            <!-- Start inner form Table -->
+                                                            <div class="row mt-1">
+                                                                <div class="col justify-content-md-center">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <table class="table tablet table-bordered"
+                                                                                id="tableOrderhasItem">
+                                                                                <thead>
+                                                                                    <tr id="tablehead">
+                                                                                        <th> # </th>
+                                                                                        <th> Items </th>
+                                                                                        <th> Unit Price </th>
+                                                                                        <th> Quantity </th>
+                                                                                        <th> Line Price </th>
+                                                                                        <th> Modify </th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody class="tableBody"
+                                                                                    id="tBodyOrderhasItem">
+                                                                                    <tr>
+                                                                                        <td> 1 </td>
+                                                                                        <td> Biriyani </td>
+                                                                                        <td> 1500.00 </td>
+                                                                                        <td> 2 </td>
+                                                                                        <td> 3000.00 </td>
+                                                                                        <td> -</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                                <tfoot id="tfootOrderhasItem">
+                                                                                    <tr>
+                                                                                        <td colspan="4"
+                                                                                            class="text-start fw-bold">
+                                                                                            Total
+                                                                                            Amount</td>
+                                                                                        <td>7500.00</td>
+                                                                                    </tr>
+                                                                                </tfoot>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- End Inner form Table -->
+                                                        </div>
+                                                        <!-- End Inner Form & Table -->
+                                                    </div>
+                                                    <!-- End Inner Form & Table -->
+                                                </div>
+
+                                                <!-- Make Buttons -->
+                                                <div class="row mt-4 d-flex">
+                                                    <div class="col-8 text-start">
+                                                        <button class="btn btn-danger btninput" type="button"
+                                                            id="btnclr" onclick="buttonOrderClear()">Clear
+                                                            <i class="fa-solid fa-arrows-rotate"></i></button>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        <button class="btn btn-warning btninput" type="button"
+                                                            onclick="buttonOrderUpdate()" id="btnupdate">Update
+                                                            <i class="fa-regular fa-pen-to-square"></i></button>
+                                                        <button class="btn btn-success btninput" type="submit"
+                                                            onclick="buttonOrderSubmit()" id="btnsubmit">
+                                                            Confirm
+                                                            <i class="fa-solid fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Buttons -->
+
+                                                <!-- Make print/delete buttons-->
+                                                <div class="row mt-3 text-end">
+                                                    <div class="d-none me-1" id="divModifybtn">
+                                                        <button class="button me-2 fw-bold" id="btnprint" type="button"
+                                                            onclick="orderPrint(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-print icon"></i><br>
+                                                            Print</button>
+                                                        <button class="button me-2 fw-bold" id="btndelete" type="button"
+                                                            onclick="orderDelete(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-trash icon"></i><br>
+                                                            Delete</button>
+                                                    </div>
+                                                </div>
+                                                <!-- End print/delete buttons-->
+                                            </form>
+                                            <!-- End form -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End modal-->
+        </div>
+    </div>
+
+    <script src="uIControllers/orderdinein.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

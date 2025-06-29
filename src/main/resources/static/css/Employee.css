@@ -1,0 +1,26 @@
+#th tr th{
+    text-align: center;
+    color:rgb(243, 243, 243);
+    background-color: #BF7543;
+}
+
+/* tr:nth-child(odd){
+    background-color: rgba(178, 169, 202, 0.76);
+}
+tr:nth-child(even){
+    color: rgba(0, 0, 0, 0.76);
+} */
+
+.crdbdy{
+    background-color:#fcca5ecb;
+}
+
+#tdbtn{
+    text-align: center;
+    height: 60px;
+}
+
+#modalEmployeePrint{
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 100;
+}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Customer Management </div>
+                </div>
+            </div>
+
+            <!--Add buttons for modal-->
+            <div class="row m-0">
+                <div class="d-flex justify-content-md-end">
+                    <button type="button" class="btn m-2" id="btnModal" data-bs-toggle="modal"
+                        data-bs-target="#modalCustomer" aria-controls="modalCustomer">
+                        <i class="fa-solid fa-plus"></i> Add Customer </button>
+                </div>
+            </div>
+
+            <div class="row table m-0">
+                <!-- Start Table -->
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableCustomer">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th>
+                                <th> Customer Reg. No </th>
+                                <th> Title </th>
+                                <th> First Name </th>
+                                <th> Last Name </th>
+                                <th> Mobile NO. </th>
+                                <th> Address </th>
+                                <th> Email </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody class="tableBody" id="tBodyCustomer">
+                            <tr>
+                                <!--  <td> 1 </td>
+                                <td> 20250001 </td>
+                                <td> Miss </td>
+                                <td> Amali </td>
+                                <td> Abeysekera </td>
+                                <td> 0715944275 </td>
+                                <td> Polhena, kelaniya </td>
+                                <td> amali@gmail.com </td>
+                                <td> Active </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End of Table -->
+            </div>
+
+            <!-- Start modal-->
+            <div class="modal" id="modalCustomer">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalCustomerLabel">Customer Registration Form</h4>
+                            </div>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row justify-content-md-center">
+                                <div class="col-11">
+                                    <div class="card">
+                                        <div class="card-body crdbdy">
+                                            <!-- Start Form -->
+                                            <form id="formCustomer" onsubmit="return false">
+                                                <!-- title/name -->
+                                                <div class="row mt-2">
+                                                    <!-- Start Title -->
+                                                    <div class="col-2">
+                                                        <label for="titleCus" class="form-lable fw-bold"> Title <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <select id="titleCus" class="form-select"
+                                                                onchange="customer.title = this.value;  this.style.border = '2px solid green';">
+                                                                <option value="" selected disabled>Select</option>
+                                                                <option>Mr.</option>
+                                                                <option>Mrs.</option>
+                                                                <option>Miss</option>
+                                                                <option>Dr.</option>
+                                                                <option>Rev.</option>
+                                                                <option>Ms.</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Title -->
+
+                                                    <!-- Start First Name -->
+                                                    <div class="col">
+                                                        <label for="txtfirstName" class="form-lable fw-bold">First Name
+                                                            <span class="text-danger"> *</span></label>
+                                                        <div class="col">
+                                                            <input type="text" id="txtfirstName" class="form-control"
+                                                                placeholder="First Name" required
+                                                                onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'customer', 'firstname')">
+                                                            <div class="form-text">Enter your first name (Ex: Amali)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End First Name -->
+
+                                                    <!-- Start Last Name -->
+                                                    <div class="col">
+                                                        <label for="txtlastName" class="form-lable fw-bold">Last Name
+                                                            <span class="text-danger"> *</span></label>
+                                                        <div class="col">
+                                                            <input type="text" id="txtlastName" class="form-control"
+                                                                placeholder="Last Name" required
+                                                                onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'customer', 'lastname')">
+                                                            <div class="form-text">Enter your last name (Ex: Abeysekera)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Last Name -->
+                                                </div>
+
+                                                <!-- contact no/email -->
+                                                <div class="row mt-3">
+                                                    <!-- Start Contact no -->
+                                                    <div class="col">
+                                                        <label for="txtNumber" class="form-lable fw-bold">Mobile Number
+                                                            <span class="text-danger"> *</span></label>
+                                                        <div class="input-group">
+                                                            <div class="col">
+                                                                <input type="text"
+                                                                    onkeyup="txtValidator(txtNumber,'^[0][7][01245678][0-9]{7}$', 'customer', 'contact_no')"
+                                                                    class="form-control" id="txtNumber"
+                                                                    placeholder="Phone Number" required>
+                                                            </div>
+                                                            <span class="input-group-text">
+                                                                <i
+                                                                    class="fa-solid fa-square-phone-flip icon"></i></span>
+                                                        </div>
+                                                        <div class="form-text">Enter valid Phone number</div>
+                                                    </div>
+                                                    <!-- End Contact no -->
+
+                                                    <!-- Start Email -->
+                                                    <div class="col">
+                                                        <label for="txtEmail" class="form-lable fw-bold">Email <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <input type="email" class="form-control col" id="txtEmail"
+                                                                placeholder="Enter Email " required
+                                                                onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'customer', 'email')">
+                                                            <div class="form-text">Enter valid Email (Ex:
+                                                                abcdf@gmail.com)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Email -->
+                                                </div>
+
+                                                <!-- added Address/status -->
+                                                <div class="row mt-3">
+                                                    <!-- Start Address -->
+                                                    <div class="col">
+                                                        <label for="txtAdres" class="form-lable fw-bold">Address <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <input type="text" id="txtAdres" class="form-control"
+                                                                required placeholder="Enter Address"
+                                                                onkeyup="customer.address = this.value; this.style.border = 'solid 2px green'">
+                                                            <div class="form-text">Enter Customer's Delivery Address
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Address -->
+
+                                                    <!-- Start Customer Status -->
+                                                    <div class="col">
+                                                        <lable for="cusStatus" class="form-lable fw-bold">Customer
+                                                            Status <span class="text-danger">*</span>
+                                                        </lable>
+                                                        <div class="col">
+                                                            <select id="cusStatus" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'customer', 'customerstatus_id')">
+                                                                <option value="" selected disabled>Select Status
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Customer Status -->
+                                                </div>
+
+                                                <!-- Note -->
+                                                <div class="row mt-3">
+                                                    <!-- Start Note -->
+                                                    <div class="col">
+                                                        <label for="txtNote" class="form-lable fw-bold">Notes : <span
+                                                                class="text-danger"></span></label>
+                                                        <div class="col">
+                                                            <textarea id="txtNote" class="form-control"
+                                                                placeholder="Enter Notes"
+                                                                onkeyup="customer.note = this.value; this.style.border = 'solid 2px green'"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Note -->
+                                                </div>
+
+                                                <!-- Make Buttons -->
+                                                <div class="row mt-4 d-flex">
+                                                    <div class="col-8 text-start">
+                                                        <button class="btn btn-danger btninput" type="button"
+                                                            id="btnclr" onclick="buttonCustomerClear()">Clear <i
+                                                                class="fa-solid fa-arrows-rotate"></i></button>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        <button class="btn btn-warning btninput" type="button"
+                                                            onclick="buttonCustomerUpdate()" id="btnupdate">Update <i
+                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                        <button class="btn btn-success btninput" type="submit"
+                                                            onclick="buttonCustomerRegister()" id="btnsubmit"> Register
+                                                            <i class="fa-solid fa-user-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Buttons -->
+
+                                                <!-- Make print/delete buttons-->
+                                                <div class="row mt-3 text-end">
+                                                    <div class="d-none me-1" id="divModifybtn">
+                                                        <button class="button me-2 fw-bold" id="btnprint" type="button"
+                                                            onclick="customerPrint(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-print icon"></i><br>
+                                                            Print</button>
+                                                        <button class="button me-2 fw-bold" id="btndelete" type="button"
+                                                            onclick="customerDelete(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-trash icon"></i><br>
+                                                            Delete</button>
+                                                    </div>
+                                                </div>
+                                                <!-- End print/delete buttons-->
+                                            </form>
+                                            <!-- End form -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End modal-->
+
+        </div>
+    </div>
+    <script src="uIControllers/customer.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

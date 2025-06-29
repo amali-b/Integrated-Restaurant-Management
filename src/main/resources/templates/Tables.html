@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Manage Tables </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col m-1">
+                    <div class="card">
+                        <div class="card-head">
+                            <h4 class="card-title">Table Form</h4>
+                        </div>
+                        <div class="card-body crdbdy">
+                            <!-- Start Form -->
+                            <form id="formTables" onsubmit="return false">
+                                <!--Table no. / Seat Count -->
+                                <div class="row">
+                                    <!-- Start Table no. -->
+                                    <div class="col">
+                                        <label for="txtTblNo" class="form-lable fw-bold">Table Number
+                                            <span class="text-danger">*</span></label>
+                                        <input type="text"
+                                            onkeyup="txtValidator(txtTblNo,'^[0-9]{1,3}$', 'tables', 'number')"
+                                            class="form-control" id="txtTblNo" placeholder="Enter Table Number"
+                                            required>
+                                    </div>
+                                    <!-- End Table no. -->
+
+                                    <!-- Start Seat Count -->
+                                    <div class="col">
+                                        <label for="countSeat" class="form-lable fw-bold">Seat Count
+                                            <span class="text-danger">*</span></label>
+                                        <input type="number"
+                                            onkeyup="txtValidator(countSeat,'^[1-9][0]{0,1}$', 'tables', 'seatcount')"
+                                            class="form-control" id="countSeat" placeholder="Enter Seat Count" required
+                                            min="1" max="10">
+                                    </div>
+                                    <!-- End Seat Count -->
+                                </div>
+
+                                <!-- Make Buttons -->
+                                <div class="row mt-4 d-flex">
+                                    <div class="col-8 text-start">
+                                        <button class="btn btn-danger btninput" type="button" id="btnclr"
+                                            onclick="buttonSupplierOrderClear()">Clear
+                                            <i class="fa-solid fa-arrows-rotate"></i></button>
+                                    </div>
+                                    <div class="col text-end">
+                                        <button class="btn btn-warning btninput" type="button"
+                                            onclick="buttonSupplierOrderUpdate()" id="btnupdate">Update
+                                            <i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="btn btn-success btninput" type="submit"
+                                            onclick="buttonSupplierOrderSubmit()" id="btnsubmit">
+                                            Submit
+                                            <i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- End Buttons -->
+                            </form>
+                            <!-- End form -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Table -->
+                <div class="col m-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table tablet table-bordered" id="tableDineinTables">
+                                <thead>
+                                    <tr id="tablehead">
+                                        <th> # </th>
+                                        <th> Table Number </th>
+                                        <th> Seat Count </th>
+                                        <th> ... </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody" id="tBodyDineinTables">
+                                    <tr>
+                                        <td> 1 </td>
+                                        <td> 001 </td>
+                                        <td> 5 </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Table -->
+            </div>
+        </div>
+    </div>
+
+    <script src="uIControllers/tables.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

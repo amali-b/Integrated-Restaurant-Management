@@ -1,0 +1,236 @@
+.bodyimg{
+    /* background-image: url(images/rest1.webp);     */
+    background-repeat:no-repeat;
+    background-size:cover;
+    position: fixed;
+    filter: brightness(50%);
+}
+.wrapper{
+    display: flex;
+    min-height: 100vh;
+}
+.navbar{
+    background-color: #ffffff;
+    width:auto;
+    opacity: 80%;
+}
+.navbar-brand img{
+    width: 90px;
+    position: relative;
+    cursor: pointer;
+}
+.main{
+    margin-inline-start: 80px;
+    min-height: 100%;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    position: relative;
+}
+
+#btnAlert{
+    color: #935027;
+    border-color: none !important;
+}
+#btnAlert:hover{
+    background-color:  none !important;
+}
+
+
+#sidebar{
+    position: fixed;
+    height: 100%;
+    width: 80px;
+    min-width: 70px;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    display: flex;
+    flex-direction:column;
+    background-color:#935027;
+    border-radius: 15px;
+    overflow: auto;
+}
+
+#sidebar.expand{
+    /* width: 270px; */
+    min-width: 220px;
+}
+#sidebar.expand .main{
+    margin-inline-start: 200px;
+    transition: all 0.35s ease-in-out;
+}
+
+/* #menu:hover{
+    color: sienna;
+}
+ */
+
+#toggle-btn{
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem;
+    margin-right: 12px;
+}
+
+#toggle-btn i{
+font-size: 1.5rem;
+/* color: #303535; */
+color: #935027;
+
+}
+
+#btnuser{
+    background-color: transparent;
+    cursor: pointer;
+    border-color: #935027;
+    font-size: 1rem;
+    color: #935027;
+}
+
+/* dropdown menu eka button eke size ektma open kregnna*/
+.navbar .dropdown-menu.show {
+    min-width: 100%;
+}
+
+/* .sidebar-menu{
+    margin: auto 0;
+}
+
+.sidebar-menu a{
+    color:  #292c2d;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-decoration: none;
+} */
+
+#sidebar:not(.expand) .sidebar-menu,
+#sidebar:not(.expand) a.sidebar-link span{
+    display: none;
+}
+
+.sidebar-nav{
+    padding: 2rem 0;
+    flex: 1 1 auto;
+    margin-top: 60px;
+}
+
+a.sidebar-link{
+    padding: .95rem 1.625rem;
+    color: #ffffff;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    /* border-left: 3px solid transparent; */
+    text-decoration: none;
+}
+
+.sidebar-link i{
+    font-size:  1.1rem;
+    margin-right: .75rem;
+}
+
+a.sidebar-link:hover{
+    background-color:#f7d7a5;
+    /* color: #292c2d; */
+    color: #935027;
+    border-radius: 10px;
+}
+
+.sidebar-item{
+    position: relative;
+}
+
+#sidebar:not(.expand) .sidebar-item .sidebar-dropdown{
+    position: absolute;
+    top: 0;
+    left: 70px;
+    background-color: #9d6733;
+    padding: 0;
+    display: none;
+    min-width: 15rem;
+}
+
+#sidebar:not(.expand) .sidebar-item:hover .hasdropdown+.sidebar-dropdown{
+    display: block;
+    max-height: 15rem;
+    width: 100%;
+    opacity: 1;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after{
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after{
+transform: rotate(45deg);
+transition: all .2s ease-out;
+}
+
+
+/* ORDER UI */
+h3{
+    color: #ffffff;
+    /* color: rgb(151, 4, 146); */
+    text-align: center;
+    font-family:cursive;
+}
+.txtorder{
+    color: #ffffff;
+    text-align: center;
+}
+.pagecontent{
+    text-align: center;
+    font-size: 60px;
+    /* font-family:'Lucida Sans', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
+    font-family:'Brush Script MT', cursive;
+    color: #ffffff;
+}
+
+.btnOrderTyp{
+border: none !important;
+}
+
+.btnOrderTyp a{
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 20px;
+    border: 2px white solid;
+    text-decoration: none;
+}
+.btnOrderTyp a:hover{
+    color:#f7d7a5;
+    font-size: 20px;
+    border-color:#f7d7a5;
+}
+
+ /* ------- DASHBOARD VIEW MODULES CSS START ------- */
+
+#dashboardItems{
+    margin-top: 90px;
+}
+
+.viewDashboard a{
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* background-color:#424242;
+    color:#ffffff; */
+    background:linear-gradient(to right,#fceab1,#fde8a3, #fae396,#f9c589);
+    color:#6f2f14;
+    border-color: #6f2f14;
+    height: 120px;
+    opacity: 90%;
+}
+.viewDashboard a:hover{
+    background:linear-gradient(to right,#424242);
+    color:#ffffff;
+}

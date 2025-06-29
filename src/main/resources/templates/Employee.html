@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<head>
+    <!--link employee css files-->
+    <link rel="stylesheet" href="css/Employee.css">
+</head>
+
+<body style="background-color: #fde8a3;">
+    <div class="wrapper">
+
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col text-center">
+                        <div id="pageTitle"> Manage Employee </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid mt-2">
+                <div class="row title m-1">
+                    <!-- d-grid : to collapse by clicking anywhere in the button -->
+                    <div class="d-grid text-center">
+                        <button class="btnCollapse" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapsEmployee" aria-controls="collapsEmployee">
+                            Employee Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Buttons for edit/delete/print -->
+                <div class="text-end">
+                    <!-- buttons display wenne nathi kranna d-none danne -->
+                    <div id="divModifybtn" class="d-none">
+                        <button class="button me-2 fw-bold" id="btnedit" type="button"
+                            onclick="employeeFormRefill(window['editob'], window['editrowno'])"><i
+                                class="fa-solid fa-angles-down icon"></i><br> Edit </button>
+                        <button class="button me-2 fw-bold" id="btnprint" type="button" data-bs-toggle="modal"
+                            data-bs-target="#modalEmployeePrint"
+                            onclick="employeePrint(window['editob'], window['editrowno'])"><i
+                                class="fa-solid fa-print icon"></i><br> Print </button>
+                        <button class="button me-2 fw-bold" id="btndelete" type="button"
+                            onclick="employeeDelete(window['editob'], window['editrowno'])"><i
+                                class="fa-solid fa-trash icon"></i><br> Delete </button>
+                    </div>
+                </div>
+
+                <!-- Start Table -->
+                <div class="collapse show" id="collapsEmployee">
+                    <table class="tablet table-bordered" id="tableEmployee">
+                        <thead id="th">
+                            <tr>
+                                <th> # </th> <!--#, index , No -->
+                                <th> Emp Number </th>
+                                <th> Full Name </th>
+                                <th> NIC </th>
+                                <th> Contact </th>
+                                <th> Email </th>
+                                <th> DOB </th>
+                                <th> Gender </th>
+                                <th> Designation </th>
+                                <th> Status </th>
+                                <!-- <th colspan="3" width="15%"> Modify </th> -->
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- <tr class="odd">
+                                <td> 1 </td>
+                                <td> EMP240001 </td>
+                                <td> Amali Abeysekera </td>
+                                <td> amaliw3c@gmail.com</td>
+                                <td> 2001 - 01 - 21 </td>
+                                <td> Working </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            <tr class="even">
+                                <td> 2 </td>
+                                <td> EMP240002 </td>
+                                <td> Vishaka Perera </td>
+                                <td> vishuanu@gmail.com</td>
+                                <td> 1999 - 07 - 08 </td>
+                                <td> Working </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End of Table -->
+
+
+            </div>
+
+            <div class="container-fluid">
+                <div class="row title m-1">
+                    <!-- d-grid : to collapse by clicking anywhere in the button -->
+                    <div class="d-grid text-center">
+                        <button class="btnCollapse" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapsEmpForm" aria-controls="collapsEmpForm">
+                            Employee Form
+                        </button>
+                    </div>
+                </div>
+
+                <div class="collapse m-1" id="collapsEmpForm">
+                    <!-- Start Form -->
+                    <div class="card">
+                        <div class="card-body crdbdy">
+                            <!-- form eke default submit eka disable kranna one -->
+                            <form id="formEmp" onsubmit="return false">
+                                <!-- Start Name -->
+                                <div class="row mt-3">
+                                    <!-- Start Full Name -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <label for="txtfullName"
+                                                    class="input-group-text form-lable col-2 fw-bold">Full
+                                                    Name : <span class="text-danger">*</span></label>
+                                                <div class="col">
+                                                    <input type="text" id="txtfullName" class="form-control"
+                                                        placeholder="Enter your Full Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-text text-end">Enter your full name (Ex: Amali
+                                                Abeysekera)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Full Name -->
+
+                                    <!-- Start Calling Name -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <label for="txtcName"
+                                                    class="input-group-text form-lable col-3 fw-bold">Calling
+                                                    Name : <span class="text-danger">*</span></label>
+                                                <div class="col">
+                                                    <input type="text" id="txtcName" class="form-control"
+                                                        placeholder="Enter your Calling Name" list="dlcallingName"
+                                                        onchange="employee.callingname = this.value; this.style.border = 'solid 2px green'"
+                                                        required>
+                                                    <datalist id="dlcallingName">
+                                                        <!-- <option value="Amali">
+                                            <option value="Bhuvisara">
+                                            <option value="Abeysekera"> -->
+                                                    </datalist>
+                                                </div>
+                                            </div>
+                                            <div class="form-text text-end">Select your calling name from dropdown
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Calling Name -->
+                                </div>
+                                <!-- End Name -->
+
+                                <!-- Start Nic & Email-->
+                                <div class="row mt-3">
+                                    <!-- Start Nic -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <label for="txtNic"
+                                                    class="input-group-text form-lable col-2 fw-bold">NIC :
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col">
+                                                    <input type="text" class="form-control" id="txtNic"
+                                                        placeholder="Enter your NIC" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-text text-end">Enter valid NIC Number (Ex:
+                                                xxxx00112233/
+                                                xx123456V)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Nic -->
+
+                                    <!-- Start Email -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <label for="txtEmail"
+                                                    class="input-group-text form-lable col-3 fw-bold">Email :
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="col">
+                                                    <input type="email" class="form-control col" id="txtEmail"
+                                                        placeholder="Enter your Email " required
+                                                        onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'employee', 'email')">
+                                                </div>
+                                            </div>
+                                            <div class="form-text text-end">Enter valid Email (Ex: abc@gmail.com)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Email -->
+                                </div>
+                                <!-- End Nic & Email-->
+
+                                <!-- Start Contacts (Tel/DOB)-->
+                                <div class="row mt-3">
+                                    <!-- Start Tel no. -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <label for="txtNumber"
+                                                    class="input-group-text form-lable col-2 fw-bold">
+                                                    Contact No : <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col">
+                                                    <input type="text"
+                                                        onkeyup="txtValidator(txtNumber,'^[0][7][01245678][0-9]{7}$', 'employee', 'mobile_no')"
+                                                        class="form-control" id="txtNumber"
+                                                        placeholder="Enter your Contact Number " required>
+                                                </div>
+                                                <span class="input-group-text"><i
+                                                        class="fa-solid fa-square-phone-flip icon"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Tel no. -->
+
+                                    <!-- Start DOB -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <span onclick="dateDOB.focus()"
+                                                    class="input-group-text form-lable col-3 fw-bold">Date of Birth
+                                                    :
+                                                    <span class="text-danger">*</span>
+                                                </span>
+                                                <div class="col">
+                                                    <input type="date" class="form-control" id="dateDOB"
+                                                        placeholder="Enter date of birth" required min="1979-01-01"
+                                                        max="2006-12-13"
+                                                        onchange="employee.dob = this.value; this.style.border = '2px solid green';">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End DOB -->
+                                </div>
+
+                                <!-- Start Gender & Civilstatus-->
+                                <div class="row mt-3">
+                                    <!-- Start Gender -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <lable class="input-group-text form-lable col-2 fw-bold">Gender :
+                                                    <span class="text-danger">*</span>
+                                                </lable>
+                                                <div class="form-check col-2">
+                                                    <input type="radio" class="form-check-input" id="radioMale"
+                                                        name="gender" required>
+                                                    <label for="radioMale" class="form-lable"> Male </label>
+                                                </div>
+                                                <div class="form-check col">
+                                                    <input type="radio" class="form-check-input" id="radioFemale"
+                                                        name="gender" required>
+                                                    <label for="radioFemale" class="form-lable"> Female </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Gender -->
+
+                                    <!-- Start Civil Status -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <lable for="civilStatus"
+                                                    class="input-group-text form-lable col-3 fw-bold">
+                                                    Civil
+                                                    Status : <span class="text-danger">*</span>
+                                                </lable>
+                                                <div class="col">
+                                                    <select id="civilStatus" class="form-select"
+                                                        onchange="selectDynamicElementValidator(this, 'employee', 'civilstatus_id')">
+                                                        <option value="" selected disabled>Select Civil Status
+                                                        </option>
+                                                        <!-- <option>Single</option>
+                                            <option>Married</option>
+                                            <option>Divorced</option>
+                                            <option>Widowed</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End CivilStatus -->
+                                </div>
+
+                                <!-- Start Employee designation/status-->
+                                <div class="row mt-3">
+                                    <!-- Start Designation -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <lable for="selectDesignation"
+                                                    class="input-group-text form-lable col-2 fw-bold">Designation :
+                                                    <span class="text-danger">*</span>
+                                                </lable>
+                                                <div class="col">
+                                                    <select id="selectDesignation" class="form-select"
+                                                        onchange="selectDynamicElementValidator(this, 'employee', 'designation_id')">
+                                                        <option value="" selected disabled>Select Designation
+                                                        </option>
+                                                        <!-- <option>Admin</option>
+                                                <option>Manager</option>
+                                                <option>Chef</option>
+                                                <option>Cashier</option>
+                                                <option>Waiter</option>
+                                                <option>Delivery Driver</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Designation -->
+
+                                    <!-- Start Employee Status -->
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <lable for="empStatus"
+                                                    class="input-group-text form-lable col-3 fw-bold">
+                                                    Employee Status : <span class="text-danger">*</span>
+                                                </lable>
+                                                <div class="col">
+                                                    <select id="empStatus" class="form-select"
+                                                        onchange="selectDynamicElementValidator(this, 'employee', 'employeestatus_id')">
+                                                        <option value="" selected disabled>Select Employee Status
+                                                        </option>
+                                                        <!-- <option>Working</option>
+                                                <option>Resigned</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Employee Status -->
+                                </div>
+
+                                <!-- Start address/note-->
+                                <div class="row mt-3">
+                                    <!-- Start Address -->
+                                    <div class="col">
+                                        <!-- <div class="row form-floating">
+                                    <textarea class="form-control" id="txtAdres" required placeholder="Enter Address"
+                                        onchange="employee.address = this.value; this.style.border = 'solid 2px green'">
+                                        </textarea>
+                                    <label for="txtAdres" class="form-lable fw-bold"> Address : <span
+                                            class="text-danger">*</span></label>
+                                </div> -->
+                                        <div class="row">
+                                            <label for="txtAdres" class="form-lable fw-bold col-2">Address : <span
+                                                    class="text-danger">*</span></label>
+                                            <div class="col">
+                                                <textarea id="txtAdres" class="form-control" required
+                                                    placeholder="Enter Address"
+                                                    onkeyup="employee.address = this.value; this.style.border = 'solid 2px green'"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Address -->
+
+                                    <!-- Start Note -->
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <textarea id="txtNote" class="form-control" placeholder="Enter Notes"
+                                                onkeyup="employee.note = this.value; this.style.border = 'solid 2px green'"></textarea>
+                                            <label for="txtNote" class="form-lable fw-bold">Note : <span
+                                                    class="text-danger"></span></label>
+                                        </div>
+                                    </div>
+                                    <!-- End Note -->
+                                </div>
+                                <!-- End address/note-->
+
+                                <!-- Make Buttons -->
+                                <div class="row mt-4 d-flex">
+                                    <div class="col-8 text-start">
+                                        <button type="button" class="btn btn-danger btninput" id="btnclr"
+                                            onclick="buttonEmployeeClear()">Clear <i
+                                                class="fa-solid fa-arrows-rotate"></i></button>
+                                    </div>
+                                    <div class="col text-end">
+                                        <button type="button" class="btn btn-warning btninput me-3" id="btnupdate"
+                                            onclick="buttonEmployeeUpdate()">Update
+                                            <i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button type="submit" class="btn btn-success btninput" id="btnsubmit"
+                                            onclick="buttonEmployeeSubmit()">Submit <i
+                                                class="fa-solid fa-user-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- End Buttons -->
+                            </form>
+                            <!-- End form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="uIControllers/employee.js"></script>
+
+    <!-- Create print Employee modal -->
+    <div class="modal" id="modalEmployeePrint">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="idH3"> View Employee Record </h3>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body d-grid">
+                    <table class="table-bordered table-striped border-5" id="tableEmployeeRowPrint">
+                        <tr>
+                            <th>Emp Number :</th>
+                            <td id="tdEmpId"> </td>
+                        </tr>
+                        <tr>
+                            <th>Full Name :</th>
+                            <td id="tdEmpFname"> </td>
+                        </tr>
+                        <tr>
+                            <th>NIC : </th>
+                            <td id="tdNic"> </td>
+                        </tr>
+                        <tr>
+                            <th>Contact : </th>
+                            <td id="tdMobile"> </td>
+                        </tr>
+                        <tr>
+                            <th>DOB : </th>
+                            <td id="tdDob"> </td>
+                        </tr>
+                        <tr>
+                            <th>Gender : </th>
+                            <td id="tdGender"> </td>
+                        </tr>
+                        <tr>
+                            <th>Designation : </th>
+                            <td id="tdDesignation"> </td>
+                        </tr>
+                        <tr>
+                            <th>Status : </th>
+                            <td id="tdStatus"> </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="btnPrintRow" onclick="printEmployeeRow()">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

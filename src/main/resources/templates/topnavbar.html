@@ -1,0 +1,41 @@
+<!-- Start Navbar -->
+<nav class="navbar fixed-top" th:fragment="topNavbarFragment">
+    <div class="container-fluid">
+        <div class="d-flex">
+            <button id="toggle-btn" type="button">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <!-- <div class="sidebar-menu">
+                <a href="#" id="menu">Menu</a>
+            </div> -->
+            <a class="navbar-brand" href="/dashboard">
+                <img src="images/bando1.png" alt="Bando-city-hotel">
+            </a>
+        </div>
+
+        <div>
+            <h2 class="ms-5 d-inline" style="color: sienna;"> Hi.. </h2>
+            <span class="fw-bold" style="color: sienna;" th:text="${loggedempname}"></span>
+        </div>
+
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-warning" type="submit">Search</button>
+        </form>
+
+        <!-- Start Profile button -->
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" id="btnuser" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fa-solid fa-user-tie"></i>
+                <span th:text="${loggedusername}">Profile</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/user">Edit Profile</a></li>
+                <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+            </ul>
+        </div>
+        <!-- End Profile button -->
+    </div>
+</nav>
+<!-- End Navbar -->

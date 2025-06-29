@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<head>
+    <title>BIT Project 2024 | Manage User </title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+
+            <div class="row justify-content-center">
+                <div class="col-4 text-center">
+                    <div id="pageTitle"> User Management </div>
+                </div>
+            </div>
+
+            <!--Add buttons for modal-->
+            <div class="row m-0">
+                <div class="d-flex justify-content-md-end">
+                    <button type="button" class="btn" id="btnModal" data-bs-toggle="modal" data-bs-target="#modalUser"
+                        aria-controls="
+                modalUser">
+                        <i class="fa-solid fa-user-plus icon"></i> Add User</button>
+                </div>
+            </div>
+
+
+            <!-- <div class="row m-0">
+                <div class="d-flex justify-content-md-end">
+                    <button class="btn" id="btncanvas" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#canvasUser" aria-controls="canvasUser">
+                        <i class="fa-solid fa-user-plus icon"></i> Add User</button>
+                </div>
+            </div>
+            <div class="offcanvas offcanvas-top h-75" data-bs-scroll="true" tabindex="-1" id="canvasUser"
+                aria-labelledby="canvasUserLabel">
+                <div class="offcanvas-header">
+                    <div class="container">
+                        <h4 class="offcanvas-title" id="canvasUserLabel">User Form</h4>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+            </div> -->
+
+            <div class="modal" id="modalUser">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalUserLabel">User Form</h4>
+                            </div>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
+                        </div>
+
+
+                        <div class="modal-body">
+                            <div class="row justify-content-center">
+                                <div class="col">
+                                    <!-- Start Form -->
+                                    <div class="card">
+                                        <div class="card-body crdbdy">
+                                            <form id="formUser" onsubmit="return false">
+                                                <!-- Start Employee Name -->
+                                                <div class="row mt-3">
+                                                    <label for="empName" class="form-lable col-2 fw-bold">Employee
+                                                        Name
+                                                        :
+                                                        <span class="text-danger">*</span></label>
+                                                    <div class="col">
+                                                        <select id="empName" class="form-select" required
+                                                            onchange="selectDynamicElementValidator(this, 'user', 'employee_id')">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <!-- End Employee Name -->
+
+                                                <!-- Start UserName -->
+                                                <div class="row mt-3">
+                                                    <label for="txtUid" class="form-lable col-2 fw-bold">User Name :
+                                                        <span class="text-danger">*</span></label>
+                                                    <div class="col">
+                                                        <input type="text" id="txtUid" class="form-control"
+                                                            placeholder="Enter User Name" required
+                                                            onkeyup="txtValidator(this,'^([a-z][a-z0-9]{7})$', 'user', 'username')">
+                                                        <div class="form-text">Use valid user name (Ex:
+                                                            amali2001)<span class="text-danger">Length must be
+                                                                8*</span></div>
+                                                    </div>
+                                                </div>
+                                                <!-- End UserName -->
+
+                                                <!-- Start Password -->
+                                                <div class="row mt-3">
+                                                    <label for="txtUserPwd" class="form-lable col-2 fw-bold">Password :
+                                                        <span class="text-danger">*</span></label>
+                                                    <div class="col">
+                                                        <input type="password" id="txtUserPwd" class="form-control"
+                                                            placeholder="Enter Password" required
+                                                            onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'user', 'password')">
+                                                        <div class="form-text">Enter password with 8
+                                                            characters,including
+                                                            letters,numbers
+                                                            and symbol (Ex:Abc123@)</div>
+                                                    </div>
+                                                </div>
+                                                <!-- End Password -->
+
+                                                <!-- Start Confirm password -->
+                                                <div class="row mt-3">
+                                                    <label for="txtrePwd" class="form-lable col-2 fw-bold"> Password
+                                                        Confirm
+                                                        :
+                                                        <span class="text-danger">*</span></label>
+                                                    <div class="col">
+                                                        <input type="password" class="form-control" id="txtrePwd"
+                                                            placeholder="Re Enter your password" required
+                                                            onkeyup="pswdValidator(this,'^[a-zA-Z0-9@]{6,10}$', 'user', 'password')">
+                                                    </div>
+                                                </div>
+                                                <!-- End Confirm password -->
+
+                                                <!-- Start Email -->
+                                                <div class="row mt-3">
+                                                    <label for="txtEmail" class="form-lable col-2 fw-bold">Email :
+                                                        <span class="text-danger">*</span></label>
+                                                    <div class="col">
+                                                        <input type="email" class="form-control col" id="txtEmail"
+                                                            placeholder="Enter your Email " required
+                                                            onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'user', 'email')">
+                                                        <div class="form-text">Enter valid Email (Ex: abc@gmail.com)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End Email -->
+
+                                                <!-- Start Role -->
+                                                <div class="row mt-3">
+                                                    <lable class="form-lable col-2 fw-bold">Role : <span
+                                                            class="text-danger">*</span>
+                                                    </lable>
+                                                    <!-- <div class="col">
+                                                    <select id="selectRole" class="form-multi-select" required multiple
+                                                        onchange="selectMultiElementValidator(this, 'user', 'role_id')">
+                                                    </select>
+                                                </div> -->
+                                                    <div class="col form-check" id="divRoles">
+                                                        <!-- <input type="checkbox" class="form-check-input" id="rAdmin" name="role"
+                                                        value="Admin">
+                                                        <label for="rAdmin" class="form-lable"> Admin </label> -->
+                                                    </div>
+                                                </div>
+                                                <!-- End Role -->
+
+                                                <!-- Start Status -->
+                                                <div class="row mt-3">
+                                                    <lable class="labelSwitch form-lable col-2 fw-bold">Status :
+                                                        <span class="text-danger">*</span>
+                                                    </lable>
+                                                    <div class="col form-switch">
+                                                        <input class="form-check-input" type="checkbox" role="switch"
+                                                            id="empStatus" onchange="if (this.checked) {
+                                                         labelUserStatus.innerText = 'User Account is Active'; user.status = true;
+                                                    } else {
+                                                        labelUserStatus.innerText = 'User Account is DeActive'; user.status = false;
+                                                    }">
+                                                        <label class="form-check-label fw-bold te" for="empStatus"
+                                                            id="labelUserStatus">
+                                                            User Account
+                                                            is
+                                                            Active </label>
+                                                    </div>
+                                                </div>
+                                                <!-- End Employee Status -->
+
+                                                <!-- Start Note -->
+                                                <div class="row mt-3">
+                                                    <label for="txtNote" class="form-lable fw-bold col-2">Note
+                                                        :</label>
+                                                    <div class="col">
+                                                        <textarea id="txtNote" class="form-control"
+                                                            placeholder="Enter Notes"></textarea>
+                                                    </div>
+                                                </div>
+                                                <!-- End Note -->
+
+                                                <!-- Make Buttons -->
+                                                <div class="row mt-4 d-flex">
+                                                    <div class="col-8 text-start">
+                                                        <button type="button" class="btn btn-danger btninput"
+                                                            id="btnclr" onclick="buttonUserClear()">Clear <i
+                                                                class="fa-solid fa-arrows-rotate"></i></button>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        <button class="btn btn-warning btninput" id="btnupdate"
+                                                            onclick="buttonUserUpdate()" type="button">Update <i
+                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                        <button type="submit" class="btn btn-success btninput"
+                                                            id="btnsubmit" onclick="buttonUserSubmit()">Submit <i
+                                                                class="fa-solid fa-user-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Buttons -->
+
+                                                <!-- Make edit & print buttons in the Modal -->
+                                                <div class="row mt-3 text-end">
+                                                    <div class="d-none me-1" id="divModifybtn">
+                                                        <button class="button me-2 fw-bold" id="btnprint" type="button"
+                                                            disabled><i class="fa-solid fa-print icon"></i><br>
+                                                            Print</button>
+                                                        <button class="button me-2 fw-bold" id="btndelete" type="button"
+                                                            onclick="userDelete(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-trash icon"></i><br>
+                                                            Delete</button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <!-- End form -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row table m-0">
+                <!-- Start Table -->
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableUser">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th> <!--#, index , No -->
+                                <th> Employee Name </th>
+                                <th> User Name </th>
+                                <th> Email </th>
+                                <th> Role </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- <tr class="odd">
+                                <td> 1 </td>
+                                <td> Amali Abeysekera </td>
+                                <td> amali_2001 </td>
+                                <td> amaliw3c@gmail.com</td>
+                                <td> Admin </td>
+                                <td> Active </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            <tr class="even">
+                                <td> 2 </td>
+                                <td> Vishaka Lakmini Anuradha </td>
+                                <td> vishu78 </td>
+                                <td> vishuanu@gmail.com</td>
+                                <td> Cashier </td>
+                                <td> Active </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            <tr class="odd">
+                                <td> 3 </td>
+                                <td> Bhuddika Abeysekera </td>
+                                <td> babey93 </td>
+                                <td> bhuddiabey17@gmail.com</td>
+                                <td> Manager </td>
+                                <td> Active </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            <tr class="even">
+                                <td> 4 </td>
+                                <td> Tharushi Wijesekara </td>
+                                <td> 22tharu </td>
+                                <td> tharuu526@gmail.com</td>
+                                <td> Cashier </td>
+                                <td> Resigned </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            <tr class="odd">
+                                <td> 5 </td>
+                                <td> Isara Sandaru </td>
+                                <td> isara_728 </td>
+                                <td> sandeep456@gmail.com</td>
+                                <td> Waiter </td>
+                                <td> Resigned </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td> 6 </td>
+                                <td> Nimal Jayasingha </td>
+                                <td> nimal </td>
+                                <td> nimal123@gmail.com</td>
+                                <td> Delivery Driver </td>
+                                <td> Active </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td> 7 </td>
+                                <td> Hiruni Amanda </td>
+                                <td> hirinda </td>
+                                <td> amanda99@gmail.com</td>
+                                <td> Waiter </td>
+                                <td> Active </td>
+                                <td id="tdbtn">
+                                    <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                        Update
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                    </button>
+                                    <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                    </button>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End of Table -->
+            </div>
+        </div>
+    </div>
+
+    <script src="uIControllers/user.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

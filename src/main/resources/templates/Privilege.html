@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<head>
+    <title> Bando City Hotel | Manage Privilege </title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Manage Privilege </div>
+                </div>
+            </div>
+
+            <!--Add buttons for modal-->
+            <div class="row m-0">
+                <div class="d-flex justify-content-md-end">
+                    <button type="button" class="btn" id="btnModal" data-bs-toggle="modal"
+                        data-bs-target="#modalPrivilege" aria-controls="
+                modalPrivilege">
+                        <i class="fa-solid fa-plus"></i> Add Privilege</button>
+                </div>
+            </div>
+
+
+            <div class="row table m-0">
+                <!-- Start Table -->
+                <div class="col">
+                    <table class="tablet table-bordered" id="tablePrivilege">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th> <!--#, index , No -->
+                                <th> Role </th>
+                                <th> Module </th>
+                                <th> Select </th>
+                                <th> Insert </th>
+                                <th> Update </th>
+                                <th> Delete </th>
+                                <!-- <th width="18%"> Modify </th> -->
+                            </tr>
+                        </thead>
+                        <tbody id="tBodyPrivilege">
+                            <tr class="odd">
+                                <!-- <td> 1 </td>
+                            <td> Manager </td>
+                            <td> Kitchen </td>
+                            <td> Granted</td>
+                            <td> Not Granted </td>
+                            <td> Not Granted </td>
+                            <td> Not Granted </td>
+                            <td id="tdbtn">
+                                <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                    Update
+                                </button>
+                                <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                </button>
+                                <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                </button>
+                            </td> -->
+                            </tr>
+                            <tr class="even">
+                                <!-- <td> 2 </td>
+                            <td> Manager </td>
+                            <td> Payment </td>
+                            <td> Granted</td>
+                            <td> Granted </td>
+                            <td> Granted </td>
+                            <td> Granted </td>
+                            <td id="tdbtn">
+                                <button class="button"><i class="fa-solid fa-clock-rotate-left icon"></i><br>
+                                    Update
+                                </button>
+                                <button class="button"><i class="fa-solid fa-print icon"></i><br> Print
+                                </button>
+                                <button class="button"><i class="fa-solid fa-trash icon"></i><br> Delete
+                                </button>
+                            </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End of Table -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Start modal-->
+    <div class="modal" id="modalPrivilege">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container">
+                        <h4 class="modal-title" id="modalPrivilegeLabel">Privilege Form</h4>
+                    </div>
+                    <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-md-center">
+                        <div class="col-11">
+                            <div class="card">
+                                <div class="card-body crdbdy">
+                                    <!-- Start Form -->
+                                    <form id="formPriv" onsubmit="return false">
+                                        <!-- Start Role -->
+                                        <div class="row mt-3">
+                                            <lable for="selectRole" class="form-lable col-2 fw-bold">Role :
+                                                <span class="text-danger">*</span>
+                                            </lable>
+                                            <div class="col">
+                                                <select required
+                                                    onchange="selectDynamicElementValidator(this, 'privilege', 'role_id')"
+                                                    id="selectRole" class="form-select">
+                                                    <option value="" selected disabled>Select Role</option>
+                                                    <!-- <option>Manager</option>
+                                            <option>Admin</option>
+                                            <option>Chef</option>
+                                            <option>Cashier</option>
+                                            <option>Waiter</option>
+                                            <option>Delivery Driver</option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- End Role -->
+
+                                        <!-- Start Module -->
+                                        <div class="row mt-3">
+                                            <lable for="selectModule" class="form-lable col-2 fw-bold">
+                                                Module :
+                                                <span class="text-danger">*</span>
+                                            </lable>
+                                            <div class="col">
+                                                <select required
+                                                    onchange="selectDynamicElementValidator(this, 'privilege', 'module_id')"
+                                                    id="selectModule" class="form-select">
+                                                    <!-- <option value="" selected disabled>Select Module</option>
+                                            <option>Report</option>
+                                            <option>Kitchen</option>
+                                            <option>Delivery</option>
+                                            <option>Payment</option>
+                                            <option>Reservation</option>
+                                            <option>Delivery</option>
+                                            <option>Submenu</option>
+                                            <option>Menu</option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- End Module -->
+
+                                        <!-- Start Permission -->
+                                        <div class="row mt-3">
+                                            <lable class="form-lable col-2 fw-bold">Granted : <span
+                                                    class="text-danger">*</span>
+                                            </lable>
+                                            <!-- Select -->
+                                            <div class="form-check col-1">
+                                                <input type="checkbox" class="form-check-input" onchange="if (this.checked) {
+                                            privilege.privi_select = true;
+                                            } else {
+                                            privilege.privi_select = false;
+                                        }" id="checkboxSelect" name="role">
+                                                <label for="checkboxSelect" class="form-check-lable" id="labelselect">
+                                                    Select
+                                                </label>
+                                            </div>
+                                            <!-- Select -->
+
+                                            <!-- Insert -->
+                                            <div class="form-check col-1">
+                                                <input type="checkbox" class="form-check-input" onchange="if (this.checked) {
+                                            privilege.privi_insert = true;
+                                            } else {
+                                            privilege.privi_insert = false;
+                                        }" id="checkboxInsert" name="role">
+                                                <label for="checkboxInsert" class="form-lable" id="labelinsert">
+                                                    Insert </label>
+                                            </div>
+                                            <!-- Insert -->
+
+                                            <!-- Update -->
+                                            <div class="form-check col-1">
+                                                <input type="checkbox" class="form-check-input" onchange="if (this.checked) {
+                                            privilege.privi_update = true;
+                                            } else {
+                                            privilege.privi_update = false;
+                                        }" id="checkboxUpdate" name="role">
+                                                <label for="checkboxUpdate" class="form-lable" id="labelupdate">
+                                                    Update </label>
+                                            </div>
+                                            <!-- Update -->
+
+                                            <!-- Delete -->
+                                            <div class="form-check col-1">
+                                                <input type="checkbox" class="form-check-input" onchange="if (this.checked) {
+                                            privilege.privi_delete = true;
+                                            } else {
+                                            privilege.privi_delete = false;
+                                        }" id="checkboxDelete" name="role">
+                                                <label for="checkboxDelete" class="form-lable" id="labeldelete">
+                                                    Delete </label>
+                                            </div>
+                                            <!-- Delete -->
+                                        </div>
+                                        <!-- End Permission -->
+
+                                        <!-- Make Buttons -->
+                                        <div class="row mt-4 d-flex">
+                                            <div class="col-8 text-start">
+                                                <button class="btn btn-danger btninput" onclick="buttonPrivilegeClear()"
+                                                    type="button" id="btnclr">Clear
+                                                    <i class="fa-solid fa-arrows-rotate"></i></button>
+                                            </div>
+                                            <div class="col text-end">
+                                                <button class="btn btn-warning btninput" id="btnupdate"
+                                                    onclick="buttonPrivilegeUpdate()" type="button">Update <i
+                                                        class="fa-regular fa-pen-to-square"></i></button>
+                                                <button class="btn btn-success btninput"
+                                                    onclick="buttonPrivilegeSubmit()" id="btnsubmit"
+                                                    type="submit">Submit <i class="fa-solid fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <!-- End Buttons -->
+
+                                        <!-- Make edit & print buttons in the Modal -->
+                                        <div class="row mt-3 text-end">
+                                            <div class="d-none me-1" id="divModifybtn">
+                                                <button class="button me-2 fw-bold" id="btnprint" type="button"
+                                                    disabled><i class="fa-solid fa-print icon"></i><br>
+                                                    Print</button>
+                                                <button class="button me-2 fw-bold" id="btndelete" type="button"
+                                                    onclick="privilegeDelete(window['editob'], window['editrowno'])"><i
+                                                        class="fa-solid fa-trash icon"></i><br>
+                                                    Delete</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <!-- End form -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End modal-->
+
+    <script src="scripts/privcommon.js"></script>
+    <script src="uIControllers/privilege.js"></script>
+    <script src="scripts/validatoin.js"></script>
+    <script src="uIControllers/dashboard.js"></script>
+
+</body>
+
+</html>
