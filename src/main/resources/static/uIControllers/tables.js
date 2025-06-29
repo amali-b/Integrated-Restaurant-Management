@@ -78,7 +78,7 @@ const refreshtableDineinTable = () => {
     //datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
-    const columns = [
+    let columns = [
         { property: "number", dataType: "string" },
         { property: "seatcount", dataType: "string" }
     ];

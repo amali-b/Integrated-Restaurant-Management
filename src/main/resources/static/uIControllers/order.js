@@ -30,6 +30,12 @@ const refreshForm = () => {
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
 
+    const orderTables = getServiceRequest("/tables/alldata");
+    fillDropdown(tableNO, "Select Table.!", orderTables, "number");
+
+    const orderVehicles = getServiceRequest("/vehicle/alldata");
+    fillDropdown(tableNO, "Select Vehicle.!", orderVehicles, "name");
+
     setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtServiceChg, txtDeliveryChg, txtNetAmount, orderStatus, tableNO, deliveryVehicle, txtNote]);
 
     // type eka form eka open weddima active wdyt select wenna
@@ -615,12 +621,12 @@ const refreshOrderTable = () => {
         });
     });
 
-    const orders = getServiceRequest("/order/alldata");
+    let orders = getServiceRequest("/order/alldata");
 
     //datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
-    const columns = [
+    let columns = [
         { property: "ordercode", dataType: "string" },
         { property: getCustomerName, dataType: "function" },
         { property: getOrderType, dataType: "function" },
@@ -629,12 +635,24 @@ const refreshOrderTable = () => {
         { property: "discount", dataType: "decimal" },
         { property: "servicecharge", dataType: "decimal" },
         { property: "netamount", dataType: "decimal" },
-        { property: getOrderStatus, dataType: "function" }
+        { property: getOrderStatus, dataType: "function" },
+        { property: getOrderTable, dataType: "function" },
+        { property: getOrderVehicle, dataType: "function" }
     ];
 
     //call fill data into table
     fillTableFour(tBodyOrders, orders, columns, orderFormRefill, true);
     $('#tableOrders').DataTable();
+}
+
+//define function for get  table number
+const getOrderTable = (dataOb) => {
+    return dataOb.tables_id.number;
+}
+
+//define function for get  vehicle name
+const getOrderVehicle = (dataOb) => {
+    return dataOb.vehicle_id.name;
 }
 
 //define function for get  order status
@@ -833,9 +851,16 @@ const orderDelete = (ob, rowIndex) => {
 const buttonOrderClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
     });
-    refreshForm();
 }
 //define function for clear Inner form
 const buttonInnerFormClear = () => {

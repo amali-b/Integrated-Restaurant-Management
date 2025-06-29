@@ -19,6 +19,7 @@ const refreshForm = () => {
     txtServiceChg.disabled = "disabled";
     txtNetAmount.disabled = "";
     txtNetAmount.disabled = "disabled";
+    selectOrderType.disabled = "disabled";
 
     //define new object
     order = new Object();
@@ -33,6 +34,9 @@ const refreshForm = () => {
 
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
+
+    const orderTables = getServiceRequest("/tables/alldata");
+    fillDropdown(tableNO, "Select Table.!", orderTables, "number");
 
     setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtServiceChg, txtNetAmount, orderStatus, tableNO]);
 
@@ -624,7 +628,7 @@ const buttonOrderSubmit = () => {
     let errors = checkFormError();
     title = "Are you sure to Submit following Customer Order.?";
     obName = "";
-    text = "Type : " + order.ordertype_id
+    text = "Type : " + order.ordertype_id.type
         + ", Net Amount : " + order.netamount;
     let submitResponse = getHTTPServiceRequest('/order/insert', "POST", order);
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
@@ -668,19 +672,49 @@ const orderDelete = (ob, rowIndex) => {
 const buttonOrderClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
     });
-    refreshForm();
 }
 
 //define function for clear Inner form
 const buttonInnerFormClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshInnerFormandTableSubmenu();
+            refreshInnerFormandTableMenu();
+        }
     });
-    refreshInnerFormandTableSubmenu();
-    refreshInnerFormandTableMenu();
+}
+
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Order Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
+    });
 }
 
 //function define for print Order record

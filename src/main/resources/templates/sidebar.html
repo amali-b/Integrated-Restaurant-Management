@@ -3,8 +3,8 @@
     <!--Start Dashboard head -->
     <!-- Start Navbar -->
     <nav class="navbar fixed-top" th:fragment="topNavbarFragment">
-        <div class="container-fluid">
-            <div class="d-flex">
+        <div class="container-fluid d-flex">
+            <div>
                 <button id="toggle-btn" type="button">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -16,27 +16,33 @@
                 </a>
             </div>
 
-            <div>
-                <h2 class="ms-5 d-inline" style="color: sienna;"> Hi.. </h2>
+            <div class="ms-5 flex-fill">
+                <h2 class="d-inline" style="color: sienna;"> Hi.. </h2>
                 <span class="fw-bold" style="color: sienna;" th:text="${loggedempname}"></span>
             </div>
 
-            <form class="d-flex" role="search">
+            <!-- <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-warning" type="submit">Search</button>
-            </form>
+            </form> -->
 
             <!-- Start Profile button -->
-            <div class="dropdown">
-                <button class="btn dropdown-toggle" id="btnuser" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="fa-solid fa-user-tie"></i>
-                    <span th:text="${loggedusername}">Profile</span>
+            <div class="d-flex flex-row">
+                <button class="btn me-2" type="button" id="btnAlert">
+                    <i class="fa-solid fa-bell"></i>
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/user">Edit Profile</a></li>
-                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
-                </ul>
+
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" id="btnuser" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span th:text="${loggeduserphoto}"></span>
+                        <span th:text="${loggedusername}">Profile</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/user">Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                    </ul>
+                </div>
             </div>
             <!-- End Profile button -->
         </div>
@@ -51,49 +57,50 @@
                 <span>Home</span>
             </a>
         </li>
-        <!-- Administration -->
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#admin"
-                aria-expanded="false" aria-controls="admin">
-                <i class="fa-solid fa-user-tie"></i>
-                <span>Administration</span>
-            </a>
-            <ul id="admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
-                    <a href="/employee" class="sidebar-link">Employee</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="/privilege" class="sidebar-link">Privilege</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="/user" class="sidebar-link">User</a>
-                </li>
-            </ul>
-        </li>
 
-        <!-- Order -->
+        <!-- Customer 
         <li class="sidebar-item">
-            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#order"
-                aria-expanded="false" aria-controls="order">
+            <a href="/customer" class="sidebar-link">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <span>Order</span>
+                <span>Customer</span>
             </a>
-            <ul id="order" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
-                    <a href="/order" class="sidebar-link">Customer Order</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="/orderpayment" class="sidebar-link">Order Payment</a>
-                </li>
-            </ul>
-        </li>
+        </li>-->
 
         <!-- Customer -->
         <li class="sidebar-item">
-            <a href="/customer" class="sidebar-link">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#customer"
+                aria-expanded="false" aria-controls="customer">
                 <i class="fa-solid fa-hands-holding-child"></i>
                 <span>Customer</span>
             </a>
+            <ul id="customer" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/customer" class="sidebar-link">Customer</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/order" class="sidebar-link">Orders</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/orderpayment" class="sidebar-link">Order Payments</a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Submenu & Menu -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#items"
+                aria-expanded="false" aria-controls="items">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Order Items</span>
+            </a>
+            <ul id="items" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/submenu" class="sidebar-link">Submenu</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/menuitems" class="sidebar-link">Menu Items</a>
+                </li>
+            </ul>
         </li>
 
         <!-- Supplier -->
@@ -118,24 +125,6 @@
                 </li>
             </ul>
         </li>
-
-        <!-- Authentication -->
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                aria-expanded="false" aria-controls="auth">
-                <i class="fa-solid fa-file-shield"></i>
-                <span>Authentication</span>
-            </a>
-            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
-                    <a href="/login" class="sidebar-link">Login</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="/employee" class="sidebar-link">Register</a>
-                </li>
-            </ul>
-        </li>
-
         <!-- Ingredients -->
         <li class="sidebar-item">
             <a href="/ingredient" class="sidebar-link">
@@ -151,12 +140,61 @@
             </a>
         </li>
 
+        <!-- Administration -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#admin"
+                aria-expanded="false" aria-controls="admin">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Administration</span>
+            </a>
+            <ul id="admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/employee" class="sidebar-link">Employee</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/privilege" class="sidebar-link">Privilege</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/user" class="sidebar-link">User</a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Authentication -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                aria-expanded="false" aria-controls="auth">
+                <i class="fa-solid fa-file-shield"></i>
+                <span>Authentication</span>
+            </a>
+            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/login" class="sidebar-link">User Profile</a>
+                </li>
+            </ul>
+        </li>
+
         <!-- Reports -->
         <li class="sidebar-item">
-            <a href="/reports" class="sidebar-link">
-                <i class="fa-solid fa-list-check"></i>
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#reports"
+                aria-expanded="false" aria-controls="reports">
+                <i class="fa-solid fa-file-shield"></i>
                 <span>Reports</span>
             </a>
+            <ul id="reports" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/reportPayment" class="sidebar-link">Payment Report</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/reportSales" class="sidebar-link">Sales Report</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/reportPurchase" class="sidebar-link">Purchase Report</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/reportCustomer" class="sidebar-link">Customer Report</a>
+                </li>
+            </ul>
         </li>
 
         <!-- Multi items -->

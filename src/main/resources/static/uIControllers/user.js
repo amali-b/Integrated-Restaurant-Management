@@ -467,6 +467,23 @@ const buttonUserDelete = () => {
     refreshUserTable();
 }
 
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close User Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshUserForm();
+            $('#modalUser').modal('hide');
+        }
+    });
+}
+
 const pswdValidator = () => {
     if (txtUserPwd.value === txtrePwd.value) {
         user.password = txtUserPwd.value;
@@ -481,9 +498,17 @@ const pswdValidator = () => {
 const buttonUserClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshUserForm();
+        }
     });
-    refreshUserForm();
+
     /* let userConfirm = window.confirm("Do you want to Refresh Form..?");
     if (userConfirm) {
         refreshUserForm();

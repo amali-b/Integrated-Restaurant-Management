@@ -56,13 +56,13 @@
                             <div class="container">
                                 <h4 class="modal-title" id="modalUserLabel">User Form</h4>
                             </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
                         </div>
 
 
                         <div class="modal-body">
                             <div class="row justify-content-center">
-                                <div class="col-11">
+                                <div class="col">
                                     <!-- Start Form -->
                                     <div class="card">
                                         <div class="card-body crdbdy">
@@ -88,9 +88,9 @@
                                                     <div class="col">
                                                         <input type="text" id="txtUid" class="form-control"
                                                             placeholder="Enter User Name" required
-                                                            onkeyup="txtValidator(this,'^[a-z0-9_]{8}$', 'user', 'username')">
+                                                            onkeyup="txtValidator(this,'^([a-z][a-z0-9]{7})$', 'user', 'username')">
                                                         <div class="form-text">Use valid user name (Ex:
-                                                            amali_2001)<span class="text-danger">Length must be
+                                                            amali2001)<span class="text-danger">Length must be
                                                                 8*</span></div>
                                                     </div>
                                                 </div>
@@ -121,7 +121,7 @@
                                                     <div class="col">
                                                         <input type="password" class="form-control" id="txtrePwd"
                                                             placeholder="Re Enter your password" required
-                                                            onkeyup="pswdValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'user', 'password')">
+                                                            onkeyup="pswdValidator(this,'^[a-zA-Z0-9@]{6,10}$', 'user', 'password')">
                                                     </div>
                                                 </div>
                                                 <!-- End Confirm password -->

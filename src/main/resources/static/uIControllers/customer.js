@@ -33,12 +33,12 @@ const refreshForm = () => {
 //create refresh table function
 const refreshCustomerTable = () => {
 
-    const customers = getServiceRequest("/customer/alldata");
+    let customers = getServiceRequest("/customer/alldata");
 
     //datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
-    const columns = [
+    let columns = [
         { property: "reg_no", dataType: "string" },
         { property: "title", dataType: "string" },
         { property: "firstname", dataType: "string" },
@@ -353,37 +353,139 @@ const customerDelete = (ob, rowIndex) => {
 
 }
 
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Customer Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+            $('#modalCustomer').modal('hide');
+        }
+    });
+}
+
 //define function for clear/reset button
 const buttonCustomerClear = () => {
-    Swal.fire({
-        title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
-    });
-    refreshForm();
     /*  let userConfirm = window.confirm("Do you want to Refresh Form..?");
      if (userConfirm) {
          refreshForm();
      } */
+    Swal.fire({
+        title: "Are you Sure to Refresh Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
+    });
 }
 
 //function define for print Customer record
 const customerPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodyCustomer, rowIndex, "White");
+    const currentDateTime = new Date().toLocaleString();
 
     let newWindow = window.open();
-    let printView = '<html>'
-        + '<head>'
-        + '<link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">'
-        + '<title>BIT Project Customer| 2025</title></head>'
-        + '<body><h1>Print Customer Details</h1>'
-        + '<table class="table-bordered table-stripped border-1 w-25">'
-        + '<tr><th> Customer :</th><td>' + ob.title + ob.firstname + " " + ob.lastname + '</td></tr>'
-        + '<tr><th> Mobile Number :</th><td>' + ob.contact_no + '</td></tr>'
-        + '<tr><th> Email :</th><td>' + ob.email + '</td></tr>'
-        + '<tr><th> Status :</th><td>' + ob.customerstatus_id.status + '</td></tr>'
-        + '</table>'
-        + '</body></html>'
+    const printView = `
+        <html>
+        <head>
+            <title>Customer Report Management | BIT 2025</title>
+            <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+            <style>
+                body {
+                    padding: 30px;
+                    font-family: Arial, sans-serif;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                .header img {
+                    max-width: 100px;
+                    display: block;
+                    margin: 0 auto 10px auto;
+                }
+                h1 {
+                    font-size: 24px;
+                    margin-bottom: 5px;
+                }
+                .date-time {
+                    font-size: 12px;
+                    color: #555;
+                }
+                table {
+                    margin: auto;
+                    width: 60%;
+                }
+                th {
+                    text-align: left;
+                    width: 40%;
+                    background-color: #f8f9fa;
+                    padding: 8px;
+                }
+                td {
+                    background-color: #fff;
+                    padding: 8px;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 50px;
+                    font-size: 12px;
+                    color: #888;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Customer Details</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+            </div>
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Customer Refistration Number</th>
+                    <td>${ob.reg_no}</td>
+                </tr>
+                <tr>
+                    <th>Customer</th>
+                    <td>${ob.title + " " + ob.firstname + " " + ob.lastname}</td>
+                </tr>
+                <tr>
+                    <th>Mobile Number</th>
+                    <td>${ob.contact_no}</td>
+                </tr>
+                <tr>
+                    <th>Emai</th>
+                    <td>${ob.email}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>${ob.address}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>${ob.customerstatus_id.status}</td>
+                </tr>
+            </table>
+            <div class="footer">
+                &copy; 2025 BIT Project. All rights reserved.
+            </div>
+        </body>
+        </html>
+    `;
+
+    newWindow.document.open();
     newWindow.document.writeln(printView);
 
     setTimeout(() => {

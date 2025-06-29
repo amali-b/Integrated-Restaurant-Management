@@ -203,12 +203,12 @@ const buttonmenuSubmenuUpdate = () => {
 //create refresh table function
 const refreshMenuTable = () => {
 
-    const menuItems = getServiceRequest("/menuitems/alldata");
+    let menuItems = getServiceRequest("/menuitems/alldata");
 
     //datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
-    const columns = [
+    let columns = [
         { property: "code", dataType: "string" },
         { property: "name", dataType: "string" },
         { property: getSubmenus, dataType: "function" },
@@ -367,21 +367,53 @@ const menuItemDelete = (ob, rowIndex) => {
     swalDelete(title, obName, text, deleteResponse, modalMenu, message);
 }
 
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Menu Item Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+            $('#modalMenu').modal('hide');
+        }
+    });
+}
+
 //define function for clear Menu Item form
 const buttonmenuItemClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
     });
-    refreshForm();
 }
+
 //define function for clear Inner form
 const buttonInnerFormClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshInnerFormandTable();
+        }
     });
-    refreshForm();
 }
 
 //function define for print Menu Item record

@@ -7,7 +7,7 @@ window.addEventListener("load", () => {
 
 //define refresh table function
 const refreshInventorytable = () => {
-    const inventories = getServiceRequest("/inventory/alldata");
+    let inventories = getServiceRequest("/inventory/alldata");
 
     // Format date fields to remove the time part
     //forEach() eken inventories array eke hama item ehektm ynewa
@@ -22,7 +22,7 @@ const refreshInventorytable = () => {
         manufacturedate: formatDate(item.manufacturedate, "dd-mmm-yyyy") // or "mmm-d-yyyy"
     })); */
 
-    const columns = [
+    let columns = [
         { property: getInventoryName, dataType: "function" },
         { property: "availablequantity", dataType: "string" },
         { property: "totalquantity", dataType: "string" },

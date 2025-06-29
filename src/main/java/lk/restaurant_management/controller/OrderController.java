@@ -40,6 +40,7 @@ public class OrderController implements CommonController<Order> {
     // request mapping for load order UI
     @RequestMapping(value = "/order")
     public ModelAndView UI() {
+        // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView OrderView = new ModelAndView();
         OrderView.setViewName("Order.html");
@@ -246,7 +247,7 @@ public class OrderController implements CommonController<Order> {
             // check data Exist
             Order extOrder = orderDao.getReferenceById(order.getId());
             if (extOrder == null) {
-                return "Delete not Completed : Customer Order Not Exist.!";
+                return "Customer Order Not Exist.!";
             }
             try {
                 // set auto generate value

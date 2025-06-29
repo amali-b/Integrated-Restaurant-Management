@@ -21,7 +21,7 @@ public class Tables {
     private Integer id;
 
     @NotNull
-    private Integer number;
+    private String number;
 
     @NotNull
     private Integer seatcount;

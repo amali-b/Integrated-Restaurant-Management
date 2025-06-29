@@ -91,10 +91,10 @@ const refreshForm = () => {
 //create refresh table function
 const refreshSupplierTable = () => {
     // get list of suppliers using ajax get request
-    const suppliers = getServiceRequest("/supplier/alldata");
+    let suppliers = getServiceRequest("/supplier/alldata");
 
     //create display property list
-    const columns = [
+    let columns = [
         { property: "supplier_name", dataType: "string" },
         { property: "contact_no", dataType: "string" },
         { property: "email", dataType: "string" },
@@ -577,13 +577,37 @@ const supplierDelete = (ob, rowIndex) => {
     }); */
 }
 
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Supplier Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+            $('#modalSupplier').modal('hide');
+        }
+    });
+}
+
 //define function for 
 const buttonSupplierClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
     });
-    refreshForm();
     supplier.supplyIngredients = [];
     fillDropdown(SelectedIngredints, "", supplier.supplyIngredients, "ingredient_name");
 

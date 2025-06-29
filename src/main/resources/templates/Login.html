@@ -45,20 +45,28 @@
                 0px 27.2px 34.1px -7px rgba(0, 0, 0, 0.122),
                 0px 60px 67px -7px rgba(0, 0, 0, 0.17);
         }
+
+        .card img {
+            width: 90px;
+            position: relative;
+            display: block;
+            margin: auto;
+        }
     </style>
 </head>
 
 <body class="body">
     <div class="container-fluid p-0">
         <div class="card justify-content-center m-2 mx-auto p-3 mb-5 rounded">
-            <div class=" card-body">
+            <img src="images/bando1.png" alt="Bando-city-hotel">
+            <div class="card-body">
                 <h4 class="card-title text-center text-uppercase mb-2">Login Form</h4>
 
                 <!-- Start Login Form -->
                 <form action="/login" method="post">
                     <div class="row p-1 m-2">
                         <label for="userName" class="form-lable fw-bold mb-1">
-                            User Name <span class="text-danger">*</span> (Ex: amali_2001)
+                            User Name <span class="text-danger">*</span> (Ex: abcde123)
                         </label>
                         <input type="text" id="userName" name="username" class="form-control mb-1" required
                             placeholder="Enter User Name">
@@ -93,10 +101,10 @@
                     </div>
                     <!-- Button end -->
 
-                    <div class="form-check p-1">
+                    <!-- <div class="form-check p-1">
                         <input type="checkbox" class="ms-1 form-check-input" id="checkboxLogin">
                         <label for="checkboxLogin" class="labelRemember ms-2 form-lable">Remember Me</label>
-                    </div>
+                    </div> -->
                 </form>
                 <!-- Form end -->
 

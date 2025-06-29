@@ -65,7 +65,7 @@ const refreshInnerFormandTable = () => {
     btnInnerUpdate.classList.add("d-none");
     btnInnerSubmit.classList.remove("d-none");
 
-    const ingredients = getServiceRequest("/ingredient/alldata");
+    let ingredients = getServiceRequest("/ingredient/alldata");
     fillDropdownTwo(SelectIngredint, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
 
     setDefault([SelectIngredint, txtQuantity]);
@@ -238,9 +238,9 @@ const refreshSubmenutable = () => {
 
 
     // Initial load with all submenus
-    const submenus = getServiceRequest("/submenu/alldata");
+    let submenus = getServiceRequest("/submenu/alldata");
 
-    const columns = [
+    let columns = [
         { property: "submenuimage", dataType: "string" },
         { property: "name", dataType: "string" },
         { property: "submenu_code", dataType: "string" },
@@ -398,18 +398,49 @@ const productDelete = (ob, rowIndex) => {
 const buttonProductClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshSubmenuForm();
+        }
     });
-    refreshSubmenuForm();
 }
 
 //define function for clear Inner form
 const buttonInnerFormClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshInnerFormandTable();
+        }
     });
-    refreshInnerFormandTable();
+}
+
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Submenu Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshSubmenuForm();
+            $('#modalSubmenu').modal('hide');
+        }
+    });
 }
 
 //function define for print Supplier Order record

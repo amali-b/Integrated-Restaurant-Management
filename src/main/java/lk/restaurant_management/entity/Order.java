@@ -36,7 +36,7 @@ public class Order {
     private String customercontact;
 
     @NotNull
-    private BigDecimal totalprice;
+    private BigDecimal totalamount;
 
     private BigDecimal discount;
 
@@ -68,8 +68,8 @@ public class Order {
     private Orderstatus orderstatus_id;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "vehicles_id", referencedColumnName = "id")
-    private Vehicle vehicles_id;
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
+    private Vehicle vehicle_id;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "tables_id", referencedColumnName = "id")

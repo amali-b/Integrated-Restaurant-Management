@@ -28,6 +28,15 @@
     position: relative;
 }
 
+#btnAlert{
+    color: #935027;
+    border-color: none !important;
+}
+#btnAlert:hover{
+    background-color:  none !important;
+}
+
+
 #sidebar{
     position: fixed;
     height: 100%;

@@ -7,6 +7,16 @@ const activeTableRow = (tBodyId, rowIndex, color) => {
     tBodyId.children[parseInt(rowIndex)].style.backgroundColor = color;
 }
 
+// define function for generate colors
+function getRandomHexColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 //define function for dynamic dropdown element
 const fillDropdown = (parentId, message, datalist, property) => {
     // clear existing static values 
@@ -85,11 +95,41 @@ const fillDropdownTwo = (parentId, message, datalist, property1, property2) => {
     parentId.innerText = "";
 } */
 
+//call fill data into table
+fillReportTable = (tBodyId, datalist, columnList) => {
+    tBodyId.innerHTML = "";
+
+    datalist.forEach((dataOb, index) => {
+        let tr = document.createElement("tr");
+
+        let tdIndex = document.createElement("td");
+        tdIndex.innerText = parseInt((index) + 1);
+        tr.appendChild(tdIndex);
+
+        columnList.forEach(columnOb => {
+            let td = document.createElement("td");
+
+            if (columnOb.dataType == "string") {
+                //dataOb kyela datalist eke eka object ekak aran ekata property eke nama dila access krenewa.. [columnOb.property] me wdyta dala thyenne string ekaka dataOb.property wdyt gnna ba.
+                td.innerText = dataOb[columnOb.property];
+            }
+            if (columnOb.dataType == "function") {
+                td.innerHTML = columnOb.property(dataOb);
+            }
+            if (columnOb.dataType == "decimal") {
+                td.innerHTML = dataOb[columnOb.property];
+            }
+            tr.appendChild(td);
+        });
+        tBodyId.appendChild(tr);
+    });
+}
+
 // Define function for fill data in to table
 //table ekema modify column eke buttons danewa
 const fillTableOne = (tBodyId, datalist, columnList, editFunction, deleteFunction, printFunction, buttonVisibility = true) => {
 
-    infoTbody.innerHTML = "";
+    tBodyId.innerHTML = "";
 
     datalist.forEach((dataOb, index) => {
         let tr = document.createElement("tr");
@@ -151,25 +191,25 @@ const fillTableOne = (tBodyId, datalist, columnList, editFunction, deleteFunctio
             tdButtons.appendChild(printButton);
         }
 
-        infoTbody.appendChild(tr);
+        tBodyId.appendChild(tr);
     });
 };
 
 //modify column eke dropdown ehekat button danewa
 /* const fillTableTwo = (tBodyId, datalist, columnList, editFunction, deleteFunction, printFunction, buttonVisibility = true) => {
-
+ 
     infoTbody.innerHTML = "";
-
+ 
     datalist.forEach((dataOb, index) => {
         let tr = document.createElement("tr");
-
+ 
         let tdIndex = document.createElement("td");
         tdIndex.innerText = parseInt((index) + 1);
         tr.appendChild(tdIndex);
-
+ 
         columnList.forEach(columnOb => {
             let td = document.createElement("td");
-
+ 
             if (columnOb.dataType == "string") {
                 //dataOb kyela datalist eke eka object ekak aran ekata property eke nama dila access krenewa.. [columnOb.property] me wdyta dala thyenne string ekaka dataOb.property wdyt gnna ba.
                 td.innerText = dataOb[columnOb.property];
@@ -179,29 +219,29 @@ const fillTableOne = (tBodyId, datalist, columnList, editFunction, deleteFunctio
             }
             tr.appendChild(td);
         });
-
+ 
         let tdButtons = document.createElement("td");
-
+ 
         let dropdownDiv = document.createElement("div"); dropdownDiv.className = "dropdown";
         let dropdownButton = document.createElement("button"); dropdownButton.innerHTML = "Optoin";
         //dropdown icon eka aregnna wdya
         dropdownButton.className = "btn btn-otuline-primary dropdown-toggle";
         dropdownButton.setAttribute("data-bs-toggle", "dropdown");
         let dropdownUI = document.createElement("ui"); dropdownUI.className = "dropdown-menu";
-
+ 
         let editLi = document.createElement("li"); editLi.className = "dropdown-item";
         let deleteLi = document.createElement("li"); deleteLi.className = "dropdown-item";
         let printLi = document.createElement("li"); printLi.className = "dropdown-item";
-
-
+ 
+ 
         dropdownDiv.appendChild(dropdownButton);
         dropdownDiv.appendChild(dropdownUI);
-
+ 
         dropdownUI.appendChild(editLi);
         dropdownUI.appendChild(deleteLi);
         dropdownUI.appendChild(printLi);
-
-
+ 
+ 
         let editButton = document.createElement("button");
         editButton.className = "btn btn-outline-warning fw-bold me-2"
         editButton.innerHTML = "<i class='fa-solid fa-clock-rotate-left icon'></i><br> Update";
@@ -211,7 +251,7 @@ const fillTableOne = (tBodyId, datalist, columnList, editFunction, deleteFunctio
             editFunction(dataOb, index);
         }
         editLi.appendChild(editButton);
-
+ 
         let printButton = document.createElement("button");
         printButton.className = "btn btn-outline-success fw-bold me-2"
         printButton.innerHTML = "<i class='fa fa-print'></i><br> Print";
@@ -221,7 +261,7 @@ const fillTableOne = (tBodyId, datalist, columnList, editFunction, deleteFunctio
             printFunction(dataOb, index);
         }
         printLi.appendChild(printButton);
-
+ 
         let deleteButton = document.createElement("button");
         deleteButton.className = "btn btn-outline-danger fw-bold me-2"
         deleteButton.innerHTML = "<i class='fa fa-trash'></i><br> Delete";
@@ -231,16 +271,16 @@ const fillTableOne = (tBodyId, datalist, columnList, editFunction, deleteFunctio
             deleteFunction(dataOb, index);
         }
         deleteLi.appendChild(deleteButton);
-
+ 
         if (buttonVisibility) {
             tdButtons.appendChild(dropdownDiv);
             tr.appendChild(tdButtons);
         }
         tr.appendChild(tdButtons);
-
+ 
         infoTbody.appendChild(tr);
     });
-
+ 
 }; */
 
 //row eka click kalama button visible wenw
@@ -397,7 +437,6 @@ const formatDate = (dateString, format = "long") => {
     return date.toISOString().split("T")[0]; //split("T") gives ["2025-10-02", "00:00:00"] take the [0] part → "2025-10-02"
 };
 
-
 // define function for Inner form table
 //modify column eke dropdown ehekat button danewa
 const fillInnerTable = (InnertBody, datalist, columnList, editFunction, deleteFunction, buttonVisibility = true) => {
@@ -553,3 +592,4 @@ const fillDropdownOrder = (parentId, message, datalist1, datalist2, property) =>
         parentId.appendChild(option)
     });
 }
+

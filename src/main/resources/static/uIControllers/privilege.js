@@ -85,7 +85,7 @@ const refreshPrivilegeTable = () => {
     //datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
-    const columns = [
+    let columns = [
         { property: getRole, dataType: "function" }, //object
         { property: getModule, dataType: "function" }, //object
         { property: getSelect, dataType: "function" }, // boolean
@@ -444,7 +444,31 @@ const privilegePrint = (ob, rowIndex) => {
 const buttonPrivilegeClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
     });
-    refreshForm();
+}
+
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Privilege Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+            $('#modalPrivilege').modal('hide');
+        }
+    });
 }

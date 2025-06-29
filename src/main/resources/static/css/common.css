@@ -6,13 +6,15 @@ body{
 #pageTitle{
     margin-top: 90px;
     font-size: 30px;
-    font-weight: bold;
-    background: linear-gradient(to right, #6f2f14, #974617, #da7925);
+    font-weight: 500;
+    background: #9e3a00;
+    /* background: linear-gradient(to right, #9e3a00, #bd6b02, #ef9000); */
     color: transparent;
     background-clip: text;
     /* text-decoration:underline #371a12; */
     border-radius: 10px;
-    font-family:cursive;
+    /* font-family:cursive; */
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .btnCollapse{

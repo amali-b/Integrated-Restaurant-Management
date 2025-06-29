@@ -57,14 +57,14 @@ selectCategoryElement.addEventListener("change", () => {
 
 //define refresh table function
 const refreshIngredienttable = () => {
-    const ingredients = getServiceRequest("/ingredient/alldata");
+    let ingredients = getServiceRequest("/ingredient/alldata");
 
     // Format purchase_price to 2 decimal places
     /* ingredients.forEach(item => {
         item.purchase_price = Number(item.purchase_price).toFixed(2);
     }); */
 
-    const columns = [
+    let columns = [
         { property: "code", dataType: "string" },
         { property: "ingredient_name", dataType: "string" },
         { property: getIngredientCategory, dataType: "function" },
@@ -328,8 +328,32 @@ const itemDelete = (ob, rowIndex) => {
 const buttonItemClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshIngredientForm();
+        }
     });
-    refreshIngredientForm();
+}
+
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Ingredient Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshIngredientForm();
+            $('#modalIngredient').modal('hide');
+        }
+    });
 }
 

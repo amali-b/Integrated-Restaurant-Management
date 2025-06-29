@@ -84,28 +84,33 @@ const checkIngredientExt = () => {
 // define function for filter ingredients by Supplier
 const filteringredientsbySupplier = () => {
     let ingredients = getServiceRequest("/ingredient/listbysupplier?supplierid=" + JSON.parse(SelectSupplier.value).id);
-    fillDropdown(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name");
+    fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
+    SelectIngredints.disabled = false;
 }
 
 //define function for refresh inner form
 const refreshInnerFormandTable = () => {
+
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
     //define new object
     supplierorderHasIngredient = new Object();
 
+    //SelectIngredints.disabled = true;
     let ingredients = [];
-    if (SelectSupplier.value != "") {
-        ingredients = getServiceRequest("/ingredient/listbysupplier?supplierid=" + JSON.parse(SelectSupplier.value).id);
+    if (SelectSupplier.value == "") {
+        fillDropdown(SelectIngredints, "Select Supplier First.!", [], "");
+        SelectIngredints.disabled = true;
     } else {
-        ingredients = getServiceRequest("/ingredient/alldata");
+        // filteringredientsbySupplier function eken ena data innerform eka refresh weddi makenewa.. e nisa methanadi api eka aye aregnna one
+        ingredients = getServiceRequest("/ingredient/listbysupplier?supplierid=" + JSON.parse(SelectSupplier.value).id);
+        fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
+        SelectIngredints.disabled = false;
     }
-    fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
-
 
     /*         ingredients = getServiceRequest("/ingredient/list");
     // fillDropdownTwo function eka common eke declare kranna one meka gnnanm
         fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", supplierorderHasIngredient.ingredient_id.ingredient_name); */
-
-    SelectIngredints.disabled = "";
 
     txtPrice.value = "";
     txtPrice.disabled = "disabled";
@@ -299,12 +304,12 @@ const buttonSupplierOrderIngredientUpdate = () => {
 //create refresh table function
 const refreshSupplierOrderTable = () => {
 
-    const supplierOrders = getServiceRequest("/supplierorder/alldata");
+    let supplierOrders = getServiceRequest("/supplierorder/alldata");
 
     //datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
-    const columns = [
+    let columns = [
         { property: "ordercode", dataType: "string" },
         { property: getSupplierName, dataType: "function" },
         { property: "daterequired", dataType: "string" },
@@ -553,18 +558,50 @@ const supplierOrderDelete = (ob, rowIndex) => {
 const buttonSupplierOrderClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
     });
-    refreshForm();
 }
 //define function for clear Inner form
 const buttonInnerFormClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshInnerFormandTable();
+        }
     });
-    refreshInnerFormandTable();
 }
+
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Purchase Order Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+            $('#modalSupplierOrder').modal('hide');
+        }
+    });
+}
+
 
 //function define for print Supplier Order record
 const supplierOrderPrint = (ob, rowIndex) => {

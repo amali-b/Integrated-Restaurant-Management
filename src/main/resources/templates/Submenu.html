@@ -111,7 +111,7 @@
                             <div class="container">
                                 <h4 class="modal-title" id="modalSubmenuLabel">Submenu Form</h4>
                             </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row justify-content-md-center">
@@ -159,7 +159,7 @@
                                                                 <input type="text" id="txtProductname"
                                                                     class="form-control"
                                                                     placeholder="Enter Product Name"
-                                                                    onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20})|([A-Z][a-z]{1,10}[ ][A-Z][a-z]{0,30})$', 'submenu', 'name')">
+                                                                    onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20}( [A-Z][a-z]{1,30})?)( [LM])?$', 'submenu', 'name')">
                                                             </div>
                                                         </div>
                                                         <!-- End Product Name-->
@@ -243,7 +243,8 @@
                                                                                         placeholder="Enter Quantity"
                                                                                         required>
                                                                                     <div class="form-text text-end">
-                                                                                        Enter Quantity
+                                                                                        (ex: 500g = KG-0.5)
+
                                                                                     </div>
                                                                                 </div>
                                                                                 <!-- End Quantity -->
@@ -272,8 +273,8 @@
                                                                                         id="btnInnerSubmit"
                                                                                         type="button"
                                                                                         onclick="buttonSubmenuIngredientSubmit()"><i
-                                                                                            class="fa-solid fa-cart-plus"></i><br>Add
-                                                                                        to Cart</button>
+                                                                                            class="fa-solid fa-plus"></i><br>Add
+                                                                                    </button>
                                                                                 </div>
                                                                             </div>
                                                                             <!-- End Buttons -->

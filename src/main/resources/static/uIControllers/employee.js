@@ -576,17 +576,26 @@ const buttonEmployeeDelete = () => {
     refreshEmpTable();
 }
 
+// define function for clear buttton
 const buttonEmployeeClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshEmpForm();
+        }
     });
-    refreshEmpForm();
     /* let userConfirm = window.confirm("Do you want to Refresh Form..?");
     if (userConfirm) {
         refreshEmpForm();
     } */
 }
+
 
 /* ############################# VALIDATION ################################# */
 
