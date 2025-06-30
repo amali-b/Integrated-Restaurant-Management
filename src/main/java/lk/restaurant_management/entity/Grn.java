@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -72,6 +73,10 @@ public class Grn {
     @OneToOne
     @JoinColumn(name = "supplierorder_id", referencedColumnName = "id")
     private SupplierOrder supplierorder_id;
+
+    @ManyToOne
+    @JoinColumn(name = "grnstatus_id", referencedColumnName = "id")
+    private GrnStatus grnstatus_id;
 
     // Grn and grn_has_ingredient has one to many relationship
     @OneToMany(mappedBy = "grn_id", cascade = CascadeType.ALL, orphanRemoval = true)

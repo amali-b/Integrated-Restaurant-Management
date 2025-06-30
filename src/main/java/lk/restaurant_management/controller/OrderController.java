@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.OrderDao;
+import lk.restaurant_management.dao.OrderstatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Order;
 import lk.restaurant_management.entity.OrderHasMenuitem;
@@ -29,6 +30,8 @@ import lk.restaurant_management.entity.User;
 
 @RestController
 public class OrderController implements CommonController<Order> {
+    @Autowired
+    private OrderstatusDao orderstatusDao;
     @Autowired
     private OrderDao orderDao;
     @Autowired
@@ -251,8 +254,9 @@ public class OrderController implements CommonController<Order> {
             }
             try {
                 // set auto generate value
-                order.setDeleteuser(loggedUser.getId());
-                order.setDeletedatetime(LocalDateTime.now());
+                extOrder.setDeleteuser(loggedUser.getId());
+                extOrder.setDeletedatetime(LocalDateTime.now());
+                extOrder.setOrderstatus_id(orderstatusDao.getReferenceById(5));
 
                 // save operator
 

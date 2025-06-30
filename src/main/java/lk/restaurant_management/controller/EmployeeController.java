@@ -109,7 +109,7 @@ public class EmployeeController {
             // check data Exist
             Employee extEmployeeNic = employeeDao.getByNIC(employee.getNic());
             if (extEmployeeNic != null) {
-                return "Save not Completed : Entered NIC (" + employee.getNic() + ") is Already exist.!";
+                return "Entered NIC (" + employee.getNic() + ") is Already exist.!";
             }
 
             // dao layer eka hareha getByEmail method eka call krela employeege Email eka
@@ -119,7 +119,7 @@ public class EmployeeController {
             // extEmployeeEmail null ndda da blenewa
             if (extEmployeeEmail != null) {
                 // null naththan e kynne e dapu email ekt samana email ekk already thyenewa
-                return "Save not Completed : Entered Email Already exist.!";
+                return "Entered Email Already exist.!";
             }
 
             try {
@@ -178,24 +178,24 @@ public class EmployeeController {
 
         // check employee exist
         if (employee.getId() == null) {
-            return "Update not Completed : Employee Not Exist.!";
+            return "Employee Not Exist.!";
         }
 
         // dekama dannath puluwn noda hitiyath aulk na
         Employee extById = employeeDao.getReferenceById(employee.getId());
         if (extById == null) {
-            return "Update not Completed : Employee Not Exist";
+            return "Employee Not Exist";
         }
 
         if (userPrivilege.getPrivi_update()) {
             // check data duplicate
             Employee extEmployeeNic = employeeDao.getByNIC(employee.getNic());
             if (extEmployeeNic != null && extEmployeeNic.getId() != employee.getId()) {
-                return "Update not Completed : Entered NIC (" + employee.getNic() + ") is Already exist.!";
+                return "Entered NIC (" + employee.getNic() + ") is Already exist.!";
             }
             Employee extEmployeeEmail = employeeDao.getByEmail(employee.getEmail());
             if (extEmployeeEmail != null && extEmployeeEmail.getId() != employee.getId()) {
-                return "Update not Completed : Entered Email Already exist.!";
+                return "Entered Email Already exist.!";
             }
 
             // update process
@@ -232,11 +232,11 @@ public class EmployeeController {
 
         // check user exist
         if (employee.getId() == null) {
-            return "Delete not Completed : Employee Not Exist.!";
+            return "Employee Not Exist.!";
         }
         Employee extEmployeeById = employeeDao.getReferenceById(employee.getId());
         if (extEmployeeById == null) {
-            return "Delete not Completed : Employee Not Exist";
+            return "Employee Not Exist";
         }
 
         // check privilege exist

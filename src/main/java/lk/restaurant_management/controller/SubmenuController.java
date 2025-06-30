@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.SubmenuDao;
+import lk.restaurant_management.dao.SubmenuStatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.Submenu;
@@ -28,7 +29,8 @@ import lk.restaurant_management.entity.User;
 
 @RestController
 public class SubmenuController implements CommonController<Submenu> {
-
+    @Autowired
+    private SubmenuStatusDao submenuStatusDao;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -103,7 +105,7 @@ public class SubmenuController implements CommonController<Submenu> {
             // check data Exist or duplicate
             Submenu extSubmenu = submenuDao.getBySubmenuName(submenu.getName());
             if (extSubmenu != null && extSubmenu.getId() != submenu.getId()) {
-                return "Save not Completed : Entered Submenu is Already exist.!";
+                return "Entered Submenu is Already exist.!";
             }
             try {
                 // set auto generate value
@@ -142,14 +144,14 @@ public class SubmenuController implements CommonController<Submenu> {
 
         // check data Exist
         if (submenu.getId() == null) {
-            return "Update not Completed : Submenu Not Exist.!";
+            return "Submenu Not Exist.!";
         }
 
         if (userPrivilege.getPrivi_update()) {
             // check data duplicate
             Submenu extSubmenu = submenuDao.getBySubmenuName(submenu.getName());
             if (extSubmenu != null && extSubmenu.getId() != submenu.getId()) {
-                return "Update not Completed : Entered Submenu is Already exist.!";
+                return "Entered Submenu is Already exist.!";
             }
             try {
                 // set auto generate value
@@ -192,8 +194,9 @@ public class SubmenuController implements CommonController<Submenu> {
             }
             try {
                 // set auto generate value
-                submenu.setDeletedatetime(LocalDateTime.now());
-                submenu.setDeleteuser(loggedUser.getId());
+                extSubmenu.setDeletedatetime(LocalDateTime.now());
+                extSubmenu.setDeleteuser(loggedUser.getId());
+                extSubmenu.setSubmenustatus_id(submenuStatusDao.getReferenceById(4));
 
                 // save operator
                 // association eke main side eka block krenawa (using @JsonIgnore)
