@@ -56,6 +56,11 @@ h4{
 .crdbdy{
     background-color:#fde8a3;
 }
+.innercrdbdy{
+    background-color:#fde8a3;
+    border-style: groove;
+    border-color:#BF7543;
+}
 
 .btninput{
     /* border-top-left-radius: 7px;
