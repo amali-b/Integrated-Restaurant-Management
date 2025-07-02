@@ -154,7 +154,7 @@ public class IngredientController implements CommonController<Ingredient> {
             Ingredient extIngredient = ingredientDao.getByIngredientName(ingredient.getIngredient_name());
             // extIngredient null ndda da blenewa
             if (extIngredient != null) {
-                return "Save not Completed : Entered Ingredient is Already exist.!";
+                return "Entered Ingredient is Already exist.!";
             }
 
             try {
@@ -170,7 +170,7 @@ public class IngredientController implements CommonController<Ingredient> {
 
                 return "OK";
             } catch (Exception e) {
-                return "Save not Completed : " + e.getMessage();
+                return "" + e.getMessage();
             }
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
