@@ -53,6 +53,23 @@ public class LoginController {
         return dashboardView;
     }
 
+    @RequestMapping(value = "/editUser")
+    public ModelAndView loadEditUserUI() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ModelAndView editUserView = new ModelAndView();
+        editUserView.setViewName("EditUser.html");
+        // object eka set krenewa
+        editUserView.addObject("loggedusername", auth.getName());
+
+        User user = userDao.getByUsername(auth.getName());
+        if (user.getEmployee_id() != null) {
+            editUserView.addObject("loggedempname", user.getEmployee_id().getCallingname());
+        } else {
+            editUserView.addObject("loggedempname", "Admin");
+        }
+        return editUserView;
+    }
+
     @RequestMapping(value = "/errorpage")
     public ModelAndView loadErrorUI() {
         ModelAndView errorpageView = new ModelAndView();
