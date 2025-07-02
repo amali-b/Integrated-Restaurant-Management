@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.MenuItemDao;
+import lk.restaurant_management.dao.MenuStatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.MenuHasSubmenu;
 import lk.restaurant_management.entity.MenuItem;
@@ -33,6 +34,8 @@ public class MenuItemController implements CommonController<MenuItem> {
     private UserDao userDao;
     @Autowired
     private UserPrivilegeController userPrivilegeController;
+    @Autowired
+    private MenuStatusDao menuStatusDao;
 
     @Override
     // request mapping for load menuitems order UI
@@ -87,7 +90,7 @@ public class MenuItemController implements CommonController<MenuItem> {
             MenuItem extMenuItem = menuItemDao.getByMenuName(menuitem.getName());
             // extMenuItem null ndda da blenewa
             if (extMenuItem != null) {
-                return "Save not Completed : Entered Menu is Already exist.!";
+                return "Entered Menu is Already exist.!";
             }
             try {
                 // set auto generate value
@@ -129,7 +132,7 @@ public class MenuItemController implements CommonController<MenuItem> {
 
         // check data Exist
         if (menuitem.getId() == null) {
-            return "Update not Completed : Menu Not Exist.!";
+            return "Menu Not Exist.!";
         }
 
         if (userPrivilege.getPrivi_update()) {
@@ -174,13 +177,14 @@ public class MenuItemController implements CommonController<MenuItem> {
             // check data Exist
             MenuItem extMenu = menuItemDao.getReferenceById(menuitem.getId());
             if (extMenu == null) {
-                return "Delete not Completed :Menu Item Not Exist.!";
+                return "Menu Item Not Exist.!";
             }
 
             try {
                 // set auto generate value
                 menuitem.setDeleteuser(loggedUser.getId());
                 menuitem.setDeletedatetime(LocalDateTime.now());
+                menuitem.setMenustatus_id(menuStatusDao.getReferenceById(3));
 
                 // save operator
                 // association eke main side eka block krenawa (using @JsonIgnore) main

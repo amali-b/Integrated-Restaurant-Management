@@ -3,6 +3,8 @@ package lk.restaurant_management.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +21,6 @@ public class InventoryStatusController {
     // define mapping get all customer status data
     @GetMapping(value = "/inventorystatus/alldata", produces = "application/json")
     public List<InventoryStatus> getAllInventoryStatuses() {
-        return inventoryStatusDao.findAll();
+        return inventoryStatusDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 }

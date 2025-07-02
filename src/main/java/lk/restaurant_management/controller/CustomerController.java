@@ -161,7 +161,8 @@ public class CustomerController {
         Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Customer");
 
         // check customer exist
-        if (customer.getId() == null) {
+        Customer ExtCustomer = customerDao.getReferenceById(customer.getId());
+        if (ExtCustomer == null) {
             return "Customer Not Exist.!";
         }
 
@@ -169,12 +170,12 @@ public class CustomerController {
         if (userPrivilege.getPrivi_delete()) {
             try {
                 // set auto generate value
-                customer.setDelete_datetime(LocalDateTime.now());
-                customer.setDelete_user(userDao.getByUsername(auth.getName()).getId());
-                customer.setCustomerstatus_id(customerstatusDao.getReferenceById(2));
+                ExtCustomer.setDelete_datetime(LocalDateTime.now());
+                ExtCustomer.setDelete_user(userDao.getByUsername(auth.getName()).getId());
+                ExtCustomer.setCustomerstatus_id(customerstatusDao.getReferenceById(2));
 
                 // process PUT request
-                customerDao.save(customer);
+                customerDao.save(ExtCustomer);
 
                 // manage dependancies
 

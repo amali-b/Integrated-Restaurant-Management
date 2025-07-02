@@ -3,6 +3,8 @@ package lk.restaurant_management.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +20,6 @@ public class DesignationController {
     // define mapping get all designation data -- URL [/designation/alldata]
     @GetMapping(value = "/designation/alldata", produces = "application/json")
     public List<Designation> getDesignationAllData() {
-        return designationDao.findAll();
+        return designationDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 }

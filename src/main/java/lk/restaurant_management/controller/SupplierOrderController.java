@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.SupplierOrderDao;
+import lk.restaurant_management.dao.SupplyOrderStatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.SupplierOrder;
@@ -31,6 +32,8 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
 
     @Autowired // create instance for SupplierOrderDao //interface walin instance gnna bri nisa
     private SupplierOrderDao supplierOrderDao;
+    @Autowired
+    private SupplyOrderStatusDao supplyOrderStatusDao;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -165,12 +168,13 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
             // check data Exist
             SupplierOrder extSupOrder = supplierOrderDao.getReferenceById(supplierOrder.getId());
             if (extSupOrder == null) {
-                return "Delete not Completed : Purchase Order Not Exist.!";
+                return "Purchase Order Not Exist.!";
             }
             try {
                 // set auto generate value
-                supplierOrder.setDeleteuser(loggedUser.getId());
-                supplierOrder.setDeletedatetim(LocalDateTime.now());
+                extSupOrder.setDeleteuser(loggedUser.getId());
+                extSupOrder.setDeletedatetim(LocalDateTime.now());
+                extSupOrder.setSupplyorderstatus_id(supplyOrderStatusDao.getReferenceById(3));
 
                 // SupplierorderHasIngredientList list ekata loop ekak dala read krela
                 for (SupplierorderHasIngredient sohi : supplierOrder.getSupplierorderHasIngredientList()) {
