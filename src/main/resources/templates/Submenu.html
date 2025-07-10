@@ -121,13 +121,29 @@
                                             <!-- Start Form -->
                                             <form id="formSubmenu" onsubmit="return false">
                                                 <!--  product image -->
-                                                <!-- Start image -->
-                                                <div class="row justify-content-md-center">
-                                                    <div class="col-3">
-                                                        <input type="file" class="form-control" id="imgProduct">
+                                                <!-- Start product Photo -->
+                                                <div class="row justify-content-center mt-2">
+                                                    <div class="col-auto">
+                                                        <!-- hidden input -->
+                                                        <input type="file" id="imgProduct" accept="image/*"
+                                                            style="display: none;"
+                                                            onchange="fileValidator(this, 'submenu', 'submenuimage', document.getElementById('imgPreview'), document.getElementById('clearBtn'), document.getElementById('imgContainer'))">
+                                                        <div class="position-relative d-inline-block" id="imgContainer">
+                                                            <!-- Clickable image -->
+                                                            <img src="images/chickenburger.jpg" id="imgPreview"
+                                                                alt="Upload here" class="img-thumbnail"
+                                                                style="cursor: pointer; max-width: 130px;"
+                                                                onclick="document.getElementById('imgProduct').click();">
+                                                            <!-- clear button -->
+                                                            <button type=" button" id="clearBtn"
+                                                                class="btn btn-sm btn-danger position-absolute bottom-0 start-50 m-1"
+                                                                style="display: none;">
+                                                                Clear <i class="fa-solid fa-xmark"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <!-- End image -->
+                                                <!-- End product Photo -->
 
                                                 <div class="row mt-2">
                                                     <!-- Main Form -->
@@ -171,7 +187,7 @@
                                                                 <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <input type="text"
-                                                                    onkeyup="txtValidator(txtPrice,'^[1-9][0-9]{1,5}[.][0-9]{2}$', 'submenu', 'price')"
+                                                                    onkeyup="priceValidator(txtPrice, 'submenu', 'price')"
                                                                     class="form-control" id="txtPrice"
                                                                     placeholder="Enter Product Price" required>
                                                             </div>
@@ -237,11 +253,10 @@
                                                                                         <span
                                                                                             class="text-danger">*</span></label>
                                                                                     <input type="text"
-                                                                                        onkeyup="txtValidator(txtQuantity,'^[1-9][0-9]{0,4}|([1-9][0-9]{0,4}[.][0-9]{0,3})$', 'submenuHasIngredient', 'quantity')"
+                                                                                        onkeyup="txtValidator(txtQuantity,'^([0-9]{0,4}[.][0-9]{0,3})|([1-9][0-9]{0,4}([.]?[0-9]{0,3})?)$', 'submenuHasIngredient', 'quantity')"
                                                                                         class="form-control"
                                                                                         id="txtQuantity"
-                                                                                        placeholder="Enter Quantity"
-                                                                                        required>
+                                                                                        placeholder="Enter Quantity">
                                                                                     <div class="form-text text-end">
                                                                                         (ex: 500g = KG-0.5)
 
@@ -272,9 +287,9 @@
                                                                                         class="btn btn-outline-success"
                                                                                         id="btnInnerSubmit"
                                                                                         type="button"
-                                                                                        onclick="buttonSubmenuIngredientSubmit()"><i
-                                                                                            class="fa-solid fa-plus"></i><br>Add
-                                                                                    </button>
+                                                                                        onclick="buttonSubmenuIngredientSubmit()">Add
+                                                                                        <i
+                                                                                            class="fa-solid fa-plus"></i></button>
                                                                                 </div>
                                                                             </div>
                                                                             <!-- End Buttons -->

@@ -8,6 +8,27 @@ window.addEventListener("load", () => {
     refreshSubmenutable();
 });
 
+// function for display clear button when hover on img
+document.addEventListener("DOMContentLoaded", () => {
+    const clearBtn = document.getElementById('clearBtn');
+    const container = document.getElementById('imgContainer');
+
+    // Show button on hover
+    container.addEventListener('mouseenter', () => {
+        clearBtn.style.display = 'inline';
+    });
+    // hide button when mouse leave
+    container.addEventListener('mouseleave', () => {
+        clearBtn.style.display = 'none';
+    });
+    // Clear image on button click
+    clearBtn.onclick = () => {
+        imgProduct.value = "";
+        imgPreview.src = "images/chickenburger.jpg";
+        window[object][property] = null;
+    };
+});
+
 //define refresh form function
 const refreshSubmenuForm = () => {
     formSubmenu.reset();
@@ -16,6 +37,9 @@ const refreshSubmenuForm = () => {
 
     submenu = new Object();//define submenu Object
     submenu.submenuHasIngredientList = new Array(); //define ingredient array
+
+    imgProduct.value = "";
+    imgPreview.src = "images/chickenburger.jpg";
 
     const Submenucategories = getServiceRequest("/submenucategory/alldata");
     fillDropdown(selectCategory, "Select Menu Item Category.!", Submenucategories, "name");
@@ -67,6 +91,8 @@ const refreshInnerFormandTable = () => {
 
     let ingredients = getServiceRequest("/ingredient/alldata");
     fillDropdownTwo(SelectIngredint, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
+
+    txtQuantity.value = "";
 
     setDefault([SelectIngredint, txtQuantity]);
 
@@ -160,34 +186,13 @@ const buttonSubmenuIngredientSubmit = () => {
     refreshInnerFormandTable();
 }
 
-const checkInnerFormUpdate = () => {
-    let innerupdates = "";
-    if (submenuHasIngredient != null && oldsubmenuHasIngredient != null) {
-        if (submenuHasIngredient.ingredient_id != oldsubmenuHasIngredient.ingredient_id) {
-            innerupdates = innerupdates + "Ingredient has Updated from " + oldsubmenuHasIngredient.ingredient_id + "--> " + submenuHasIngredient.ingredient_id + " \n";
-        }
-        if (submenuHasIngredient.quantity != oldsubmenuHasIngredient.quantity) {
-            innerupdates = innerupdates + "Quantity has updated from " + oldsubmenuHasIngredient.quantity + "--> " + submenuHasIngredient.quantity + " \n";
-        }
-    }
-    return innerupdates;
-}
-
 const buttonSubmenuIngredientUpdate = () => {
     console.log(submenuHasIngredient);
-    //check updates
-    let updates = checkInnerFormUpdate();
-    if (updates == "") {
-        Swal.fire({
-            title: "Nothing Changed..!",
-            icon: "info",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    } else {
+    if (submenuHasIngredient.quantity != oldsubmenuHasIngredient.quantity || submenuHasIngredient.ingredient_id.ingredient_name != oldsubmenuHasIngredient.ingredient_id.ingredient_name) {
         Swal.fire({
             title: "Are you sure you want to update following changes.?",
-            text: updates,
+            text: "Ingredient has updated from " + oldsubmenuHasIngredient.ingredient_id.ingredient_name
+                + "Quantity has updated from " + oldsubmenuHasIngredient.quantity,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "green",
@@ -195,6 +200,8 @@ const buttonSubmenuIngredientUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                submenu.submenuHasIngredientList[innerFormindex] = submenuHasIngredient;
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -204,10 +211,14 @@ const buttonSubmenuIngredientUpdate = () => {
                 refreshInnerFormandTable();
             }
         });
+    } else {
+        Swal.fire({
+            title: "Nothing Changed..!",
+            icon: "info",
+            showConfirmButton: false,
+            timer: 1500
+        });
     }
-    // main eke thyena list ekta inner object eka push krenewa
-    submenu.submenuHasIngredientList[innerFormindex] = submenuHasIngredient;
-    refreshInnerFormandTable();
 }
 
 /* ############################## MAIN FORM FUNCTIONS ################################# */
@@ -241,7 +252,7 @@ const refreshSubmenutable = () => {
     let submenus = getServiceRequest("/submenu/alldata");
 
     let columns = [
-        { property: "submenuimage", dataType: "string" },
+        { property: "submenuimage", dataType: "image-array" },
         { property: "name", dataType: "string" },
         { property: "submenu_code", dataType: "string" },
         { property: getSubmenuCategory, dataType: "function" },
@@ -283,7 +294,12 @@ const submenuFormRefill = (ob, rowIndex) => {
     submenu = JSON.parse(JSON.stringify(ob));
     oldsubmenu = JSON.parse(JSON.stringify(ob));
 
-    // imgProduct.value = ob.submenuimage;
+    // reset photo
+    if (ob.submenuimage != null) {
+        imgPreview.src = atob(ob.submenuimage);
+    } else {
+        imgPreview.src = "images/chickenburger.jpg";
+    }
     selectCategory.value = JSON.stringify(ob.category_id);
     txtProductname.value = ob.name;
     txtPrice.value = ob.price;
@@ -326,7 +342,7 @@ const checkFormUpdate = () => {
     let updates = "";
     if (submenu != null && oldsubmenu != null) {
         if (submenu.submenuimage != oldsubmenu.submenuimage) {
-            updates = updates + "Product Photo has Updated from " + oldsubmenu.submenuimage + "--> " + submenu.submenuimage + " \n";
+            updates = updates + "Product Photo has Updated \n";
         }
         if (submenu.category_id.name != oldsubmenu.category_id.name) {
             updates = updates + "Category has Updated from " + oldsubmenu.category_id.name + "--> " + submenu.category_id.name + " \n";
