@@ -80,7 +80,7 @@ const refreshIngredientForm = () => {
     const unittypes = getServiceRequest("/unitType/alldata");
     fillDropdown(SelectUnitType, "Select Unit Type.!", unittypes, "name");
 
-    setDefault([SelectCategory, txtIngredientname, dateMade, dateExpire, unitSize, txtPrice, txtRop, txtRoq, SelectStatus, SelectUnitType, txtNote]);
+    setDefault([SelectCategory, txtIngredientname, unitSize, txtPrice, txtRop, txtRoq, SelectStatus, SelectUnitType]);
 
     //select element eke value eka string value ekak wenna one nisa object eka string baweta convert krenw
     SelectStatus.value = JSON.stringify(ingredientstatuses[0]);
@@ -268,44 +268,6 @@ const buttonItemUpdate = () => {
         let updateResponse = getHTTPServiceRequest('/ingredient/update', "PUT", ingredient);
         swalUpdate(updates, title, text, updateResponse, modalIngredient);
 
-        /* if (updates == "") {
-            Swal.fire({
-                title: "Nothing Updated.!",
-                icon: "info",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        } else {
-            Swal.fire({
-                title: "Are you sure you want to update following changes.?",
-                text: updates,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "green",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, Update!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    //call put service
-                    let updateResponse = getHTTPServiceRequest('/ingredient/update', "PUT", ingredient);
-                    if (updateResponse == "OK") {
-                        Swal.fire({
-                            title: "Successfully Updated.!!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        window.location.reload();
-                    } else {
-                        Swal.fire({
-                            title: "Failed to Update.! Has following errors : ",
-                            text: updateResponse,
-                            icon: "info"
-                        });
-                    }
-                }
-            });
-        } */
     } else {
         Swal.fire({
             title: "Failed to Update.! Has following errors : ",
@@ -334,48 +296,8 @@ const itemDelete = (ob, rowIndex) => {
     obName = "";
     text = ob.ingredient_name;
     let deleteResponse = getHTTPServiceRequest('/ingredient/delete', "DELETE", ingredient);
-    message = "Menu Item has Deleted.";
+    message = "Ingredient has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalIngredient, message);
-
-    /* Swal.fire({
-        title: "Are you sure to Delete followong Ingredient.?",
-        text: ob.ingredient_name,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "green",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Delete!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            //call Delete service
-            let deleteServerResponse = getHTTPServiceRequest('/ingredient/delete', "DELETE", ingredient);
-            if (deleteServerResponse == "OK") {
-                Swal.fire({
-                    title: "Deleted Successfully.!",
-                    text: "Ingredient has Deleted.",
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                //refresh table & Form
-                refreshIngredientForm();
-                refreshIngredienttable();
-                $('#modalIngredient').modal('hide');
-            } else {
-                Swal.fire({
-                    title: "Failed to Delete.!",
-                    text: deleteResponse,
-                    icon: "error"
-                });
-            }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire({
-                title: "Cancelled",
-                text: "Your data is safe!",
-                icon: "error"
-            });
-        }
-    }); */
 }
 
 //define function for clear/reset button
