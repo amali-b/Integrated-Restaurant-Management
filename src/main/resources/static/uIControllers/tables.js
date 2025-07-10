@@ -13,8 +13,10 @@ const refreshForm = () => {
     btnsubmit.style.display = "inline";
     btnupdate.style.display = "none";
 
+    txtTblNo.disabled = false;
+
     //define new object
-    table = new Object();
+    tableDinein = new Object();
 
     setDefault([txtTblNo, countSeat]);
 }
@@ -40,8 +42,8 @@ const fillTable = (tBodyDineinTables, datalist, columnList, editFunction, delete
 
         let tdButton = document.createElement("td");
         let deleteButton = document.createElement("button");
-        deleteButton.className = "btn btn-outline-danger fw-bold me-2"
-        deleteButton.innerHTML = "<i class='fa fa-trash'></i><br> Delete";
+        deleteButton.className = "btn btn-outline-danger"
+        deleteButton.innerHTML = "<i class='fa fa-trash'></i>";
         // deleteButton.innerText = "Delete";
         tdButton.appendChild(deleteButton);
         deleteButton.onclick = () => {
@@ -67,15 +69,16 @@ const fillTable = (tBodyDineinTables, datalist, columnList, editFunction, delete
 
 //create refresh table function
 const refreshtableDineinTable = () => {
-    // const tables = getServiceRequest("/table/alldata");
-    let tables = [
+    const tables = getServiceRequest("/tables/alldata");
+    /* let tables = [
         {
             id: 1,
             number: "001",
             seatcount: 4
         }
     ];
-    //datatypes
+    
+    *///datatypes
     //string -> strting / date / number
     //function -> object / array / boolean
     let columns = [
@@ -85,7 +88,7 @@ const refreshtableDineinTable = () => {
 
     //call fill data into table
     fillTable(tBodyDineinTables, tables, columns, tablesFormRefill, tableDelete, true);
-    // $('#tableDineinTables').DataTable();
+    $('#tableDineinTables').DataTable();
 }
 
 //define Form edit function
@@ -93,19 +96,74 @@ const tablesFormRefill = (ob, rowIndex) => {
     btnsubmit.style.display = "none";
     btnupdate.style.display = "inline";
 
-    table = JSON.parse(JSON.stringify(ob));
-    oldtable = JSON.parse(JSON.stringify(ob));
+    tableDinein = JSON.parse(JSON.stringify(ob));
+    oldtableDinein = JSON.parse(JSON.stringify(ob));
 
     txtTblNo.value = ob.number;
+    txtTblNo.disabled = true;
     countSeat.value = ob.seatcount;
 }
 
+// define function for update table details
+const buttonTablesUpdate = () => {
+    //check errors
+    if (tableDinein.number != null && tableDinein.seatcount != (0 || null)) {
+        //check updates
+        let updates = "";
+        if (tableDinein.seatcount != oldtableDinein.seatcount) {
+            updates = updates + "Seat count has updated From : " + oldtableDinein.seatcount + " TO : " + tableDinein.seatcount;
+        }
+        let title = "Are you sure to update following table seat count.?";
+        let text = updates;
+        let updateResponse = getHTTPServiceRequest('/tables/update', "PUT", tableDinein);
+        swalUpdate(updates, title, text, updateResponse, "");
+    } else {
+        Swal.fire({
+            title: "Failed to Update.! Form has following errors :",
+            text: errors,
+            icon: "error"
+        });
+    }
+}
+
+// define function for add table record
+const buttonTablesSubmit = () => {
+    //check if there are any errors
+    let errors = "";
+    if (tableDinein.number == null && tableDinein.seatcount == (0 || null)) {
+        countSeat.style.border = "2px solid red";
+        errors = errors + "Please Enter Seat Count.!";
+    }
+    title = "Are you sure to Submit following Table ";
+    obName = tableDinein.number;
+    text = "Seats : " + tableDinein.seatcount;
+    let submitResponse = getHTTPServiceRequest('/tables/insert', "POST", tableDinein);
+    swalSubmit(errors, title, obName, text, submitResponse, "");
+}
+
+// define function delete table record
 const tableDelete = (ob, index) => {
-    table = ob;
-    title = "Are you sure to Delete Selected Table";
-    obName = "Table No. : " + ob.tables.number + " .?";
+    tableDinein = ob;
+    title = "Are you sure to Delete Selected ";
+    obName = "Table No. : " + ob.number;
     text = "Seats : " + ob.seatcount;
-    let deleteResponse = getHTTPServiceRequest('/order/delete', "DELETE", order);
+    let deleteResponse = getHTTPServiceRequest('/tables/delete', "DELETE", tableDinein);
     message = "Table has Deleted.";
     swalDelete(title, obName, text, deleteResponse, "", message);
+}
+
+// define function clear table form
+const buttonTablesClear = () => {
+    Swal.fire({
+        title: "Are you Sure to Refresh Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+        }
+    });
 }

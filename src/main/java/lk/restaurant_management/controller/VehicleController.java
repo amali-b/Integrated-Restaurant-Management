@@ -42,7 +42,12 @@ public class VehicleController implements CommonController<Vehicle> {
         vehicleView.setViewName("Vehicle.html");
         vehicleView.addObject("loggedusername", auth.getName());
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        vehicleView.addObject("loggedusername", auth.getName());
+
         if (user.getEmployee_id() != null) {
             vehicleView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -80,10 +85,12 @@ public class VehicleController implements CommonController<Vehicle> {
             try {
                 // do save
                 vehicleDao.save(vehicle);
+
+                return "OK";
+
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }
@@ -101,10 +108,12 @@ public class VehicleController implements CommonController<Vehicle> {
             try {
                 // do save
                 vehicleDao.save(vehicle);
+
+                return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Update : You don't have permission..!";
         }
@@ -126,10 +135,12 @@ public class VehicleController implements CommonController<Vehicle> {
             try {
                 // do save
                 vehicleDao.save(extVehicle);
+
+                return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Delete : You don't have permission..!";
         }
