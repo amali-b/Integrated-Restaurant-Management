@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Supplier Payment Management </div>
+                </div>
+            </div>
+
+            <!--Add buttons for modal-->
+            <div class="row me-1">
+                <div class="d-flex justify-content-md-end">
+                    <button type="button" class="btn m-2" id="btnModal" data-bs-toggle="modal"
+                        data-bs-target="#modalSupplierPayment" aria-controls="modalSupplierPayment">
+                        <i class="fa-solid fa-plus"></i> Add Supplier Payment </button>
+                </div>
+            </div>
+
+            <!-- Start Table -->
+            <div class="row table m-0">
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableSupplierPayment">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th>
+                                <th> Bill No. </th>
+                                <th> Supplier </th>
+                                <th> GRN No </th>
+                                <th>Payment Method</th>
+                                <th>Total Amount</th>
+                                <th>Amount Paid</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tableBody" id="tBodySupplierPayment">
+                            <tr>
+                                <td> 1 </td>
+                                <td> 250002 </td>
+                                <td> Keels Super </td>
+                                <td> GRN25001 </td>
+                                <td> 0715944275 </td>
+                                <td> keelsSuper@gmail.com </td>
+                                <td> Food </td>
+                                <td> sampath bank </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End of Table -->
+
+            <!-- Start modal-->
+            <div class="modal" id="modalSupplierPayment">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalSupplierPaymentLabel">Supplier Payment Form</h4>
+                            </div>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-md-center">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body crdbdy">
+                                            <!-- Start Form -->
+                                            <form id="formSupplierPayment" onsubmit="return false">
+                                                <div class="row mt-1">
+                                                    <!-- Start form -->
+                                                    <div class="col">
+                                                        <!--Supplier / GRN / Grn Amount -->
+                                                        <div class="row mt-2">
+                                                            <!--Start Supplier -->
+                                                            <div class="col">
+                                                                <label for="SelectSupplier"
+                                                                    class="form-lable fw-bold">Select
+                                                                    Supplier <span class="text-danger">*</span></label>
+                                                                <select id="SelectSupplier" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'supplierPayment', 'supplier_id'); filtergrnsBySupplier();">
+                                                                    <option value="" selected disabled>Select
+                                                                        Supplier
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <!-- End Supplier -->
+
+                                                            <!--Start Grn -->
+                                                            <div class="col">
+                                                                <label for="SelectGrn" class="form-lable fw-bold">Grn
+                                                                    No.<span class="text-danger"> *</span></label>
+                                                                <select id="SelectGrn" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'supplierPayment', 'grn_id');">
+                                                                    <option value="" selected disabled>Select
+                                                                        Grn
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <!-- End Grn -->
+
+                                                            <!-- Start Grn Amount -->
+                                                            <div class="col">
+                                                                <label for="txtTotalAmount"
+                                                                    class="form-lable fw-bold">Total Grn
+                                                                    Amount<span class="text-danger"> *</span></label>
+                                                                <input type="text" class="form-control"
+                                                                    id="txtTotalAmount" disabled
+                                                                    placeholder="Total Grn Amount will display here">
+                                                            </div>
+                                                            <!-- End Grn Amount -->
+                                                        </div>
+
+                                                        <!--Due Amount/ Paid Amount / Balance Amount -->
+                                                        <div class="row mt-2">
+                                                            <!-- Start Due Amount -->
+                                                            <div class="col">
+                                                                <label for="txtDueAmount" class="form-lable fw-bold">Due
+                                                                    Amount <span class="text-danger">*</span></label>
+                                                                <input type="text" disabled class="form-control"
+                                                                    id="txtDueAmount"
+                                                                    placeholder="Due Amount will display here" required>
+                                                            </div>
+                                                            <!-- End Due Amount -->
+
+                                                            <!--Start Paid Amount -->
+                                                            <div class="col">
+                                                                <label for="txtPaidAmount"
+                                                                    class="form-lable fw-bold">Paid
+                                                                    Amount <span class="text-danger">*</span></label>
+                                                                <input type="text"
+                                                                    onkeyup="priceValidator(this, 'supplierPayment', 'paidamount');calculateBalanceAmount();"
+                                                                    class="form-control" id="txtPaidAmount"
+                                                                    placeholder="Enter Paid Amount" required>
+                                                            </div>
+                                                            <!-- End Paid Amount -->
+
+
+                                                            <!--Start Balance Amount -->
+                                                            <div class="col">
+                                                                <label for="txtBalanceAmount"
+                                                                    class="form-lable fw-bold">Balance
+                                                                    Amount <span class="text-danger">*</span></label>
+                                                                <input type="text" disabled class="form-control"
+                                                                    id="txtBalanceAmount"
+                                                                    placeholder="Balance Amount will display here"
+                                                                    required>
+                                                            </div>
+                                                            <!-- End Balance Amount -->
+                                                        </div>
+
+                                                        <!--Payment Method  -->
+                                                        <div class="row mt-2">
+                                                            <!-- Start Payment Method -->
+                                                            <div class="col-4">
+                                                                <label class="form-label fw-bold"
+                                                                    for="selectPaymentMethod">Payment Method
+                                                                    <span class="text-danger">*</span></label>
+                                                                <select id="selectPaymentMethod" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this,'supplierPayment','paymentmethod_id');">
+                                                                    <option value="" selected disabled>Select Method
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <!-- End Payment Method -->
+
+                                                            <!-- ############ Check Info ############ -->
+
+                                                            <!-- Start Check No -->
+                                                            <div class="col d-none" id="colTxtCheckno">
+                                                                <label for="txtCheckno" class="form-label fw-bold">Check
+                                                                    No. <span class="text-danger">*</span></label>
+                                                                <input type="text" id="txtCheckno" class="form-control"
+                                                                    placeholder="Enter Check Number" required
+                                                                    onkeyup="txtValidator(this,'^[A-Za-z0-9]{5,20}$','supplierPayment','checknumber')">
+                                                            </div>
+                                                            <!-- End Check No -->
+
+                                                            <!--Start Check Date -->
+                                                            <div class="col d-none" id="colTxtCheckdate">
+                                                                <span onclick="dateCheckDate.focus()"
+                                                                    class="form-lable fw-bold">Check Date
+                                                                    <span class="text-danger">*</span>
+                                                                </span>
+                                                                <input type="date" class="form-control"
+                                                                    id="dateCheckDate" required onkeydown="return false"
+                                                                    onchange="dateElementValidator(this, 'supplierPayment', 'checkdate')">
+                                                            </div>
+                                                            <!--End Check Date -->
+
+                                                            <!-- ############ Transfer Info ############ -->
+                                                            <!--Start Transfer ID -->
+                                                            <div class="col d-none" id="colTxtTransferid">
+                                                                <label for="txtTransferID"
+                                                                    class="form-label fw-bold">Transfer ID <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="text" id="txtTransferID"
+                                                                    class="form-control" placeholder="Enter Transfer ID"
+                                                                    required
+                                                                    onkeyup="txtValidator(this,'^[A-Za-z0-9]{5,20}$','supplierPayment','transferid')">
+                                                            </div>
+                                                            <!--End Transfer ID -->
+
+                                                            <!--Start Transfer DateTime -->
+                                                            <div class="col d-none" id="colTxtTransferdatetime">
+                                                                <span onclick="dateTimeTransfer.focus()"
+                                                                    class="form-lable fw-bold">Transfer Date Time
+                                                                    <span class="text-danger">*</span>
+                                                                </span>
+                                                                <input type="datetime-local" id="dateTimeTransfer"
+                                                                    class="form-control" required
+                                                                    onkeydown="return false"
+                                                                    onchange="dateElementValidator(this,'supplierPayment','transferdatetime')">
+                                                            </div>
+                                                            <!--End Transfer DateTime -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- End form -->
+
+                                                </div>
+
+                                                <!-- Make Buttons -->
+                                                <div class="row mt-4 d-flex">
+                                                    <div class="col-8 text-start">
+                                                        <button class="btn btn-danger btninput" type="button"
+                                                            id="btnclr" onclick="buttonSupplierPaymentClear()">Clear
+                                                            <i class="fa-solid fa-arrows-rotate"></i></button>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        <button class="btn btn-success btninput" type="submit"
+                                                            onclick="buttonSupplierPaymentSubmit()" id="btnsubmit">
+                                                            Submit
+                                                            <i class="fa-solid fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Buttons -->
+
+                                                <!-- Make print/delete buttons-->
+                                                <div class="row mt-3 text-end">
+                                                    <div class="d-none me-1" id="divModifybtn">
+                                                        <button class="button me-2 fw-bold" id="btnprint" type="button"
+                                                            onclick="SupplierPaymentPrint(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-print icon"></i><br>
+                                                            Print</button>
+                                                    </div>
+                                                </div>
+                                                <!-- End print/delete buttons-->
+                                            </form>
+                                            <!-- End form -->
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End modal-->
+        </div>
+    </div>
+    <script src="uIControllers/supplierpayment.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>
