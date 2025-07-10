@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="row table justify-content-center m-1 p-1">
+            <div class="row table m-0">
                 <!-- Start Table -->
                 <div class="col">
                     <table class="tablet table-bordered" id="tableGrn">
@@ -33,26 +33,28 @@
                             <tr id="tablehead">
                                 <th> # </th>
                                 <th> GRN No.</th>
+                                <th> Purchase Order No. </th>
+                                <th> Supplier Invoice No. </th>
                                 <th> Received Date </th>
                                 <th> Received By </th>
-                                <th> Supplier Invoice No. </th>
-                                <th> Supplier </th>
                                 <th> Total Amount </th>
                                 <th> Discount </th>
                                 <th> Netamount </th>
+                                <th> Status </th>
                             </tr>
                         </thead>
                         <tbody class="tableBody" id="tBodyGrn">
                             <tr>
                                 <td> 1 </td>
-                                <td> Keels Super </td>
-                                <td> 0715944275 </td>
-                                <td> keelsSuper@gmail.com </td>
-                                <td> Food </td>
-                                <td> sampath bank </td>
-                                <td> Active </td>
-                                <td> Active </td>
-                                <td> Active </td>
+                                <td> GRN25000001 </td>
+                                <td> SO25000001 </td>
+                                <td> #I00001 </td>
+                                <td> 2025-01-05 </td>
+                                <td> Nimal </td>
+                                <td> 1000.00 </td>
+                                <td> 50.00 </td>
+                                <td> 950.00 </td>
+                                <td> Received </td>
                             </tr>
                         </tbody>
                     </table>
@@ -68,7 +70,7 @@
                             <div class="container">
                                 <h4 class="modal-title" id="modalGrnLabel">GRN Form</h4>
                             </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row justify-content-md-center">
@@ -80,6 +82,38 @@
                                                 <div class="row">
                                                     <!-- Start Main form -->
                                                     <div class="col-4">
+                                                        <!--Start Order No -->
+                                                        <div class="row mt-1">
+                                                            <label for="selectPurchaseOrder" class="form-lable fw-bold">
+                                                                Purchase Order No. <span
+                                                                    class="text-danger">*</span></label>
+                                                            <div class="col">
+                                                                <select id="selectPurchaseOrder" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'grn', 'supplierorder_id'); filteringredientsbySupplierOrder()">
+                                                                    <option value="" selected disabled>Select Purchase
+                                                                        Order
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Order No -->
+
+                                                        <!--Start Supplier Invoice No -->
+                                                        <div class="row mt-1">
+                                                            <label for="txtSupplierInvoice"
+                                                                class="form-lable fw-bold">Supplier
+                                                                Invoice Number
+                                                                <span class="text-danger">*</span></label>
+                                                            <div class="col">
+                                                                <input type="text"
+                                                                    onkeyup="txtValidator(this,'^[0-9]{8}$', 'grn', 'supplierinvoiceno')"
+                                                                    class="form-control" id="txtSupplierInvoice"
+                                                                    placeholder="Enter Supplier Invoice Number"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Supplier Invoice No-->
+
                                                         <!-- Start Received Date -->
                                                         <div class="row mt-1">
                                                             <span onclick="dateReceived.focus()"
@@ -97,63 +131,17 @@
 
                                                         <!--Start Received By -->
                                                         <div class="row mt-1">
-                                                            <label for="SelectReceiver" class="form-lable fw-bold">
+                                                            <label for="txtReceivedBy" class="form-lable fw-bold">
                                                                 Received
                                                                 By <span class="text-danger">*</span></label>
                                                             <div class="col">
-                                                                <select id="SelectReceiver" class="form-select"
-                                                                    onchange="selectDynamicElementValidator(this, 'grn', 'receivedby')">
-                                                                    <option value="" selected disabled>Select Receiver
-                                                                    </option>
-                                                                </select>
+                                                                <input type="text" class="form-control"
+                                                                    id="txtReceivedBy" placeholder="Enter Receiver"
+                                                                    required
+                                                                    onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'grn', 'receivedby')">
                                                             </div>
                                                         </div>
                                                         <!-- End Received By -->
-
-                                                        <!--Start Supplier Invoice No -->
-                                                        <div class="row mt-1">
-                                                            <label for="txtSupplierInvoice"
-                                                                class="form-lable fw-bold">Supplier
-                                                                Invoice Number
-                                                                <span class="text-danger">*</span></label>
-                                                            <div class="col">
-                                                                <input type="text"
-                                                                    onkeyup="txtValidator(txtSupplierInvoice,'^[0-9]{8}$', 'Grn', 'supplierinvoiceno')"
-                                                                    class="form-control" id="txtSupplierInvoice"
-                                                                    placeholder="Enter Supplier Invoice Number"
-                                                                    required>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Supplier Invoice No-->
-
-                                                        <!--Start Supplier -->
-                                                        <div class="row mt-1">
-                                                            <label for="SelectSupplier"
-                                                                class="form-lable fw-bold">Select
-                                                                Supplier <span class="text-danger">*</span></label>
-                                                            <div class="col">
-                                                                <select id="SelectSupplier" class="form-select"
-                                                                    onchange="selectDynamicElementValidator(this, 'supplier', 'supplier_name')">
-                                                                    <option value="" selected disabled>Select Supplier
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Supplier -->
-
-                                                        <!--Start Order No -->
-                                                        <div class="row mt-1">
-                                                            <label for="txtOrdernumber" class="form-lable fw-bold">
-                                                                Purchase Order No. <span
-                                                                    class="text-danger">*</span></label>
-                                                            <div class="col">
-                                                                <input type="text"
-                                                                    onkeyup="txtValidator(txtOrdernumber,'^[0-9]{10}$', 'supplierorder', 'supplierorder_id')"
-                                                                    class="form-control" id="txtOrdernumber"
-                                                                    placeholder="Enter Purchase Order Number" required>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Order No -->
 
                                                         <!--Start Total Amount -->
                                                         <div class="row mt-1">
@@ -162,7 +150,7 @@
                                                                 <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <input type="text"
-                                                                    onkeyup="txtValidator(txtTotalAmount,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'grn', 'totalamount')"
+                                                                    onkeyup="priceValidator(this,'grn', 'totalamount')"
                                                                     class="form-control" id="txtTotalAmount"
                                                                     placeholder="Total Amount will display here"
                                                                     required>
@@ -173,14 +161,12 @@
                                                         <!--Start Discount -->
                                                         <div class="row mt-1">
                                                             <label for="txtDiscount" class="form-lable fw-bold">Discount
-                                                                Amount (%)
-                                                                <span class="text-danger">*</span></label>
+                                                                Amount</label>
                                                             <div class="col">
                                                                 <input type="text"
-                                                                    onkeyup="txtValidator(txtDiscount,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'grn', 'discountamount')"
+                                                                    onkeyup="priceValidator(this,'grn', 'discountamount'); calculateNetAmount();"
                                                                     class="form-control" id="txtDiscount"
-                                                                    placeholder="Discount Amount will display here"
-                                                                    required>
+                                                                    placeholder="Enter Discount Amount">
                                                             </div>
                                                         </div>
                                                         <!-- End Discount -->
@@ -192,12 +178,26 @@
                                                                 <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <input type="text"
-                                                                    onkeyup="txtValidator(txtNetamount,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'grn', 'netamount')"
+                                                                    onkeyup="priceValidator(this, 'grn', 'netamount')"
                                                                     class="form-control" id="txtNetamount"
                                                                     placeholder="Net Amount will display here" required>
                                                             </div>
                                                         </div>
                                                         <!-- End Netamount -->
+
+                                                        <!--Start Status -->
+                                                        <div class="row mt-1">
+                                                            <label for="SelectStatus" class="form-lable fw-bold">Select
+                                                                Status <span class="text-danger">*</span></label>
+                                                            <div class="col">
+                                                                <select id="SelectStatus" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'grn', 'grnstatus_id')">
+                                                                    <option value="" selected disabled>Select Status
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Status -->
 
                                                         <!-- Start Note -->
                                                         <div class="row mt-1">
@@ -232,76 +232,60 @@
                                                                                             class="text-danger">*</span></label>
                                                                                     <select class="form-select"
                                                                                         id="SelectIngredints"
-                                                                                        onchange="selectDynamicElementValidator(this, 'grnHasIngredient', 'ingredient_id')">
+                                                                                        onchange="selectDynamicElementValidator(this, 'grnHasIngredient', 'ingredient_id'); checkIngredientExt()">
                                                                                         <option value="" selected
                                                                                             disabled>
                                                                                             Select
                                                                                             Ingredients
                                                                                         </option>
                                                                                     </select>
-                                                                                    <div class="form-text text-end">
-                                                                                        Select
-                                                                                        Ingredients from
-                                                                                        Dropdown
-                                                                                    </div>
                                                                                 </div>
                                                                                 <!-- End Ingredient -->
 
                                                                                 <!--Start Batch Number -->
                                                                                 <div class="col">
                                                                                     <label for="txtBatchnumber"
-                                                                                        class="form-lable fw-bold">Batch
-                                                                                        Number
-                                                                                        Batch Number <span
-                                                                                            class="text-danger">*</span></label>
+                                                                                        class="form-lable fw-bold">
+                                                                                        Batch Number</label>
                                                                                     <input type="text"
-                                                                                        onkeyup="txtValidator(txtBatchnumber,'^[0-9]{8}$', 'grnHasIngredient', 'batchnumber')"
+                                                                                        onkeyup="txtValidator(txtBatchnumber,'^[a-zA-Z0-9]{7,10}$', 'grnHasIngredient', 'batchnumber')"
                                                                                         class="form-control"
                                                                                         id="txtBatchnumber"
-                                                                                        placeholder="Enter Batch Number"
-                                                                                        required>
+                                                                                        placeholder="Enter Batch Number">
                                                                                 </div>
                                                                                 <!-- End Batch Number-->
                                                                             </div>
 
                                                                             <!-- Start Expire / Manufacture Date -->
                                                                             <div class="row">
-                                                                                <!-- Start Expire Date -->
-                                                                                <div class="col">
-                                                                                    <span onclick="dateExpire.focus()"
-                                                                                        class="form-lable fw-bold">Expire
-                                                                                        Date
-                                                                                        <span
-                                                                                            class="text-danger">*</span>
-                                                                                    </span>
-                                                                                    <input type="date"
-                                                                                        class="form-control"
-                                                                                        id="dateExpire"
-                                                                                        placeholder="Enter Expire Date"
-                                                                                        required
-                                                                                        onchange="grnHasIngredient.expiredate = this.value; this.style.borderBottom = '2px solid green';">
-                                                                                </div>
-                                                                                <!-- End Expire Date -->
-
                                                                                 <!-- Start Manufacture Date -->
                                                                                 <div class="col">
                                                                                     <span onclick="dateMade.focus()"
                                                                                         class="form-lable fw-bold">Manufacture
                                                                                         Date
-                                                                                        <span
-                                                                                            class="text-danger">*</span>
                                                                                     </span>
                                                                                     <input type="date"
                                                                                         class="form-control"
                                                                                         id="dateMade"
-                                                                                        placeholder="Enter Manufacture Date"
-                                                                                        required
-                                                                                        onchange="grnHasIngredient.manufacturedate = this.value; this.style.borderBottom = '2px solid green';">
+                                                                                        onchange="dateElementValidator(this, 'grnHasIngredient', 'manufacturedate')">
                                                                                 </div>
                                                                                 <!-- End Manufacture Date -->
+
+                                                                                <!-- Start Expire Date -->
+                                                                                <div class="col">
+                                                                                    <span onclick="dateExpire.focus()"
+                                                                                        class="form-lable fw-bold">Expire
+                                                                                        Date
+                                                                                    </span>
+                                                                                    <input type="date"
+                                                                                        class="form-control"
+                                                                                        id="dateExpire"
+                                                                                        onchange="dateElementValidator(this, 'grnHasIngredient', 'expiredate')">
+                                                                                </div>
+                                                                                <!-- End Expire Date -->
                                                                             </div>
 
-                                                                            <!-- Start Price -->
+                                                                            <!-- Start Price /quantity / line price-->
                                                                             <div class="row mt-2">
                                                                                 <!-- Start Unit Price -->
                                                                                 <div class="col">
@@ -314,8 +298,7 @@
                                                                                         onkeyup="txtValidator(txtPrice,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'grnHasIngredient', 'purchase_price')"
                                                                                         class="form-control"
                                                                                         id="txtPrice"
-                                                                                        placeholder="Enter purchase price"
-                                                                                        required>
+                                                                                        placeholder="Enter purchase price">
                                                                                 </div>
                                                                                 <!-- End Unit Price -->
 
@@ -326,11 +309,10 @@
                                                                                         <span
                                                                                             class="text-danger">*</span></label>
                                                                                     <input type="text"
-                                                                                        onkeyup="txtValidator(txtQuantity,'^[1-9][0-9]{0,4}[.]{0,1}[0-9]{0,3}$', 'grnHasIngredient', 'quantity')"
+                                                                                        onkeyup="txtValidator(txtQuantity,'^[1-9][0-9]{0,4}[.]{0,1}[0-9]{0,3}$', 'grnHasIngredient', 'quantity'); generateLineprice();"
                                                                                         class="form-control"
                                                                                         id="txtQuantity"
-                                                                                        placeholder="Enter Quantity"
-                                                                                        required>
+                                                                                        placeholder="Enter Quantity">
                                                                                 </div>
                                                                                 <!-- End Quantity -->
 
@@ -345,8 +327,7 @@
                                                                                         onkeyup="txtValidator(txtLinePrice,'^[1-9][0-9]{1,4}[.][0-9]{2}$', 'grnHasIngredient', 'lineprice')"
                                                                                         class="form-control"
                                                                                         id="txtLinePrice"
-                                                                                        placeholder="Line Amount"
-                                                                                        required>
+                                                                                        placeholder="Line Amount">
                                                                                 </div>
                                                                                 <!-- End Line Price -->
                                                                             </div>
@@ -354,27 +335,27 @@
                                                                             <!-- Make Buttons -->
                                                                             <div class="row mt-4 d-flex">
                                                                                 <div class="col-3 text-start">
-                                                                                    <button
+                                                                                    <button id="btnInnerClr"
                                                                                         class="btn btn-outline-danger"
                                                                                         type="button"
-                                                                                        onclick="buttonGrnClear()">Clear
+                                                                                        onclick="buttonInnerFormClear()">Clear
                                                                                         <i
                                                                                             class="fa-solid fa-arrows-rotate"></i></button>
                                                                                 </div>
                                                                                 <div class="col text-end">
-                                                                                    <button
+                                                                                    <button id="btnInnerUpdate"
                                                                                         class="btn btn-outline-warning"
                                                                                         type="button"
-                                                                                        onclick="buttonGrnUpdate()">Update
+                                                                                        onclick="buttonGrnIngredientUpdate()">Update
                                                                                         <i
                                                                                             class="fa-regular fa-pen-to-square"></i></button>
-                                                                                    <button
+                                                                                    <button id="btnInnerSubmit"
                                                                                         class="btn btn-outline-success"
-                                                                                        type="submit"
-                                                                                        onclick="buttonGrnSubmit()">
+                                                                                        type="button"
+                                                                                        onclick="buttonGrnIngredientSubmit()">
                                                                                         Submit
                                                                                         <i
-                                                                                            class="fa-solid fa-user-plus"></i></button>
+                                                                                            class="fa-solid fa-plus"></i></button>
                                                                                 </div>
                                                                             </div>
                                                                             <!-- End Buttons -->
@@ -393,29 +374,32 @@
                                                                 <div class="card">
                                                                     <div class="card-body">
                                                                         <table class="table tablet table-bordered"
-                                                                            id="tableSupplyOrderhasIngredient">
+                                                                            id="tableGrnhasIngredient">
                                                                             <thead>
                                                                                 <tr id="tablehead">
                                                                                     <th> # </th>
                                                                                     <th> Ingredients </th>
+                                                                                    <th> Batch No. </th>
                                                                                     <th> Unit Price </th>
                                                                                     <th> Quantity </th>
                                                                                     <th> Line Price </th>
+                                                                                    <th> Modify </th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody class="tableBody"
-                                                                                id="tBodySupplyOrderhasIngredient">
+                                                                                id="tBodyGrnhasIngredient">
                                                                                 <tr>
                                                                                     <td> 1 </td>
                                                                                     <td> Onion </td>
+                                                                                    <td> #2500001 </td>
                                                                                     <td> 250.00 </td>
                                                                                     <td> 30kg </td>
                                                                                     <td> 7500.00 </td>
                                                                                 </tr>
                                                                             </tbody>
-                                                                            <tfoot>
+                                                                            <tfoot id="tfootGrnhasIngredient">
                                                                                 <tr>
-                                                                                    <td colspan="4"
+                                                                                    <td colspan="5"
                                                                                         class="text-start fw-bold">
                                                                                         Total
                                                                                         Amount</td>
@@ -445,7 +429,7 @@
                                                             <button class="btn btn-success btninput" type="submit"
                                                                 onclick="buttonGrnSubmit()" id="btnsubmit">
                                                                 Submit
-                                                                <i class="fa-solid fa-user-plus"></i></button>
+                                                                <i class="fa-solid fa-plus"></i></button>
                                                         </div>
                                                     </div>
                                                     <!-- End Buttons -->
@@ -453,16 +437,11 @@
                                                     <!-- Make print/delete buttons-->
                                                     <div class="row mt-3 text-end">
                                                         <div class="d-none me-1" id="divModifybtn">
-                                                            <button class="btn btn-outline-info m-2 fw-bold"
+                                                            <button class="button me-2 fw-bold" id="btnprint"
                                                                 type="button"
                                                                 onclick="GrnPrint(window['editob'], window['editrowno'])"><i
                                                                     class="fa-solid fa-print icon"></i><br>
                                                                 Print</button>
-                                                            <button class="btn btn-outline-danger me-1 fw-bold"
-                                                                type="button"
-                                                                onclick="GrnDelete(window['editob'], window['editrowno'])"><i
-                                                                    class="fa-solid fa-trash icon"></i><br>
-                                                                Delete</button>
                                                         </div>
                                                     </div>
                                                     <!-- End print/delete buttons-->
@@ -472,8 +451,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>

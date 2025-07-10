@@ -18,7 +18,7 @@ public class GrnstatusController {
 
     @GetMapping(value = "/grnstatus/alldata", produces = "application/json")
     public List<GrnStatus> getAlldata() {
-        return grnstatusDao.findAll(Sort.by(Direction.DESC, "id"));
+        return grnstatusDao.findAll(Sort.by(Direction.ASC, "id"));
     }
 
 }

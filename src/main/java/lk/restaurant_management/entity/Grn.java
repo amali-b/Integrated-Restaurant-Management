@@ -47,6 +47,8 @@ public class Grn {
     @NotNull
     private BigDecimal netamount;
 
+    private BigDecimal paidamount;
+
     private String note;
 
     @NotNull
@@ -67,10 +69,6 @@ public class Grn {
     private LocalDateTime deletedatetime;
 
     @OneToOne
-    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
-    private Supplier supplier_id;
-
-    @OneToOne
     @JoinColumn(name = "supplierorder_id", referencedColumnName = "id")
     private SupplierOrder supplierorder_id;
 
@@ -78,6 +76,11 @@ public class Grn {
     @JoinColumn(name = "grnstatus_id", referencedColumnName = "id")
     private GrnStatus grnstatus_id;
 
+    /*
+     * grn object eheka grn_has_ingredient ekak grnHasIngredientsList list eken
+     * remove kaloth or ingredient ekak remove kloth eka database ekenuth delete
+     * kranna orphanRemoval = true danewa
+     */
     // Grn and grn_has_ingredient has one to many relationship
     @OneToMany(mappedBy = "grn_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GrnHasIngredient> grnHasIngredientList;
