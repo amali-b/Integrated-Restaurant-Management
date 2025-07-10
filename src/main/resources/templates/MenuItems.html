@@ -36,7 +36,6 @@
                                 <th> Menu Name </th>
                                 <th> Submenus </th>
                                 <th> Price </th>
-                                <th> Discount (if applicable) </th>
                                 <th> Status </th>
                             </tr>
                         </thead>
@@ -47,7 +46,6 @@
                                 <td> Set Menu - L </td>
                                 <td> Fried rice, Chicken </td>
                                 <td> 1500 </td>
-                                <td> - </td>
                                 <td> Available </td>
                             </tr>
                         </tbody>
@@ -97,7 +95,7 @@
                                                                 <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <input type="text"
-                                                                    onkeyup="txtValidator(txtPrice,'^[1-9][0-9]{1,5}[.][0-9]{2}$', 'menuitem', 'price')"
+                                                                    onkeyup="priceValidator(txtPrice, 'menuitem', 'price')"
                                                                     class="form-control" id="txtPrice"
                                                                     placeholder="Enter Menu Price" required>
                                                             </div>
@@ -106,25 +104,6 @@
                                                             </div>
                                                         </div>
                                                         <!-- End Price -->
-
-                                                        <!-- Start Seasonal Discount-->
-                                                        <div class="row mt-2">
-                                                            <label for="selectDiscount" class="form-lable fw-bold">
-                                                                Seasonal Discount</label>
-                                                            <div class="col">
-                                                                <select id="selectDiscount" class="form-select"
-                                                                    onchange="selectDynamicElementValidator(this, 'menuitem', 'seasonaldiscount_id')">
-                                                                    <option value="" selected disabled>Select Seasonal
-                                                                        Discount
-                                                                    </option>
-                                                                    <option>Rice</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-text text-end text-danger">
-                                                                Select discount only if applicable
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Seasonal Discount -->
 
                                                         <!-- Start menu Status -->
                                                         <div class="row mt-2">
