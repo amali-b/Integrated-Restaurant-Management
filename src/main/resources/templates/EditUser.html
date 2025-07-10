@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <div class="main">
+            <div class="offcanvas offcanvas-top h-75" data-bs-scroll="true" tabindex="-1" id="canvasUser"
+                aria-labelledby="canvasUserLabel">
+                <div class="offcanvas-header">
+                    <div class="container">
+                        <h4 class="offcanvas-title" id="canvasUserLabel">Edit User Profile</h4>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <!-- Start Form -->
+                            <div class="card m-1">
+                                <div class="card-body crdbdy">
+                                    <form id="formUser">
+                                        <!-- Start Employee Name -->
+                                        <div class="row mt-2">
+                                            <label for="userName" class="form-lable col-4 fw-bold">Employee Name
+                                            </label>
+                                            <div class="col-5">
+                                                <input type="text" id="userName" class="form-control" required>
+                                            </div>
+                                            <div class="col text-center">
+                                                <button class="btninput"><i
+                                                        class="fa-regular fa-pen-to-square"></i></button>
+                                            </div>
+                                        </div>
+                                        <!-- End Employee Name -->
+
+                                        <!-- Start UserName -->
+                                        <div class="row mt-2">
+                                            <label for="txtUid" class="form-lable col-4 fw-bold">User ID </label>
+                                            <div class="col-5">
+                                                <input type="text" id="txtUid" class="form-control" required
+                                                    onkeyup="txtValidator(this,'^([a-z][a-z0-9]{7})$', 'user', 'username')">
+                                            </div>
+                                            <div class="col text-center">
+                                                <button class="btninput"><i
+                                                        class="fa-regular fa-pen-to-square"></i></button>
+                                            </div>
+                                        </div>
+                                        <!-- End UserName -->
+
+                                        <!-- Start Password -->
+                                        <div class="row mt-2">
+                                            <label for="empPwd" class="form-lable col-4 fw-bold">Password </label>
+                                            <div class="col-5">
+                                                <input type="password" id="empPwd" class="form-control" required
+                                                    onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'user', 'password')">
+                                            </div>
+                                            <div class="col text-center">
+                                                <button class="btninput"><i
+                                                        class="fa-regular fa-pen-to-square"></i></button>
+                                            </div>
+                                        </div>
+                                        <!-- End Password -->
+
+                                        <!-- Start Email -->
+                                        <div class="row mt-3">
+                                            <label for="txtEmail" class="form-lable col-4 fw-bold">Email </label>
+                                            <div class="col-5">
+                                                <input type="email" class="form-control col" id="txtEmail" required
+                                                    onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'user', 'email')">
+                                            </div>
+                                            <div class="col text-center">
+                                                <button class="btninput"><i
+                                                        class="fa-regular fa-pen-to-square"></i></button>
+                                            </div>
+                                        </div>
+                                        <!-- End Email -->
+
+                                        <!-- Make Buttons -->
+                                        <div class="row mt-3 p-1">
+                                            <div class="col text-end">
+                                                <button type="submit"
+                                                    class="btn btninput btn-outline-primary">Save</button>
+                                            </div>
+                                        </div>
+                                        <!-- End Buttons -->
+
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- End form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="uIControllers/user.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

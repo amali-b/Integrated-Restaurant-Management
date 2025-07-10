@@ -8,6 +8,60 @@ window.addEventListener("load", () => {
     refreshIngredienttable();
 });
 
+// define function for ingredient category form
+const refreshIngCategoryForm = () => {
+    formIngCategory.reset();
+
+    ingredientcategory = new Object();
+
+    setDefault([txtCategory]);
+}
+
+const buttonCategorySubmit = () => {
+    console.log(ingredientcategory);
+
+    if (ingredientcategory.name != null) {
+        Swal.fire({
+            title: "Are you sure to Submit following Category " + ingredientcategory.name + " .?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "green",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let submitResponse = getHTTPServiceRequest('/ingredientcategory/insert', "POST", ingredientcategory);
+                if (submitResponse == "OK") {
+                    Swal.fire({
+                        title: "Saved Successfully..!",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1800
+                    });
+                    refreshIngCategoryForm();
+                    let ingredientcategories = getServiceRequest("/ingredientcategory/alldata");
+                    fillDropdown(SelectCategory, "Select Ingredient Category.!", ingredientcategories, "name");
+                    SelectCategory.value = JSON.stringify(ingredientcategories[0]);
+                    SelectCategory.style.border = "2px solid green";
+                    ingredient.ingredientcategory_id = JSON.parse(SelectCategory.value);
+                } else {
+                    Swal.fire({
+                        title: "Save not Completed..! Has following errors :",
+                        text: submitResponse,
+                        icon: "info"
+                    });
+                }
+            }
+        });
+    } else {
+        Swal.fire({
+            title: "Failed to Submit.!",
+            text: "Enter Category Name.!",
+            icon: "error"
+        });
+    }
+}
+
 //define refresh form function
 const refreshIngredientForm = () => {
     formIngredient.reset();

@@ -82,18 +82,67 @@
                                                     <div class="col">
                                                         <label for="SelectCategory" class="form-lable fw-bold">
                                                             Category <span class="text-danger">*</span></label>
-                                                        <div class="col">
+                                                        <div class="row">
                                                             <div class="input-group">
-                                                                <select id="SelectCategory" class="form-select"
-                                                                    onchange="selectDynamicElementValidator(this, 'ingredient', 'ingredientcategory_id')">
-                                                                    <option value="" selected disabled>Select Ingredient
-                                                                        Category</option>
-                                                                    <option>Rice</option>
-                                                                </select>
-                                                                <span class="input-group-text">
-                                                                    <i class="fa-regular fa-plus"></i></span>
+                                                                <div class="col-11">
+                                                                    <select id="SelectCategory" class="form-select"
+                                                                        onchange="selectDynamicElementValidator(this, 'ingredient', 'ingredientcategory_id')">
+                                                                        <option value="" selected disabled>Select
+                                                                            Ingredient
+                                                                            Category</option>
+                                                                        <option>Rice</option>
+                                                                    </select>
+                                                                </div>
+                                                                <span class="input-group-text" data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapsIngCat"
+                                                                    aria-controls="collapsIngCat">
+                                                                    <i class="fa-regular fa-plus"></i>
+                                                                </span>
                                                             </div>
                                                         </div>
+                                                        <!-- Start Category Collapse -->
+                                                        <div class="collapse m-1" id="collapsIngCat">
+                                                            <div class="row mt-1">
+                                                                <div class="col-11 justify-content-md-center">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <form id="formIngCategory"
+                                                                                onsubmit="return false">
+                                                                                <!-- Start Category -->
+                                                                                <div class="row">
+                                                                                    <div class="col-3">
+                                                                                        <label for="txtCategory"
+                                                                                            class="form-lable fw-bold">Category</label>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            id="txtCategory"
+                                                                                            placeholder="Enter Category"
+                                                                                            required
+                                                                                            onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20}( [A-Z][a-z]{1,20})?)$', 'ingredientcategory', 'name')">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- Make Buttons -->
+                                                                                <div class="row mt-3">
+                                                                                    <div class="col text-end">
+                                                                                        <button
+                                                                                            class="btn btn-outline-success"
+                                                                                            id="btnCategorySubmit"
+                                                                                            type="button"
+                                                                                            onclick="buttonCategorySubmit()"><i
+                                                                                                class="fa-solid fa-plus"></i>
+                                                                                            Submit</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- End Buttons -->
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Category Collapse-->
                                                     </div>
                                                     <!-- End Ingredient Category -->
 
