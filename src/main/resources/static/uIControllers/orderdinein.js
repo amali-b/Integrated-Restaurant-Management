@@ -13,11 +13,11 @@ const refreshForm = () => {
     btnupdate.style.display = "none";
 
     SelectCustomer.disabled = "";
-    txtTotalAmount.disabled = "";
-    // txtTotalAmount.disabled = "disabled";
-    txtServiceChg.disabled = "";
+    txtTotalAmount.value = "";
+    txtTotalAmount.disabled = "disabled";
+    txtServiceChg.value = "";
     txtServiceChg.disabled = "disabled";
-    txtNetAmount.disabled = "";
+    txtNetAmount.value = "";
     txtNetAmount.disabled = "disabled";
     selectOrderType.disabled = "disabled";
 
@@ -75,15 +75,13 @@ const calculateTotal = () => {
 
     //totalamount = submenuTotal + menuTotal;
 
-    txtTotalAmount.value = totalamount.toFixed(2);
+    txtTotalAmount.value = parseFloat(totalamount).toFixed(2);
     order.totalamount = txtTotalAmount.value;
     txtTotalAmount.style.border = "2px solid green";
 
     /* ### Generate Service Charge ### */
     if (txtTotalAmount.value > 0) {
-        let serviceChg = totalamount * 0.10;
-
-        txtServiceChg.value = parseFloat(serviceChg.toFixed(2));
+        txtServiceChg.value = parseFloat(totalamount * 0.10).toFixed(2);
         order.servicecharge = txtServiceChg.value;
         txtServiceChg.style.border = "2px solid green";
     }
@@ -94,7 +92,7 @@ const calculateTotal = () => {
         let servicecharge = parseFloat(txtServiceChg.value);
         let netamount = totalamount + servicecharge;
 
-        txtNetAmount.value = parseFloat(netamount.toFixed(2));
+        txtNetAmount.value = parseFloat(netamount).toFixed(2);
         order.netamount = txtNetAmount.value;
         txtNetAmount.style.border = "2px solid green";
     }
@@ -119,6 +117,18 @@ const checkSubmenuExt = () => {
         txtPrice.value = parseFloat(SelectSmenu.price).toFixed(2); //ingredient entity eken SelectSmenu eke price eka gnnewa
         orderHasSubmenu.price = parseFloat(txtPrice.value).toFixed(2);
         txtPrice.style.border = "2px solid green";
+    }
+}
+
+// define function for filter submenu by category
+const filterSubmenusbyCategory = () => {
+    if (selectCategory.value == "") {
+        fillDropdown(SelectSubmenu, "Select Category First.!", [], "");
+        SelectSubmenu.disabled = true;
+    } else {
+        let submenus = getServiceRequest("/submenu/bycategory?category_id=" + JSON.parse(selectCategory.value).id);
+        fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
+        SelectSubmenu.disabled = false;
     }
 }
 
@@ -151,10 +161,19 @@ const refreshInnerFormandTableSubmenu = () => {
     //define new object
     orderHasSubmenu = new Object();
 
-    let submenus = getServiceRequest("/submenu/alldata");
-    fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
+    let categories = getServiceRequest("/submenucategory/alldata");
+    fillDropdown(selectCategory, "Select Category", categories, "name");
 
-    SelectSubmenu.disabled = "";
+    let submenus = [];
+    if (selectCategory.value == "") {
+        fillDropdown(SelectSubmenu, "Select Category First.!", [], "");
+        SelectSubmenu.disabled = true;
+    } else {
+        submenus = getServiceRequest("/submenu/bycategory?category_id=" + JSON.parse(selectCategory.value).id);
+        fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
+        SelectSubmenu.disabled = false;
+    }
+
     txtPrice.value = "";
     txtPrice.disabled = "disabled";
     txtQuantity.value = "";
@@ -179,7 +198,7 @@ const refreshInnerFormandTableSubmenu = () => {
     fillInnerTable(tBodyOrderhasSubmenu, order.orderHasSubmenuList, columns, orderSubmenuFormRefill, orderSubmenuDelete, true);
 
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootOrderhasSubmenu, order.orderHasSubmenuList, column);
+    fillInnerTableFooter(tfootOrderhasSubmenu, order.orderHasSubmenuList, column, columns.length);
 
     calculateTotal();
 }
@@ -205,7 +224,7 @@ const orderSubmenuFormRefill = (ob, index) => {
         fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", orderHasSubmenu.ingredient_id.ingredient_name); */
 
     SelectSubmenu.disabled = "disabled";
-    SelectSubmenu.value = JSON.stringify(ob.submenu_id.name);
+    SelectSubmenu.value = JSON.stringify(ob.submenu_id);
     txtPrice.value = ob.price;
     txtQuantity.value = ob.quantity;
     txtLinePrice.value = parseFloat(ob.lineprice).toFixed(2);
@@ -249,7 +268,6 @@ const orderSubmenuDelete = (ob, index) => {
 
 const buttonorderSubemnuSubmit = () => {
     console.log(orderHasSubmenu);
-
     Swal.fire({
         title: "Are you sure to Submit Following Details.?",
         text: "Submenu : " + orderHasSubmenu.submenu_id.name
@@ -261,6 +279,8 @@ const buttonorderSubemnuSubmit = () => {
         confirmButtonText: "Yes, Submit!"
     }).then((result) => {
         if (result.isConfirmed) {
+            // main eke thyena list ekta inner object eka push krenewa
+            order.orderHasSubmenuList.push(orderHasSubmenu);
             Swal.fire({
                 title: "Saved Successfully..!",
                 icon: "success",
@@ -270,10 +290,6 @@ const buttonorderSubemnuSubmit = () => {
             refreshInnerFormandTableSubmenu();
         }
     });
-
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasSubmenuList.push(orderHasSubmenu);
-    refreshInnerFormandTableSubmenu();
 }
 
 const buttonorderSubemnuUpdate = () => {
@@ -289,6 +305,8 @@ const buttonorderSubemnuUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                order.orderHasSubmenuList[innerFormindex] = orderHasSubmenu;
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -306,9 +324,6 @@ const buttonorderSubemnuUpdate = () => {
             timer: 1500
         });
     }
-
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasSubmenuList[innerFormindex] = orderHasSubmenu;
     refreshInnerFormandTableSubmenu();
 }
 
@@ -340,8 +355,11 @@ const generateLineprice = (ob) => {
         //input fields wela values convert krenewa string walin float bawat
         let unitprice = parseFloat(txtPriceMenu.value);
         let quantity = parseFloat(txtQuantityMenu.value);
+        let discount = parseFloat(SeasonalDiscount.value) || 0;
+
         //multiply quantity and unit price
-        let lineprice = quantity * unitprice;
+        // let lineprice = quantity * unitprice;
+        let lineprice = (quantity * unitprice) - discount;
 
         // Assign to the object
         orderHasMenuitem.lineprice = lineprice;
@@ -392,7 +410,7 @@ const refreshInnerFormandTableMenu = () => {
     fillInnerTable(tBodyOrderhasItem, order.orderHasMenuitemList, columns, orderItemFormRefill, orderItemDelete, true);
 
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootOrderhasItem, order.orderHasMenuitemList, column);
+    fillInnerTableFooter(tfootOrderhasItem, order.orderHasMenuitemList, column, columns.length);
 
     calculateTotal();
 }
@@ -414,7 +432,8 @@ const orderItemFormRefill = (ob, index) => {
     oldorderHasMenuitem = JSON.parse(JSON.stringify(ob));
 
     SelectMenu.disabled = "disabled";
-    SelectMenu.value = JSON.stringify(ob.menuitems_id.name);
+    SelectMenu.value = JSON.stringify(ob.menuitems_id);
+    // SeasonalDiscount.value = ob.menuitems_id.seasonaldiscount_id ? JSON.stringify(ob.menuitems_id.seasonaldiscount_id) : ""; //empty if null
     txtPriceMenu.value = ob.price;
     txtQuantityMenu.value = ob.quantity;
     txtLinePriceMenu.value = parseFloat(ob.lineprice).toFixed(2);
@@ -458,7 +477,6 @@ const orderItemDelete = (ob, index) => {
 
 const buttonorderItemSubmit = () => {
     console.log(orderHasMenuitem);
-
     Swal.fire({
         title: "Are you sure to Submit Following Details.?",
         text: "Menuitem : " + orderHasMenuitem.menuitems_id.name
@@ -470,6 +488,8 @@ const buttonorderItemSubmit = () => {
         confirmButtonText: "Yes, Submit!"
     }).then((result) => {
         if (result.isConfirmed) {
+            // main eke thyena list ekta inner object eka push krenewa
+            order.orderHasMenuitemList.push(orderHasMenuitem);
             Swal.fire({
                 title: "Saved Successfully..!",
                 icon: "success",
@@ -479,10 +499,6 @@ const buttonorderItemSubmit = () => {
             refreshInnerFormandTableMenu();
         }
     });
-
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasMenuitemList.push(orderHasMenuitem);
-    refreshInnerFormandTableMenu();
 }
 
 const buttonorderItemUpdate = () => {
@@ -498,6 +514,8 @@ const buttonorderItemUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                order.orderHasMenuitemList[innerFormindex] = orderHasMenuitem;
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -515,14 +533,13 @@ const buttonorderItemUpdate = () => {
             timer: 1500
         });
     }
-
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasMenuitemList[innerFormindex] = orderHasMenuitem;
-    refreshInnerFormandTableMenu();
 }
 
 
+
 /* ############################## MAIN FORM FUNCTIONS ################################# */
+
+
 //define Form edit function
 const orderFormRefill = (ob, rowIndex) => {
     $('#modalOrders').modal('show');
@@ -534,19 +551,19 @@ const orderFormRefill = (ob, rowIndex) => {
 
     SelectCustomer.disabled = "disabled";
     SelectCustomer.value = JSON.stringify(order.customer_id);
-    if (ob.customername == undefined) {
+    if (ob.customername == null) {
         txtCustName.value = "";
     } else {
         txtCustName.value = ob.customername;
     }
-    if (ob.customercontact == undefined) {
+    if (ob.customercontact == null) {
         txtNumber.value = "";
     } else {
         txtNumber.value = ob.customercontact;
     }
     selectOrderType.value = JSON.stringify(ob.ordertype_id);
     txtTotalAmount.value = ob.totalprice;
-    if (ob.servicecharge == undefined) {
+    if (ob.servicecharge == null) {
         txtSecviceChg.value = "";
     } else {
         txtSecviceChg.value = ob.servicecharge;
@@ -615,8 +632,8 @@ const checkFormUpdate = () => {
         if (order.netamount != oldorder.netamount) {
             updates = updates + "Net Amount has updated from " + oldorder.netamount + " \n";
         }
-        if (order.supplyorderstatus_id.status != oldorder.supplyorderstatus_id.status) {
-            updates = updates + "Status has updated from " + oldorder.supplyorderstatus_id.status + " \n";
+        if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
+            updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
         }
     }
     return updates;
@@ -684,8 +701,8 @@ const buttonOrderClear = () => {
     });
 }
 
-//define function for clear Inner form
-const buttonInnerFormClear = () => {
+//define function for clear Submenu Inner form
+const buttonInnerSmenuFormClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
         icon: "warning",
@@ -696,6 +713,21 @@ const buttonInnerFormClear = () => {
     }).then((result) => {
         if (result.isConfirmed) {
             refreshInnerFormandTableSubmenu();
+        }
+    });
+}
+
+//define function for clear Menu Inner form
+const buttonInnerMenuFormClear = () => {
+    Swal.fire({
+        title: "Are you Sure to Refresh Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
             refreshInnerFormandTableMenu();
         }
     });

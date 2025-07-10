@@ -15,11 +15,17 @@ const refreshForm = () => {
     btnsubmit.style.display = "inline";
     btnupdate.style.display = "none";
     SelectCustomer.disabled = "";
+    txtTotalAmount.value = "";
+    txtTotalAmount.disabled = "disabled";
+    txtServiceChg.value = "";
+    txtServiceChg.disabled = "disabled";
+    txtNetAmount.value = "";
+    txtNetAmount.disabled = "disabled";
 
     //define new object
     order = new Object();
     order.orderHasSubmenuList = new Array();
-    order.orderHasMenuList = new Array();
+    order.orderHasMenuitemList = new Array();
 
     const customers = getServiceRequest("/customer/alldata");
     fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
@@ -34,17 +40,9 @@ const refreshForm = () => {
     fillDropdown(tableNO, "Select Table.!", orderTables, "number");
 
     const orderVehicles = getServiceRequest("/vehicle/alldata");
-    fillDropdown(tableNO, "Select Vehicle.!", orderVehicles, "name");
+    fillDropdown(deliveryVehicle, "Select Vehicle.!", orderVehicles, "name");
 
-    setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtServiceChg, txtDeliveryChg, txtNetAmount, orderStatus, tableNO, deliveryVehicle, txtNote]);
-
-    // type eka form eka open weddima active wdyt select wenna
-    selectOrderType.value = JSON.stringify(orderTypes[0]);//select value eka string wenna one nisa object eka string baweta convert krenw
-    // orderTypes list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
-    console.log("Mokakada Me;", orderTypes[0]);
-
-    order.ordertype_id = orderTypes[0];
-    selectOrderType.style.border = "2px solid green";
+    setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtServiceChg, txtDeliveryChg, txtNetAmount, orderStatus, tableNO, deliveryVehicle]);
 
     // status eka form eka open weddima active wdyt select wenna
     orderStatus.value = JSON.stringify(orderStatuses[0]);//select value eka string wenna one nisa object eka string baweta convert krenw
@@ -58,6 +56,7 @@ const refreshForm = () => {
     selectTypeElement.addEventListener("change", () => {
         //stringify value ekak thyena nisa eka JSON parse krela Type object ekak gnnewa
         let type = JSON.parse(selectTypeElement.value);
+        order.ordertype_id = JSON.stringify(type);
         selectTypeElement.style.border = "2px solid green"
     });
 
@@ -65,106 +64,81 @@ const refreshForm = () => {
     refreshInnerFormandTableMenu();
 }
 
-
+// define function for calculate total
 const calculateTotal = () => {
-
     let totalamount = 0.00;
-    // const submenuTotal = parseFloat(order.orderHasSubmenuList?.lineprice) || 0;
-    // const menuTotal = parseFloat(order.orderHasMenuitemList?.lineprice) || 0;
-
-    // let submenuTotal = (order.orderHasSubmenuList || []).map(ositem => parseFloat(ositem.lineprice) || 0).reduce((sum, price) => sum + price, 0);;
-    // let menuTotal = (order.orderHasMenuitemList || []).map(omitem => parseFloat(omitem.lineprice) || 0).reduce((sum, price) => sum + price, 0);;
-
-
-    for (const ositem of order.orderHasSubmenuList) {
-        totalamount = parseFloat(totalamount) + parseFloat(ositem.lineprice);
+    // Calculate total from submenu items
+    for (const ositem of order.orderHasSubmenuList || []) {
+        totalamount = parseFloat(totalamount) + parseFloat(ositem.lineprice || 0);
     }
 
-    for (const omitem of order.orderHasMenuitemList) {
-        totalamount = parseFloat(totalamount) + parseFloat(omitem.lineprice);
+    // Calculate total from menu items
+    for (const omitem of order.orderHasMenuitemList || []) {
+        totalamount = parseFloat(totalamount) + parseFloat(omitem.lineprice || 0);
     }
 
-    //totalamount = submenuTotal + menuTotal;
-
-
-    txtTotalAmount.value = totalamount.toFixed(2);
+    // Set total amount
+    txtTotalAmount.value = parseFloat(totalamount).toFixed(2);
     order.totalamount = txtTotalAmount.value;
     txtTotalAmount.style.border = "2px solid green";
 
-    /* ### Generate Service Charge ### */
-    if (txtTotalAmount.value > 0) {
-        let serviceChg = totalamount * 0.10;
+    // Reset charges first
+    txtServiceChg.value = "";
+    txtDeliveryChg.value = "";
+    order.servicecharge = 0;
+    order.deliverycharge = 0;
 
-        txtServiceChg.value = parseFloat(serviceChg.toFixed(2));
+    // check if selected order type is dine in
+    let selectOrderTypeElement = document.getElementById('selectOrderType');
+    const orderType = selectOrderTypeElement.options[selectOrderTypeElement.selectedIndex].text.trim().toLowerCase();
+
+    // check type 
+    if (orderType === "dine-in") {
+        console.log("Processing Dine-In order");
+
+        /* ### Generate Service Charge ### */
+        txtServiceChg.value = parseFloat(totalamount * 0.10).toFixed(2); // 10% service charge;
+
         order.servicecharge = txtServiceChg.value;
         txtServiceChg.style.border = "2px solid green";
+
+    } else if (orderType === "delivery") {
+        console.log("Processing Delivery order");
+
+        /* ### Generate Delivery Charge ### */
+        txtDeliveryChg.value = parseFloat(250).toFixed(2);// 250 delivery charge
+
+        order.deliverycharge = txtDeliveryChg.value;
+        txtDeliveryChg.style.border = "2px solid green";
+
+    } else { // order type == Take Away
+        console.log("Processing Take Away order");
+
+        // Reset border styles for unused fields
+        txtServiceChg.style.border = "";
+        txtDeliveryChg.style.border = "";
     }
 
-    /* ### Generate Net Amount ### */
+    /* ### Calculate Net Amount ### */
     if (txtTotalAmount.value != 0.00) {
+        // convert values to number format from string
         let totalamount = parseFloat(txtTotalAmount.value);
-        let servicecharge = parseFloat(txtServiceChg.value);
-        let netamount = totalamount + servicecharge;
+        let servicecharge = parseFloat(txtServiceChg.value || 0);
+        let deliverycharge = parseFloat(txtDeliveryChg.value || 0);
+        let netamount = totalamount + deliverycharge + servicecharge;
 
-        txtNetAmount.value = parseFloat(netamount.toFixed(2));
+        console.log("Net amount calculation:");
+        console.log("- Total amount:", totalamount);
+        console.log("- Service charge:", servicecharge);
+        console.log("- Delivery charge:", deliverycharge);
+        console.log("- Net amount:", netamount);
+
+
+        txtNetAmount.value = parseFloat(netamount).toFixed(2);
         order.netamount = txtNetAmount.value;
         txtNetAmount.style.border = "2px solid green";
     }
-
-    /* let submenuTotal = 0;
-    for (const ositem of order.orderHasSubmenuList || []) {
-        submenuTotal = parseFloat(submenuTotal) + parseFloat(ositem.lineprice);
-    }
-    let menuTotal = 0;
-    for (const omitem of order.orderHasMenuitemList || []) {
-        menuTotal = parseFloat(menuTotal) + parseFloat(omitem.lineprice);
-    }
-
-    totalamount = submenuTotal + menuTotal;
-
-    if (totalamount > 0) {
-        txtTotalAmount.value = totalamount.toFixed(2);
-        order.totalamount = txtTotalAmount.value;
-        txtTotalAmount.style.border = "2px solid green";
-    } else {
-        txtTotalAmount.value = "";
-        txtTotalAmount.style.border = "1px solid #ced4da"; // reset style
-        order.totalamount = 0;
-    }
-    generateServiceChg(); */
 }
-/* 
-const generateServiceChg = () => {
-    const totalamount = parseFloat(txtTotalAmount.value) || 0;
-    if (totalamount > 0) {
-        let serviceChg = totalamount * 0.10;
-
-        txtServiceChg.value = parseFloat(serviceChg.toFixed(2));
-        order.servicecharge = txtServiceChg.value;
-        txtServiceChg.style.border = "2px solid green";
-    } else {
-        order.servicecharge = 0.00;
-        txtServiceChg.value = "";
-        txtServiceChg.style.border = "1px solid #ced4da";
-    }
-    generateNetamount();
-}
-
-const generateNetamount = () => {
-    if (txtTotalAmount.value != 0.00) {
-        let totalamount = parseFloat(txtTotalAmount.value);
-        let servicecharge = parseFloat(txtServiceChg.value);
-        let netamount = totalamount + servicecharge;
-
-        txtNetAmount.value = parseFloat(netamount.toFixed(2));
-        order.netamount = txtNetAmount.value;
-        txtNetAmount.style.border = "2px solid green";
-    } else {
-        order.netamount = 0.00;
-        txtNetAmount.value = "";
-        txtNetAmount.style.border = "1px solid #ced4da";
-    }
-} */
 
 /* ############################## SUBMENU INNER FORM FUNCTIONS ################################# */
 // define function for check Submenu existance
@@ -214,26 +188,48 @@ const generateLinepriceSmenu = (ob) => {
     }
 }
 
+// define function for filter submenu by category
+const filterSubmenusbyCategory = () => {
+    if (selectCategory.value != "") {
+        let submenus = getServiceRequest("/submenu/bycategory?category_id=" + JSON.parse(selectCategory.value).id);
+        fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
+        SelectSubmenu.disabled = false;
+    } else {
+        fillDropdown(SelectSubmenu, "Select Category First.!", [], "");
+        SelectSubmenu.disabled = true;
+    }
+}
+
 //define function for refresh inner form
 const refreshInnerFormandTableSubmenu = () => {
     //define new object
     orderHasSubmenu = new Object();
 
-    let submenus = getServiceRequest("/submenu/alldata");
-    fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
+    let categories = getServiceRequest("/submenucategory/alldata");
+    fillDropdown(selectCategory, "Select Category", categories, "name");
 
-    SelectSubmenu.disabled = "";
+    let submenus = [];
+    if (selectCategory.value == "") {
+        fillDropdown(SelectSubmenu, "Select Category First.!", [], "");
+        SelectSubmenu.disabled = true;
+    } else {
+        submenus = getServiceRequest("/submenu/bycategory?category_id=" + JSON.parse(selectCategory.value).id);
+        fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
+        SelectSubmenu.disabled = false;
+    }
+
+    selectCategory.value = "";
     txtPrice.value = "";
-    txtPrice.disabled = "disabled";
+    txtPrice.disabled = true;
     txtQuantity.value = "";
     txtLinePrice.value = "";
-    txtLinePrice.disabled = "disabled";
+    txtLinePrice.disabled = true;
 
     // btnInnerUpdate.style.display = "none"; wdyt gnnth puluwn
     btnSmenuUpdate.classList.add("d-none");
     btnSmenuSubmit.classList.remove("d-none");
 
-    setDefault([SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
+    setDefault([selectCategory, SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
 
     //define function for refresh inner table
     let columns = [
@@ -246,19 +242,10 @@ const refreshInnerFormandTableSubmenu = () => {
     //call fill data into table
     fillInnerTable(tBodyOrderhasSubmenu, order.orderHasSubmenuList, columns, orderSubmenuFormRefill, orderSubmenuDelete, true);
 
-    // orderHasSubmenuList ekata data ekathu unoth line price wela ekathuwa gnna puluwn
-    let totalamount = 0.00;
-    for (const orderSubemenu of order.orderHasSubmenuList) {
-        totalamount = parseFloat(totalamount) + parseFloat(orderSubemenu.lineprice);
-    }
-    /* if (totalamount != 0.00) {
-        txtTotalAmount.value = totalamount.toFixed(2);
-        order.totalamount = txtTotalAmount.value;
-        txtTotalAmount.style.border = "2px solid green";
-    } */
-
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootOrderhasSubmenu, order.orderHasSubmenuList, column);
+    fillInnerTableFooter(tfootOrderhasSubmenu, order.orderHasSubmenuList, column, columns.length);
+
+    calculateTotal();
 }
 
 const getSubmenuName = (ob) => {
@@ -277,11 +264,8 @@ const orderSubmenuFormRefill = (ob, index) => {
     orderHasSubmenu = JSON.parse(JSON.stringify(ob));
     oldorderHasSubmenu = JSON.parse(JSON.stringify(ob));
 
-    /*         ingredients = getServiceRequest("/ingredient/list");
-    // fillDropdownTwo function eka common eke declare kranna one meka gnnanm
-        fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", orderHasSubmenu.ingredient_id.ingredient_name); */
-
-    SelectSubmenu.disabled = "disabled";
+    selectCategory.value = JSON.stringify(submenu_id.category_id);
+    SelectSubmenu.disabled = true;
     SelectSubmenu.value = JSON.stringify(ob.submenu_id);
     txtPrice.value = ob.price;
     txtQuantity.value = ob.quantity;
@@ -412,13 +396,15 @@ const checkMenuExt = () => {
 }
 
 //onkeyup ekedi wada krenewa (adala html input field eka athule function eka call kranne one)
-const generateLineprice = (ob) => {
+const generateLineprice = () => {
     if (txtQuantityMenu.value > 0) {
         //input fields wela values convert krenewa string walin float bawat
         let unitprice = parseFloat(txtPriceMenu.value);
         let quantity = parseFloat(txtQuantityMenu.value);
+        let discount = parseFloat(SeasonalDiscount.value) || 0;
+
         //multiply quantity and unit price
-        let lineprice = quantity * unitprice;
+        let lineprice = (quantity * unitprice) - discount;
 
         // Assign to the object
         orderHasMenuitem.lineprice = lineprice;
@@ -468,19 +454,10 @@ const refreshInnerFormandTableMenu = () => {
     //call fill data into table
     fillInnerTable(tBodyOrderhasItem, order.orderHasMenuitemList, columns, orderItemFormRefill, orderItemDelete, true);
 
-    // orderHasSubmenuList ekata data ekathu unoth line price wela ekathuwa gnna puluwn
-    let totalamount = 0.00;
-    for (const orderMenu of order.orderHasMenuitemList) {
-        totalamount = parseFloat(totalamount) + parseFloat(orderMenu.lineprice);
-    }
-    /*  if (totalamount != 0.00) {
-         txtTotalAmount.value = totalamount.toFixed(2);
-         order.totalamount = txtTotalAmount.value;
-         txtTotalAmount.style.border = "2px solid green";
-     } */
-
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootOrderhasItem, order.orderHasMenuitemList, column);
+    fillInnerTableFooter(tfootOrderhasItem, order.orderHasMenuitemList, column, columns.length);
+
+    calculateTotal();
 }
 
 const getMenuName = (ob) => {
@@ -501,6 +478,7 @@ const orderItemFormRefill = (ob, index) => {
 
     SelectMenu.disabled = "disabled";
     SelectMenu.value = JSON.stringify(ob.menuitems_id);
+    SeasonalDiscount.value = ob.menuitems_id.seasonaldiscount_id ? JSON.stringify(ob.menuitems_id.seasonaldiscount_id) : ""; //empty if null
     txtPriceMenu.value = ob.price;
     txtQuantityMenu.value = ob.quantity;
     txtLinePriceMenu.value = parseFloat(ob.lineprice).toFixed(2);
@@ -556,6 +534,8 @@ const buttonorderItemSubmit = () => {
         confirmButtonText: "Yes, Submit!"
     }).then((result) => {
         if (result.isConfirmed) {
+            // main eke thyena list ekta inner object eka push krenewa
+            order.orderHasMenuitemList.push(orderHasMenuitem);
             Swal.fire({
                 title: "Saved Successfully..!",
                 icon: "success",
@@ -565,10 +545,6 @@ const buttonorderItemSubmit = () => {
             refreshInnerFormandTableMenu();
         }
     });
-
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasMenuitemList.push(orderHasMenuitem);
-    refreshInnerFormandTableMenu();
 }
 
 const buttonorderItemUpdate = () => {
@@ -584,6 +560,8 @@ const buttonorderItemUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                order.orderHasMenuitemList[innerFormindex] = orderHasMenuitem;
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -601,10 +579,6 @@ const buttonorderItemUpdate = () => {
             timer: 1500
         });
     }
-
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasMenuitemList[innerFormindex] = orderHasMenuitem;
-    refreshInnerFormandTableMenu();
 }
 
 /* ############################## MAIN FORM FUNCTIONS ################################# */
@@ -630,10 +604,10 @@ const refreshOrderTable = () => {
         { property: "ordercode", dataType: "string" },
         { property: getCustomerName, dataType: "function" },
         { property: getOrderType, dataType: "function" },
-        { property: getOrderedItems, dataType: "function" },
         { property: "totalamount", dataType: "decimal" },
         { property: "discount", dataType: "decimal" },
         { property: "servicecharge", dataType: "decimal" },
+        { property: "deliverycharge", dataType: "decimal" },
         { property: "netamount", dataType: "decimal" },
         { property: getOrderStatus, dataType: "function" },
         { property: getOrderTable, dataType: "function" },
@@ -647,12 +621,12 @@ const refreshOrderTable = () => {
 
 //define function for get  table number
 const getOrderTable = (dataOb) => {
-    return dataOb.tables_id.number;
+    return dataOb.tables_id?.number ?? "-";
 }
 
 //define function for get  vehicle name
 const getOrderVehicle = (dataOb) => {
-    return dataOb.vehicle_id.name;
+    return dataOb.vehicle_id?.name ?? "-";
 }
 
 //define function for get  order status
@@ -694,7 +668,7 @@ const getCustomerName = (dataOb) => {
     if (dataOb.customer_id != null) {
         return dataOb.customer_id.firstname;
     } else {
-        return "-";
+        return dataOb.customername ? dataOb.customername : "";
     }
 }
 
@@ -702,6 +676,46 @@ const getCustomerName = (dataOb) => {
 const getOrderedItems = (dataOb) => {
     return "Items";
 }
+
+
+/* ############### ORDER TYPE WORKS ################ */
+// user form eken order type(Dine-in / Delivery / Take-Away) eka select kalama method ekata adala input field display krenewa
+
+// Get order type element by ID
+const selectOrderTypeElement = document.querySelector("#selectOrderType");
+
+// Add event listener, user kenek change ekak kalama
+selectOrderTypeElement.addEventListener("change", () => {
+
+    // selected option eke text eka aregena whitespace ain krela lowercase welata convert krenewa
+    const orderType = selectOrderTypeElement.options[selectOrderTypeElement.selectedIndex].text.trim().toLowerCase();
+
+    // Highlight the dropdown border in green to show user interaction
+    selectOrderTypeElement.style.border = "2px solid green";
+
+    // method eka bank transfer wena input field wela ids aran group kregnnewa
+    const dineInFieldGroup = ["colServiceChrg", "colDineinTable"];
+    // method eka cheque wena input field wela ids aran group kregnnewa
+    const deliveryFieldGroup = ["colDeliveryChrg", "colDeliveryVehicle"];
+
+    let netamount = "";
+    // Selected method ekata anuwa input field eka display kregnnawa
+    if (orderType === "dine-in") {
+        // Show transfer fields and hide cheque fields
+        dineInFieldGroup.forEach(id => document.getElementById(id)?.classList.remove("d-none"));
+        deliveryFieldGroup.forEach(id => document.getElementById(id)?.classList.add("d-none"));
+
+    } else if (orderType === "delivery") {
+        // Show cheque fields and hide transfer fields
+        deliveryFieldGroup.forEach(id => document.getElementById(id)?.classList.remove("d-none"));
+        dineInFieldGroup.forEach(id => document.getElementById(id)?.classList.add("d-none"));
+    } else {
+        // For any other order type, hide both cheque and transfer related fields
+        deliveryFieldGroup.forEach(id => document.getElementById(id)?.classList.add("d-none"));
+        dineInFieldGroup.forEach(id => document.getElementById(id)?.classList.add("d-none"));
+    }
+});
+
 
 //define Form edit function
 const orderFormRefill = (ob, rowIndex) => {
@@ -713,25 +727,18 @@ const orderFormRefill = (ob, rowIndex) => {
     oldorder = JSON.parse(JSON.stringify(ob));
 
     SelectCustomer.disabled = "disabled";
-    SelectCustomer.value = JSON.stringify(order.customer_id);
+    SelectCustomer.value = ob.customer_id != null ? JSON.stringify(ob.customer_id) : "";
+    txtCustName.value = ob.customername != null ? ob.customername : "";
+    txtNumber.value = ob.customercontact != null ? ob.customercontact : "";
     selectOrderType.value = JSON.stringify(ob.ordertype_id);
-    txtTotalAmount.value = ob.totalprice;
+    txtTotalAmount.value = ob.totalamount;
+    txtServiceChg.value = ob.servicecharge != null ? ob.servicecharge : "";
+    txtDeliveryChg.value = ob.deliverycharge != null ? ob.deliverycharge : "";
     txtNetAmount.value = ob.netamount;
     orderStatus.value = JSON.stringify(ob.orderstatus_id);
+    tableNO.value = ob.tables_id != null ? JSON.stringify(ob.tables_id) : "";
 
-    if (ob.servicecharge == undefined) {
-        txtSecviceChg.value = "";
-    } else {
-        txtSecviceChg.value = ob.servicecharge;
-    }
-
-    if (ob.note == undefined) {
-        txtNote.value = "";
-    } else {
-        txtNote.value = ob.note;
-    }
-
-    refreshInnerFormandTable();
+    refreshInnerFormandTableSubmenu();
 }
 
 //define function to check errors
@@ -745,21 +752,26 @@ const checkFormError = () => {
         txtTotalAmount.style.border = "2px solid red";
         errors = errors + "Please Fill Inner Form/s.! \n";
     }
-    if (order.servicecharge == null) {
-        txtServiceChg.style.border = "2px solid red";
-        errors = errors + "Please Select Required Date.! \n";
-    }
     if (order.netamount == null) {
         txtNetAmount.style.border = "2px solid red";
         errors = errors + "Please Fill Inner Form/s.! \n";
     }
-    if (order.tables_id == null) {
-        tableNO.style.border = "2px solid red";
-        errors = errors + "Please Select Table.! \n";
-    }
-    if (order.vehicle_id == null) {
-        deliveryVehicle.style.border = "2px solid red";
-        errors = errors + "Please Select Vehicle.! \n";
+    if (order.ordertype_id.name === "Dine-In") {
+        if (order.servicecharge == null || order.servicecharge.trim() === "") {
+            txtServiceChg.style.border = "2px solid red";
+        }
+        if (order.tables_id == null) {
+            tableNO.style.border = "2px solid red";
+            errors = errors + "Please Select Table No.! \n";
+        }
+    } else if (order.ordertype_id.name === "Delivery") {
+        if (order.deliverycharge == null || order.deliverycharge.trim() === "") {
+            txtDeliveryChg.style.border = "2px solid red";
+        }
+        if (order.vehicle_id == null) {
+            deliveryVehicle.style.border = "2px solid red";
+            errors = errors + "Please Select Vehicle.! \n";
+        }
     }
     if (order.orderHasSubmenuList.length == 0 && order.orderHasMenuitemList.length == 0) {
         errors = errors + "Please Select Submenu or Menu.! \n";
@@ -791,11 +803,20 @@ const checkFormUpdate = () => {
         if (order.servicecharge != oldorder.servicecharge) {
             updates = updates + "Service Charge has updated from " + oldorder.servicecharge + " \n";
         }
+        if (order.deliverycharge != oldorder.deliverycharge) {
+            updates = updates + "Delivery Charge has updated from " + oldorder.deliverycharge + " \n";
+        }
         if (order.netamount != oldorder.netamount) {
             updates = updates + "Net Amount has updated from " + oldorder.netamount + " \n";
         }
-        if (order.supplyorderstatus_id.status != oldorder.supplyorderstatus_id.status) {
-            updates = updates + "Status has updated from " + oldorder.supplyorderstatus_id.status + " \n";
+        if (order.tables_id.number != oldorder.tables_id.number) {
+            updates = updates + "Table No. has updated from " + oldorder.tables_id.number + " \n";
+        }
+        if (order.vehicle_id.name != oldorder.vehicle_id.name) {
+            updates = updates + "Vehicle has updated from " + oldorder.vehicle_id.name + " \n";
+        }
+        if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
+            updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
         }
     }
     return updates;
@@ -805,9 +826,9 @@ const checkFormUpdate = () => {
 const buttonOrderSubmit = () => {
     //check if there are any errors
     let errors = checkFormError();
-    title = "Are you sure to Submit following Customer Order.?";
+    title = "Are you sure to Submit following Customer Order";
     obName = "";
-    text = "Type : " + order.ordertype_id
+    text = "Type : " + order.ordertype_id.name
         + ", Net Amount : " + order.netamount;
     let submitResponse = getHTTPServiceRequest('/order/insert', "POST", order);
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
@@ -862,38 +883,123 @@ const buttonOrderClear = () => {
         }
     });
 }
-//define function for clear Inner form
-const buttonInnerFormClear = () => {
+
+//define function for clear Submenu Inner form
+const buttonInnerSmenuFormClear = () => {
     Swal.fire({
         title: "Are you Sure to Refresh Form.?",
-        icon: "warning"
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshInnerFormandTableSubmenu();
+        }
     });
-    refreshInnerFormandTableSubmenu();
-    refreshInnerFormandTableMenu();
+}
+
+//define function for clear Menu Inner form
+const buttonInnerMenuFormClear = () => {
+    Swal.fire({
+        title: "Are you Sure to Refresh Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshInnerFormandTableMenu();
+        }
+    });
+}
+
+//define function for modal close and refresh form
+const buttonModalClose = () => {
+    Swal.fire({
+        title: "Are you Sure to Close Customer Form.?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshForm();
+            $('#modalOrders').modal('hide');
+        }
+    });
 }
 
 //function define for print Order record
-const orderPrint = (ob, rowIndex) => {
+/* const orderPrint = (ob, rowIndex) => {
+
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodyOrders, rowIndex, "White");
 
     let newWindow = window.open();
     let printView = '<html>'
         + '<head>'
-        + '<link rel="stylesheet" href="../Resourse/bootstrap-5.2.3/css/bootstrap.min.css">'
-        + '<title>BIT Project | 2025</title></head>'
+        + '<link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">'
+        + '<title>BIT Project Order | 2025 </title></head>'
         + '<body><h1>Print Order Details</h1>'
         + '<table class="table-bordered table-stripped border-1 w-25">'
-        + '<tr><th> Order :</th><td>' + ob.id + '</td></tr>'
-        + '<tr><th> Mobile Number :</th><td>' + ob.contact_no + '</td></tr>'
-        + '<tr><th> Email :</th><td>' + ob.email + '</td></tr>'
-        + '<tr><th> Address :</th><td>' + ob.address + '</td></tr>'
-        + '<tr><th> Bank Name :</th><td>' + ob.bankname + '</td></tr>'
-        + '<tr><th> Branch Name :</th><td>' + ob.branchname + '</td></tr>'
-        + '<tr><th> Account Number :</th><td>' + ob.accountnumber + '</td></tr>'
-        + '<tr><th> Account Holder Name :</th><td>' + ob.holdername + '</td></tr>'
-        + '<tr><th> Order type :</th><td>' + ob.ordertype + '</td></tr>'
+        + '<tr><th> Order :</th><td>' + ob.ordercode + '</td></tr>'
+        + '<tr><th> Total Amount :</th><td>' + ob.totalamount + '</td></tr>'
+        + '<tr><th> Discount :</th><td>' + ob.discount + '</td></tr>'
+        + '<tr><th> Service Charge :</th><td>' + ob.servicecharge + '</td></tr>'
+        + '<tr><th> Net Amount :</th><td>' + ob.netamount + '</td></tr>'
+        + '<tr><th> Order type :</th><td>' + ob.ordertype_id.type + '</td></tr>'
+        + 'tr'
+        + `<div class="row mt-1">
+            <div class="col justify-content-md-center">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table tablet table-bordered"
+                            id="tableOrderhasSubmenuandMemu">
+                            <thead>
+                                <tr id="tablehead">
+                                    <th> # </th>
+                                    <th> Items </th>
+                                    <th> Unit Price </th>
+                                    <th> Quantity </th>
+                                    <th> Line Price </th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableBody"
+                                id="tBodyOrderhasSubmenu">
+                                <tr>
+                                    <td> 1 </td>
+                                    <td> Biriyani </td>
+                                    <td> 1500.00 </td>
+                                    <td> 2 </td>
+                                    <td> 3000.00 </td>
+                                    <td> -</td>
+                                </tr>
+                            </tbody>
+                            <tfoot id="tfootOrderhasSubmenu">
+                                <tr>
+                                    <td colspan="4"
+                                        class="text-start fw-bold">
+                                        Total
+                                        Amount</td>
+                                    <td>7500.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>`
+        + '</tr>'
+
+
+
+
         + '<tr><th> Status :</th><td>' + ob.orderstatus_id.status + '</td></tr>'
+        + '<tr><th> Table No. :</th><td>' + ob.tables_id.number + '</td></tr>'
         + '</table>'
         + '</body></html>'
     newWindow.document.writeln(printView);
@@ -903,4 +1009,190 @@ const orderPrint = (ob, rowIndex) => {
         newWindow.print();
         newWindow.close();
     }, 300);
-}
+} */
+
+
+//function define for print Order record
+const orderPrint = (orderData, rowIndex) => {
+    console.log("Printing order:", orderData, rowIndex);
+
+    // table eke row eka click kalama color eka change wenw
+    activeTableRow(tBodyOrders, rowIndex, "White");
+
+    // Print eke content eka generate krena function eka cll krenewa
+    const printContent = generateOrderPrintHTML(orderData);
+
+    // Create and configure the print window
+    const printWindow = window.open();
+
+    // Write content and handle printing
+    printWindow.document.writeln(printContent);
+    printWindow.document.close();
+
+    // Wait for content to load, then print
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    };
+};
+
+// Print eke content eka generate krena function eka define krenewa
+// @param {Object} order - order object eke thama all order details thyenne
+const generateOrderPrintHTML = (order) => {
+    const currentDateTime = new Date().toLocaleString();
+
+    //  @returns {string} - print window eke display wenna one html eka return krnw
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+
+        <!-- link css -->
+        <link rel="stylesheet" href="css/print.css">
+
+        <title> Order Management - BIT 2025</title>
+    </head>
+    <body>
+        <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Order Receipt</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th> Order Code</th>
+                    <td>${order.ordercode}</td>
+                    <th> Order Type</th>
+                    <td>${order.ordertype_id.type}</td>
+                </tr>
+                <tr>
+                    <th> Customer</th>
+                    <td>${order.customer_id?.firstname ? order.customer_id.firstname : order.customername}</td>
+                    <th> User</th>
+                    <td>${order.addeduser}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="items-section">
+            <h3> Order Items</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item Name</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${generateItemRows(order)}
+                </tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="4">Total</td>
+                        <td>Rs. ${formatCurrency(order.totalamount)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th>Total Amount</th>
+                    <td>Rs. ${formatCurrency(order.totalamount)}</td>
+                    <th>Seasonal Discount</th>
+                    <td>Rs. ${formatCurrency(order.discount ? order.discount : 0)}</td>
+                </tr>
+                <tr>
+                    <th> Service Charge</th>
+                    <td>Rs. ${formatCurrency(order.servicecharge ? order.servicecharge : 0)}</td>
+                    <th> Delivery Charge</th>
+                    <td>Rs. ${formatCurrency(order.deliverycharge ? order.deliverycharge : 0)}</td>
+                </tr >
+    <tr>
+        <th colspan="3"> Net Amount</th>
+        <td><strong>Rs. ${formatCurrency(order.netamount)}</strong></td >
+    </tr >
+            </table >
+        </div >
+
+    <div class="footer">
+        &copy; 2025 BIT Project. All rights reserved.
+        <p>Generated on ${currentDateTime}</p>
+    </div>
+    </body >
+    </html >
+    `;
+};
+
+//@param {Array} items - Array of order items
+//@returns {string} - HTML string for table rows
+const generateItemRows = (order) => {
+    // Extract items from the correct association names
+    const submenuItems = order.orderHasSubmenuList || [];
+    const menuItems = order.orderHasMenuitemList || [];
+
+    // Merge both arrays into a single items array
+    const allItems = [...submenuItems, ...menuItems];
+
+    console.log(" Found items:", allItems);
+
+    return allItems.map((item, index) => {
+        console.log(` Processing item ${index + 1}: `, item);
+
+        // Handle different item types and database structures
+        let itemName, unitPrice, quantity, lineTotal;
+
+        // Check if it's a submenu item
+        if (item.submenu_id) {
+            itemName = item.submenu_id.name;
+        }
+        // Check if it's a menu item  
+        else if (item.menuitem_id) {
+            itemName = item.menuitems_id.name;
+        }
+        // Fallback to direct properties
+        else {
+            itemName = item.item_name;
+        }
+
+        // Extract pricing information
+        unitPrice = item.unitprice || item.submenu_id?.price || item.menuitem_id?.price;
+
+        quantity = item.quantity;
+
+        lineTotal = item.lineprice;
+
+        console.log(`Extracted data - Name: ${itemName}, Price: ${unitPrice}, Qty: ${quantity}, Total: ${lineTotal} `);
+
+        return `
+    < tr >
+                <td>${index + 1}</td>
+                <td>${itemName}</td>
+                <td>Rs. ${formatCurrency(unitPrice)}</td>
+                <td>${quantity}</td>
+                <td>Rs. ${formatCurrency(lineTotal)}</td>
+            </tr >
+    `;
+    }).join('');
+};
+
+//  @param {number} amount - The amount to format
+//  @returns {string} - Formatted currency string
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount || 0);
+};

@@ -49,7 +49,12 @@ public class OrderController implements CommonController<Order> {
         OrderView.setViewName("Order.html");
         OrderView.addObject("loggedusername", auth.getName());
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        OrderView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             OrderView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -186,10 +191,11 @@ public class OrderController implements CommonController<Order> {
                 // do save
                 orderDao.save(order);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }
@@ -228,10 +234,11 @@ public class OrderController implements CommonController<Order> {
                 // do save
                 orderDao.save(order);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Update : You don't have permission..!";
         }
@@ -275,10 +282,11 @@ public class OrderController implements CommonController<Order> {
                 // do save
                 orderDao.save(extOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Delete : You don't have permission..!";
         }
