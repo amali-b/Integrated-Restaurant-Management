@@ -32,4 +32,7 @@ public interface IngredientDao extends JpaRepository<Ingredient, Integer> {
     @Query(value = "select new Ingredient(i.id, i.ingredient_name, i.purchase_price, i.unittype_id) from Ingredient i where i.id in (select shi.ingredient_id.id from SupplierHasIngredient shi where shi.supplier_id.id=?1)")
     public List<Ingredient> getListBySupplier(Integer supplierid);
 
+    @Query(value = "select new Ingredient(i.id, i.ingredient_name, i.purchase_price, i.unittype_id) from Ingredient i where i.id in (select sohi.ingredient_id.id from SupplierorderHasIngredient sohi where sohi.supplierorder_id.id=?1)")
+    public List<Ingredient> getListBySupplierOrder(Integer supplierorderid);
+
 }
