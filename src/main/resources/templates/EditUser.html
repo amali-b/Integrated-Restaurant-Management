@@ -5,99 +5,139 @@
 
 <body>
     <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
         <div class="main">
-            <div class="offcanvas offcanvas-top h-75" data-bs-scroll="true" tabindex="-1" id="canvasUser"
+            <!--  <div class="offcanvas offcanvas-top h-75" data-bs-scroll="true" tabindex="-1" id="canvasUser"
                 aria-labelledby="canvasUserLabel">
                 <div class="offcanvas-header">
                     <div class="container">
                         <h4 class="offcanvas-title" id="canvasUserLabel">Edit User Profile</h4>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div class="row justify-content-center">
-                        <div class="col-8">
-                            <!-- Start Form -->
-                            <div class="card m-1">
-                                <div class="card-body crdbdy">
-                                    <form id="formUser">
-                                        <!-- Start Employee Name -->
-                                        <div class="row mt-2">
-                                            <label for="userName" class="form-lable col-4 fw-bold">Employee Name
-                                            </label>
-                                            <div class="col-5">
-                                                <input type="text" id="userName" class="form-control" required>
-                                            </div>
-                                            <div class="col text-center">
-                                                <button class="btninput"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- End Employee Name -->
+                </div> -->
 
-                                        <!-- Start UserName -->
-                                        <div class="row mt-2">
-                                            <label for="txtUid" class="form-lable col-4 fw-bold">User ID </label>
-                                            <div class="col-5">
-                                                <input type="text" id="txtUid" class="form-control" required
-                                                    onkeyup="txtValidator(this,'^([a-z][a-z0-9]{7})$', 'user', 'username')">
-                                            </div>
-                                            <div class="col text-center">
-                                                <button class="btninput"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- End UserName -->
+            <div class="modal" id="modalUserProfile">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalUserProfileLabel">Edit User Profile</h4>
+                            </div>
+                            <button type="button" class="btn-close"
+                                onclick="window.location.href='/dashboard'"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-center">
+                                <div class="col-8">
+                                    <!-- Start Form -->
+                                    <div class="card m-1">
+                                        <div class="card-body crdbdy">
+                                            <form id="formUser">
+                                                <!-- Start Employee Photo -->
+                                                <div class="row mt-2">
+                                                    <label for="imgPreview" class="form-lable col-4 fw-bold">Employee
+                                                        Photo
+                                                    </label>
+                                                    <div class="col-5">
+                                                        <!-- hidden input -->
+                                                        <input type="file" id="imgEmployee" accept="image/*"
+                                                            class="form-control" style="display: none;"
+                                                            onchange="fileValidator(this, 'userProfile', 'userphoto',document.getElementById('imgPreview'),'', '')">
+                                                        <img src="image/userimage.png" id="imgPreview" alt="Upload here"
+                                                            class="d-flex" style="max-width: 60px;">
+                                                    </div>
+                                                    <div class="col-3 text-center">
+                                                        <button class="btn btn-warning "
+                                                            onclick="imgEmployee.click();"><i
+                                                                class="fa-regular fa-pen-to-square"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Employee Photo -->
 
-                                        <!-- Start Password -->
-                                        <div class="row mt-2">
-                                            <label for="empPwd" class="form-lable col-4 fw-bold">Password </label>
-                                            <div class="col-5">
-                                                <input type="password" id="empPwd" class="form-control" required
-                                                    onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'user', 'password')">
-                                            </div>
-                                            <div class="col text-center">
-                                                <button class="btninput"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- End Password -->
+                                                <!-- Start Employee Name -->
+                                                <div class="row mt-2">
+                                                    <label for="empName" class="form-lable col-4 fw-bold">Employee Name
+                                                    </label>
+                                                    <div class="col-5">
+                                                        <input type="text" id="empName" class="form-control">
+                                                    </div>
+                                                    <div class="col text-center">
+                                                        <button class="btn btn-warning"><i
+                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Employee Name -->
 
-                                        <!-- Start Email -->
-                                        <div class="row mt-3">
-                                            <label for="txtEmail" class="form-lable col-4 fw-bold">Email </label>
-                                            <div class="col-5">
-                                                <input type="email" class="form-control col" id="txtEmail" required
-                                                    onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'user', 'email')">
-                                            </div>
-                                            <div class="col text-center">
-                                                <button class="btninput"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- End Email -->
+                                                <!-- Start UserName -->
+                                                <div class="row mt-2">
+                                                    <label for="userName" class="form-lable col-4 fw-bold">User ID
+                                                    </label>
+                                                    <div class="col-5">
+                                                        <input type="text" id="userName" class="form-control"
+                                                            onkeyup="txtValidator(this,'^([a-z][a-z0-9]{7})$', 'userProfile', 'username')">
+                                                    </div>
+                                                    <div class="col text-center">
+                                                        <button class="btn btn-warning"><i
+                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End UserName -->
 
-                                        <!-- Make Buttons -->
-                                        <div class="row mt-3 p-1">
-                                            <div class="col text-end">
-                                                <button type="submit"
-                                                    class="btn btninput btn-outline-primary">Save</button>
-                                            </div>
-                                        </div>
-                                        <!-- End Buttons -->
+                                                <!-- Start Password -->
+                                                <div class="row mt-2">
+                                                    <label for="empPwd" class="form-lable col-4 fw-bold">Password
+                                                    </label>
+                                                    <div class="col-5">
+                                                        <input type="password" id="empPwd" class="form-control" required
+                                                            onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'userProfile', 'password')">
+                                                    </div>
+                                                    <div class="col text-center">
+                                                        <button class="btn btn-warning"><i
+                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Password -->
 
-                                    </form>
+                                                <!-- Start Email -->
+                                                <div class="row mt-3">
+                                                    <label for="txtEmail" class="form-lable col-4 fw-bold">Email
+                                                    </label>
+                                                    <div class="col-5">
+                                                        <input type="email" class="form-control col" id="txtEmail"
+                                                            required
+                                                            onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'userProfile', 'email')">
+                                                    </div>
+                                                    <div class="col text-center">
+                                                        <button class="btn btn-warning"><i
+                                                                class="fa-regular fa-pen-to-square"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Email -->
+
+                                                <!-- Make Buttons -->
+                                                <div class="row mt-3 p-1">
+                                                    <div class="col text-end">
+                                                        <button type="submit" class="btn btn-outline-success"
+                                                            onclick="buttonUserProfileS()">Save</button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Buttons -->
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <!-- End form -->
                                 </div>
                             </div>
-                            <!-- End form -->
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <script src="uIControllers/user.js"></script>
+            <script src="uIControllers/userEdit.js"></script>
 </body>
 
 <body th:replace="~{footer :: footerFragment}"></body>

@@ -46,7 +46,12 @@ public class UserController {
         userView.addObject("loggedusername", auth.getName());
         userView.addObject("title", "BIT Project 2024 | Manage User ");
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        userView.addObject("loggedusername", auth.getName());
+
         if (user.getEmployee_id() != null) {
             userView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {

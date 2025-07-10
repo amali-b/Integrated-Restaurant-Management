@@ -82,6 +82,7 @@ const refreshUserTable = () => {
     let users = getServiceRequest("/user/alldata");
 
     let propertyList = [
+        { property: "userphoto", dataType: "image-array" },
         { property: getEmpName, dataType: "function" },
         { property: "username", dataType: "string" },
         { property: "email", dataType: "string" },

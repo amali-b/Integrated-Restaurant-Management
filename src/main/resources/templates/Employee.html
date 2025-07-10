@@ -40,7 +40,7 @@
                     <!-- buttons display wenne nathi kranna d-none danne -->
                     <div id="divModifybtn" class="d-none">
                         <button class="button me-2 fw-bold" id="btnedit" type="button"
-                            onclick="employeeFormRefill(window['editob'], window['editrowno'])"><i
+                            onclick="employeeFormRefill(window['editob'], window['editrowno']); document.getElementById('formEmp').scrollIntoView({ behavior: 'smooth' });"><i
                                 class="fa-solid fa-angles-down icon"></i><br> Edit </button>
                         <button class="button me-2 fw-bold" id="btnprint" type="button" data-bs-toggle="modal"
                             data-bs-target="#modalEmployeePrint"
@@ -129,6 +129,28 @@
                         <div class="card-body crdbdy">
                             <!-- form eke default submit eka disable kranna one -->
                             <form id="formEmp" onsubmit="return false">
+                                <!-- Start Employee Photo -->
+                                <div class="row justify-content-center mt-2">
+                                    <div class="col-auto">
+                                        <!-- hidden input -->
+                                        <input type="file" id="imgEmployee" accept="image/*" style="display: none;"
+                                            onchange="fileValidator(this, 'employee', 'employeeimage',document.getElementById('imgPreview'), document.getElementById('clearBtn'), document.getElementById('imgContainer'))">
+                                        <div class="position-relative d-inline-block" id="imgContainer">
+                                            <!-- Clickable image -->
+                                            <img src="images/userimage.png" id="imgPreview" alt="Upload here"
+                                                class="img-thumbnail" style="cursor: pointer; max-width: 130px;"
+                                                onclick="document.getElementById('imgEmployee').click();">
+                                            <!-- clear button -->
+                                            <button type=" button" id="clearBtn"
+                                                class="btn btn-sm btn-danger position-absolute bottom-0 start-50 m-1"
+                                                style="display: none;">
+                                                Clear <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Employee Photo -->
+
                                 <!-- Start Name -->
                                 <div class="row mt-3">
                                     <!-- Start Full Name -->
