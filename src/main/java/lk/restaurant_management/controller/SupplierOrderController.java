@@ -48,7 +48,12 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         supplierOrderView.setViewName("SupplierOrder.html");
         supplierOrderView.addObject("loggedusername", auth.getName());
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        supplierOrderView.addObject("loggedusername", auth.getName());
+
         if (user.getEmployee_id() != null) {
             supplierOrderView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -109,10 +114,11 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
                 // do save
                 supplierOrderDao.save(supplierOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }
@@ -145,10 +151,11 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
                 // do save operation
                 supplierOrderDao.save(supplierOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Update : You don't have permission..!";
         }
@@ -184,10 +191,11 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
                 // do save operation
                 supplierOrderDao.save(extSupOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Delete : You don't have permission..!";
         }

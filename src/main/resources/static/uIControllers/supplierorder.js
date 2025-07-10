@@ -63,6 +63,7 @@ const refreshForm = () => {
 /* ############################## INNER FORM FUNCTIONS ################################# */
 
 // define function for check ingredients existance
+// exit check krena welawedima thama selected item eke unit price ekth set kranne
 const checkIngredientExt = () => {
     //dropdown eken select krena value eka aregnnewa object ekak lesa convert krela 
     let Selectedingredient = JSON.parse(SelectIngredints.value);
@@ -147,7 +148,7 @@ const refreshInnerFormandTable = () => {
     }
 
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootSupplyOrderhasIngredient, supplierorder.supplierorderHasIngredientList, column);
+    fillInnerTableFooter(tfootSupplyOrderhasIngredient, supplierorder.supplierorderHasIngredientList, column, columns.length);
 }
 
 const getIngredientName = (ob) => {
@@ -243,14 +244,14 @@ const buttonSupplierOrderIngredientSubmit = () => {
             confirmButtonText: "Yes, Submit!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                supplierorder.supplierorderHasIngredientList.push(supplierorderHasIngredient);
                 Swal.fire({
                     title: "Saved Successfully..!",
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1800
                 });
-                // main eke thyena list ekta inner object eka push krenewa
-                supplierorder.supplierorderHasIngredientList.push(supplierorderHasIngredient);
                 refreshInnerFormandTable();
             }
         });
@@ -261,7 +262,6 @@ const buttonSupplierOrderIngredientSubmit = () => {
             icon: "error"
         });
     }
-    //refreshInnerFormandTable();
 }
 
 const buttonSupplierOrderIngredientUpdate = () => {
@@ -296,7 +296,6 @@ const buttonSupplierOrderIngredientUpdate = () => {
             timer: 1500
         });
     }
-    // refreshInnerFormandTable();
 }
 
 /* ############################## MAIN FORM FUNCTIONS ################################# */
@@ -313,7 +312,6 @@ const refreshSupplierOrderTable = () => {
         { property: "ordercode", dataType: "string" },
         { property: getSupplierName, dataType: "function" },
         { property: "daterequired", dataType: "string" },
-        { property: getIngredients, dataType: "function" },
         { property: "totalamount", dataType: "decimal" },
         { property: getSupplyOrderStatus, dataType: "function" }
     ];
@@ -348,11 +346,6 @@ const getSupplierName = (dataOb) => {
     return dataOb.supplier_id.supplier_name;
 }
 
-//define function for get Ingredients list
-const getIngredients = (dataOb) => {
-    return "Items";
-}
-
 //define Form edit function
 const supplierOrderFormRefill = (ob, rowIndex) => {
     $('#modalSupplierOrder').modal('show');
@@ -372,6 +365,7 @@ const supplierOrderFormRefill = (ob, rowIndex) => {
     } else {
         txtNote.value = ob.note;
     }
+    // innerform eke date tika fill kregnna one nisa
     refreshInnerFormandTable();
 }
 
@@ -405,9 +399,9 @@ const checkFormUpdate = () => {
     let updates = "";
 
     if (supplierorder != null && oldsupplierorder != null) {
-        if (supplierorder.supplier_id.supplier_name != oldsupplierorder.supplier_id.supplier_name) {
-            updates = updates + "Supplier name has updated from " + oldsupplierorder.supplier_id.supplier_name + " \n";
-        }
+        /*  if (supplierorder.supplier_id.supplier_name != oldsupplierorder.supplier_id.supplier_name) {
+             updates = updates + "Supplier name has updated from " + oldsupplierorder.supplier_id.supplier_name + " \n";
+         } */
         if (supplierorder.daterequired != oldsupplierorder.daterequired) {
             updates = updates + "Required Date has updated from " + oldsupplierorder.daterequired + " \n";
         }
@@ -569,6 +563,7 @@ const buttonSupplierOrderClear = () => {
         }
     });
 }
+
 //define function for clear Inner form
 const buttonInnerFormClear = () => {
     Swal.fire({
@@ -604,7 +599,7 @@ const buttonModalClose = () => {
 
 
 //function define for print Supplier Order record
-const supplierOrderPrint = (ob, rowIndex) => {
+/* const supplierOrderPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodySupplierOrder, rowIndex, "White");
 
@@ -613,7 +608,7 @@ const supplierOrderPrint = (ob, rowIndex) => {
     const printView = `
         <html>
         <head>
-            <title>Submenu Management | 2025</title>
+            <title>Purchase Order Management | 2025</title>
             <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
             <style>
                 body {
@@ -707,4 +702,149 @@ const supplierOrderPrint = (ob, rowIndex) => {
         newWindow.print();
         newWindow.close();
     }, 300);
-}
+} */
+
+
+//function define for print Order record
+const supplierOrderPrint = (ob, rowIndex) => {
+    console.log("Printing order:", ob, rowIndex);
+
+    // table eke row eka click kalama color eka change wenw
+    activeTableRow(tBodySupplierOrder, rowIndex, "White");
+
+    // Print eke content eka generate krena function eka cll krenewa
+    const printContent = generateSupplyOrderPrintHTML(ob);
+
+    // Create and configure the print window
+    const printWindow = window.open();
+
+    // Write content and handle printing
+    printWindow.document.writeln(printContent);
+    printWindow.document.close();
+
+    // Wait for content to load, then print
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    };
+};
+// Print eke content eka generate krena function eka define krenewa
+// @param {Object} order - order object eke thama all order details thyenne
+const generateSupplyOrderPrintHTML = (ob) => {
+    ob = supplierorder;
+    const currentDateTime = new Date().toLocaleString();
+
+    //  @returns {string} - print window eke display wenna one html eka return krnw
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- link bs5 -->
+        <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+        <!-- link css -->
+        <link rel="stylesheet" href="css/print.css">
+
+        <title> Purchase Order Management - BIT 2025</title>
+    </head>
+    <body>
+        <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Purchase Order Receipt</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th>Purcahse Order ID</th>
+                    <td>${ob.ordercode}</td>
+                </tr>
+                <tr>
+                    <th> Supplier Name</th>
+                    <td>${ob.supplier_id.supplier_name}</td>
+                </tr>
+                <tr>
+                    <th> Required Date </th>
+                    <td>${ob.daterequired}</td></tr>
+                <tr>
+                    <th> Status </th>
+                    <td>${ob.supplyorderstatus_id.status}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="items-section">
+            <h3> Order Ingredients </h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ingredient Name</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${generateItemRows(ob)}
+                </tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="4">Total</td>
+                        <td>Rs.  ${formatCurrency(ob.totalamount)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your business! </p>
+            &copy; 2025 BIT Project. All rights reserved.
+            <p>Generated on ${currentDateTime}</p>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
+//@param {Array} items - Array of order items
+//@returns {string} - HTML string for table rows
+const generateItemRows = (supplierorder) => {
+    // Extract items from the correct association names
+    const items = supplierorder.supplierorderHasIngredientList || [];
+
+    return items.map((item, index) => {
+        // Handle different possible database structures
+        const itemName = item.ingredient_id?.ingredient_name || "";
+
+        const unitPrice = item.price;
+
+        const quantity = item.quantity;
+
+        const lineTotal = item.lineprice;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${itemName}</td>
+                <td>Rs. ${formatCurrency(unitPrice)}</td>
+                <td>${quantity}</td>
+                <td>Rs. ${formatCurrency(lineTotal)}</td>
+            </tr>
+        `;
+    }).join('');
+};
+
+//  @param {number} amount - The amount to format
+//  @returns {string} - Formatted currency string
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount || 0);
+};
