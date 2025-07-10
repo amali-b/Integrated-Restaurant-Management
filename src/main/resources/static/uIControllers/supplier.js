@@ -109,6 +109,7 @@ const refreshSupplierTable = () => {
     $('#tableSupplier').DataTable(); //add dataTable
 }
 
+// define function for get supplier status
 const getSupplierStatus = (dataOb) => {
     if (dataOb.supplierstatus_id.status == "Active") {
         return "<p class='btn btn-outline-success text-center'>" + dataOb.supplierstatus_id.status + "</p>";
@@ -122,6 +123,7 @@ const getSupplierStatus = (dataOb) => {
     return dataOb.supplierstatus_id.status;
 }
 
+// define function for get supplier type
 const getSupplierType = (dataOb) => {
     let ingredientCategories = getServiceRequest("/ingredientcategory/alldata");
     // return dataOb.supplier_type; (return kranne type eke int eka)
@@ -135,6 +137,7 @@ const getSupplierType = (dataOb) => {
     }
 }
 
+// define function for select one ingredient from selected category
 const selectOneIngredient = () => {
     if (SelectBycategory.value != "") {
         //selectedByCategory list eken selected value eka object ekk baweta convert krela selectedIngredient variable ekata danewa
@@ -160,6 +163,7 @@ const selectOneIngredient = () => {
     }
 }
 
+// define function for select all ingredients from selected category
 const selectAllIngredient = () => {
     // IngredientsBycategory eke ingredients one by one kyewela supplier.supplyIngredients array ekt push krenewa
     for (const ingredient of IngredientsBycategory) {
@@ -173,6 +177,7 @@ const selectAllIngredient = () => {
     fillDropdown(SelectBycategory, "", IngredientsBycategory, "ingredient_name");
 }
 
+// define function for remove all ingredients from selected category
 const removeAllIngredient = () => {
     // supplier.supplyIngredients array eke ingredients one by one kyewela IngredientsBycategory array ekt push krenewa
     for (const ingredient of supplier.supplyIngredients) {
@@ -186,7 +191,7 @@ const removeAllIngredient = () => {
     fillDropdown(SelectedIngredints, "", supplier.supplyIngredients, "ingredient_name");
 }
 
-const removeOneIngredient = () => {
+/* const removeOneIngredient = () => {
     if (SelectedIngredints.value != "") {
         //SelectedIngredints list eken selected value eka object ekk baweta convert krela removedIngredient variable ekata danewa
         let removedIngredient = JSON.parse(SelectedIngredints.value);
@@ -214,7 +219,7 @@ const removeOneIngredient = () => {
         });
     }
 
-}
+} */
 
 //define Form edit function
 const supplierFormRefill = (ob, rowIndex) => {
@@ -352,7 +357,7 @@ const checkFormUpdate = () => {
 
     if (supplier != null && oldsupplier != null) {
         if (supplier.supplier_name != oldsupplier.supplier_name) {
-            uupdates = updates + "Supplier name has updated from " + oldsupplier.supplier_name + " \n";
+            updates = updates + "Supplier name has updated from " + oldsupplier.supplier_name + " \n";
         }
         if (supplier.contact_no != oldsupplier.contact_no) {
             updates = updates + "Phone Number has updated from " + oldsupplier.contact_no + " \n";
@@ -619,26 +624,112 @@ const buttonSupplierClear = () => {
 const supplierPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodySupplier, rowIndex, "White");
-
     let newWindow = window.open();
-    let printView = '<html>'
-        + '<head>'
-        + '<link rel="stylesheet" href="../Resourse/bootstrap-5.2.3/css/bootstrap.min.css">'
-        + '<title>BIT Project | 2025</title></head>'
-        + '<body><h1>Print Supplier Details</h1>'
-        + '<table class="table-bordered table-stripped border-1 w-25">'
-        + '<tr><th> Supplier Name :</th><td>' + ob.supplier_name + '</td></tr>'
-        + '<tr><th> Mobile Number :</th><td>' + ob.contact_no + '</td></tr>'
-        + '<tr><th> Email :</th><td>' + ob.email + '</td></tr>'
-        + '<tr><th> Address :</th><td>' + ob.address + '</td></tr>'
-        + '<tr><th> Bank Name :</th><td>' + ob.bankname + '</td></tr>'
-        + '<tr><th> Branch Name :</th><td>' + ob.branchname + '</td></tr>'
-        + '<tr><th> Account Number :</th><td>' + ob.accountnumber + '</td></tr>'
-        + '<tr><th> Account Holder Name :</th><td>' + ob.holdername + '</td></tr>'
-        + '<tr><th> Supplier type :</th><td>' + ob.supplier_type + '</td></tr>'
-        + '<tr><th> Status :</th><td>' + ob.supplierstatus_id.status + '</td></tr>'
-        + '</table>'
-        + '</body></html>'
+    const currentDateTime = new Date().toLocaleString();
+
+    const printView = `
+        <html>
+        <head>
+            <title>Supplier Management | 2025</title>
+            <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+            <style>
+                body {
+                    padding: 30px;
+                    font-family: Arial, sans-serif;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                .header img {
+                    max-width: 100px;
+                    display: block;
+                    margin: 0 auto 10px auto;
+                }
+                h1 {
+                    font-size: 24px;
+                    margin-bottom: 5px;
+                }
+                .date-time {
+                    font-size: 12px;
+                    color: #555;
+                }
+                table {
+                    margin: auto;
+                    width: 60%;
+                }
+                th {
+                    text-align: left;
+                    width: 40%;
+                    background-color: #f8f9fa;
+                    padding: 8px;
+                }
+                td {
+                    background-color: #fff;
+                    padding: 8px;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 50px;
+                    font-size: 12px;
+                    color: #888;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Supllier Details</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+            </div>
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>GRN Number</th>
+                    <td>${ob.supplier_name}</td>
+                </tr>
+                <tr>
+                    <th>Purchase Order Number</th>
+                    <td>${ob.contact_no}</td>
+                </tr>
+                <tr>
+                    <th>Received Ingredients</th>
+                    <td>${ob.email}</td>
+                </tr>
+                <tr>
+                    <th>Supplier Invoice Number</th>
+                    <td>${ob.address}</td>
+                </tr>
+                <tr>
+                    <th>Received Date</th>
+                    <td>${ob.bankname}</td>
+                </tr>
+                <tr>
+                    <th>Received By</th>
+                    <td>${ob.branchname}</td>
+                </tr>
+                <tr>
+                    <th>Total Amount</th>
+                    <td>LKR ${accountnumber}</td>
+                </tr>
+                <tr>
+                    <th>Discounted Amount</th>
+                    <td>LKR ${holdername}</td>
+                </tr>
+                <tr>
+                    <th>Net Amount</th>
+                    <td>LKR ${supplier_type}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>${supplierstatus_id.status}</td>
+                </tr>
+            </table>
+            <div class="footer">
+                &copy; 2025 BIT Project. All rights reserved.
+            </div>
+        </body>
+        </html>
+    `;
     newWindow.document.writeln(printView);
 
     setTimeout(() => {
