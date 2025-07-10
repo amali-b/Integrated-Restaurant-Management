@@ -35,11 +35,15 @@
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" id="btnuser" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <span th:text="${loggeduserphoto}"></span>
+                        <!-- img eka access kale header eka athule script tag eka athule javascript use krela -->
+                        <img src="images/admin.jpg" id="imgLoggedUser" class="rounded-circle"
+                            style="max-width: 30px; max-height: 30px;">
+
+                        <!--##  UI ehekata attribute ekak set kraddi eka thymeleafe & javascript walin access krannath puluwn ##-->
                         <span th:text="${loggedusername}">Profile</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/user">Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="/editUser">Edit Profile</a></li>
                         <li><a class="dropdown-item" href="/logout">Log Out</a></li>
                     </ul>
                 </div>
@@ -57,14 +61,6 @@
                 <span>Home</span>
             </a>
         </li>
-
-        <!-- Customer 
-        <li class="sidebar-item">
-            <a href="/customer" class="sidebar-link">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>Customer</span>
-            </a>
-        </li>-->
 
         <!-- Customer -->
         <li class="sidebar-item">
@@ -118,13 +114,14 @@
                     <a href="/supplierorder" class="sidebar-link">Order</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/supplierpayment" class="sidebar-link">Payment</a>
+                    <a href="/grn" class="sidebar-link">GRN</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/grn" class="sidebar-link">GRN</a>
+                    <a href="/supplierpayment" class="sidebar-link">Payment</a>
                 </li>
             </ul>
         </li>
+
         <!-- Ingredients -->
         <li class="sidebar-item">
             <a href="/ingredient" class="sidebar-link">
@@ -138,6 +135,23 @@
                 <i class="fa-solid fa-store"></i>
                 <span>Inventory</span>
             </a>
+        </li>
+
+        <!-- Table & Vehicle -->
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#extra"
+                aria-expanded="false" aria-controls="extra">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span>Table & Vehicle</span>
+            </a>
+            <ul id="extra" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/tables" class="sidebar-link">Table</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/vehicle" class="sidebar-link">Vehicle</a>
+                </li>
+            </ul>
         </li>
 
         <!-- Administration -->
@@ -161,7 +175,7 @@
         </li>
 
         <!-- Authentication -->
-        <li class="sidebar-item">
+        <!-- <li class="sidebar-item">
             <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
                 aria-expanded="false" aria-controls="auth">
                 <i class="fa-solid fa-file-shield"></i>
@@ -169,16 +183,16 @@
             </a>
             <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item">
-                    <a href="/login" class="sidebar-link">User Profile</a>
+                    <a href="/editUser" class="sidebar-link">Edit Profile</a>
                 </li>
             </ul>
-        </li>
+        </li> -->
 
         <!-- Reports -->
         <li class="sidebar-item">
             <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#reports"
                 aria-expanded="false" aria-controls="reports">
-                <i class="fa-solid fa-file-shield"></i>
+                <i class="fa-solid fa-file-lines"></i>
                 <span>Reports</span>
             </a>
             <ul id="reports" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">

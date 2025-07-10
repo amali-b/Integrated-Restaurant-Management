@@ -22,4 +22,15 @@
     <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css">
     <!-- link sweetalert files -->
     <script src="sweetalert2-11.17.2/package/dist/sweetalert2.all.min.js"></script>
+
+    <!-- add logged user photo -->
+    <script th:inline="javascript">
+        window.addEventListener("load", () => {
+            // string ekk wdyt ena photo eka allegnnewa
+            let loggedUserPhoto = /* [[${loggeduserphoto}]] */'${loggeduserphoto}';
+            if (loggedUserPhoto != null) {
+                imgLoggedUser.src = atob(loggedUserPhoto);
+            }
+        });
+    </script>
 </head>
