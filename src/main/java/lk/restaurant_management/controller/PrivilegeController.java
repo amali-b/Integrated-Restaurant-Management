@@ -44,7 +44,12 @@ public class PrivilegeController {
         privilegeView.addObject("loggedusername", auth.getName());
         privilegeView.addObject("title", "BIT Project 2024 | Privilege ");
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        privilegeView.addObject("loggedusername", auth.getName());
+
         if (user.getEmployee_id() != null) {
             privilegeView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {

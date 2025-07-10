@@ -51,9 +51,13 @@ public class CustomerController {
         customerView.setViewName("Customer.html");
         customerView.addObject("loggedusername", auth.getName());
 
-        User user = userDao.getByUsername(auth.getName());
-        if (user.getEmployee_id() != null) {
-            customerView.addObject("loggedempname", user.getEmployee_id().getCallingname());
+        // create user object
+        User loggeduser = userDao.getByUsername(auth.getName());
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        customerView.addObject("loggeduserphoto", loggeduser.getUserphoto());
+
+        if (loggeduser.getEmployee_id() != null) {
+            customerView.addObject("loggedempname", loggeduser.getEmployee_id().getCallingname());
         } else {
             customerView.addObject("loggedempname", "Admin");
         }

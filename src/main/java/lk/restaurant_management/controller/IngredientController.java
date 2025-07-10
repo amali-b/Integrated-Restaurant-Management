@@ -52,7 +52,12 @@ public class IngredientController implements CommonController<Ingredient> {
         ingredientView.setViewName("Ingredient.html");
         ingredientView.addObject("loggedusername", auth.getName());
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        ingredientView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             ingredientView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -128,6 +133,24 @@ public class IngredientController implements CommonController<Ingredient> {
 
         if (userPrivilege.getPrivi_select()) {
             return ingredientDao.getListBySupplier(supplierid);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new ArrayList<>();
+        }
+    }
+
+    // request mapping for get ingredient object --
+    // URL[/ingredient/listbysupplierOrder?supplierorderid= 1]
+    @GetMapping(value = "/ingredient/listbysupplierOrder", params = {
+            "supplierorderid" }, produces = "application/json")
+    public List<Ingredient> getIngredientListBySupplierOrder(@RequestParam("supplierorderid") Integer supplierorderid) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Ingredient");
+
+        if (userPrivilege.getPrivi_select()) {
+            return ingredientDao.getListBySupplierOrder(supplierorderid);
         } else {
             // privilege naththan empty array ekak return krnw
             return new ArrayList<>();

@@ -42,7 +42,12 @@ public class InventoryController {
         inventoryView.addObject("loggedusername", auth.getName());
         inventoryView.addObject("title", "BIT Project 2024 | Inventory Management");
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        inventoryView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             inventoryView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {

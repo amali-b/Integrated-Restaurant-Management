@@ -57,7 +57,12 @@ public class SupplierController implements CommonController<Supplier> {
         supplierView.addObject("loggedusername", auth.getName());
         supplierView.addObject("title", "BIT Project 2024 | Supplier");
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        supplierView.addObject("loggedusername", auth.getName());
+
         if (user.getEmployee_id() != null) {
             supplierView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {

@@ -44,9 +44,11 @@ public class LoginController {
         // object eka set krenewa
         dashboardView.addObject("loggedusername", auth.getName());
 
-        User user = userDao.getByUsername(auth.getName());
-        if (user.getEmployee_id() != null) {
-            dashboardView.addObject("loggedempname", user.getEmployee_id().getCallingname());
+        User loggeduser = userDao.getByUsername(auth.getName());
+        dashboardView.addObject("loggeduserphoto", loggeduser.getUserphoto());
+
+        if (loggeduser.getEmployee_id() != null) {
+            dashboardView.addObject("loggedempname", loggeduser.getEmployee_id().getCallingname());
         } else {
             dashboardView.addObject("loggedempname", "Admin");
         }
@@ -61,7 +63,12 @@ public class LoginController {
         // object eka set krenewa
         editUserView.addObject("loggedusername", auth.getName());
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        editUserView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             editUserView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
