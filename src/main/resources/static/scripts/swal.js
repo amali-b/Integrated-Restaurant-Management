@@ -1,13 +1,7 @@
 // define common swal submit function 
 const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
     //check errors
-    if (errors) {
-        Swal.fire({
-            title: "Failed to Submit.! Has following errors :",
-            text: errors,
-            icon: "error"
-        });
-    } else {
+    if (errors == "") {
         Swal.fire({
             //if there are no errors get confirmation
             title: title + obName + ".?",
@@ -39,7 +33,14 @@ const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
                 }
             }
         });
+    } else {
+        Swal.fire({
+            title: "Failed to Submit.! Has following errors :",
+            text: errors,
+            icon: "error"
+        });
     }
+
 }
 
 // define common swal update function 
