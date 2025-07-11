@@ -11,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.GrnDao;
+import lk.restaurant_management.dao.GrnstatusDao;
 import lk.restaurant_management.dao.SupplierPaymentDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Grn;
@@ -32,6 +32,8 @@ public class SupplierPaymentController {
     private SupplierPaymentDao supplierPaymentDao;
     @Autowired
     private GrnDao grnDao;
+    @Autowired
+    private GrnstatusDao grnstatusDao;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -110,6 +112,13 @@ public class SupplierPaymentController {
 
                 // grn eke paidamount eka update krenewa payment amount eka add krela
                 grn.setPaidamount(grn.getPaidamount().add(supplierpayment.getPaidamount()));
+
+                if (grn.getNetamount() != grn.getPaidamount()) {
+                    grn.setGrnstatus_id(grnstatusDao.getReferenceById(2));
+                }
+                if (grn.getNetamount() == grn.getPaidamount()) {
+                    grn.setGrnstatus_id(grnstatusDao.getReferenceById(3));
+                }
 
                 // GrnHasIngredientList list ekata loop ekak dala read krela
                 for (GrnHasIngredient ghi : grn.getGrnHasIngredientList()) {
