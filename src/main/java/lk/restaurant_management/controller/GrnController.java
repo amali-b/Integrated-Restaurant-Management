@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.GrnDao;
-import lk.restaurant_management.dao.GrnstatusDao;
 import lk.restaurant_management.dao.InventoryDao;
 import lk.restaurant_management.dao.InventoryStatusDao;
 import lk.restaurant_management.dao.UserDao;
@@ -45,9 +44,6 @@ public class GrnController implements CommonController<Grn> {
 
     @Autowired
     private InventoryStatusDao inventoryStatusDao;
-
-    @Autowired
-    private GrnstatusDao grnstatusDao;
 
     @Autowired
     private UserPrivilegeController userPrivilegeController;
@@ -274,7 +270,6 @@ public class GrnController implements CommonController<Grn> {
                 // set auto generate value
                 extGrn.setDeleteuser(loggedUser.getId());
                 extGrn.setDeletedatetime(LocalDateTime.now());
-                extGrn.setGrnstatus_id(grnstatusDao.getReferenceById(2));
 
                 // save operator
                 // association eke main side eka block krenawa (using @JsonIgnore) main
