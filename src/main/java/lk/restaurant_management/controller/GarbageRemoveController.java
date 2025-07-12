@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.GarbageremoveDao;
+import lk.restaurant_management.dao.InventoryDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Garbageremove;
+import lk.restaurant_management.entity.Inventory;
 import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.User;
 
@@ -27,6 +29,9 @@ public class GarbageRemoveController {
 
     @Autowired
     private GarbageremoveDao garbageremoveDao; // generate instance for interface file
+
+    @Autowired
+    private InventoryDao inventoryDao;
 
     @Autowired
     private UserDao userDao;
@@ -69,7 +74,7 @@ public class GarbageRemoveController {
     // define mapping get all garbageremove data -- URL [/garbageremove/alldata]
     // backend eke idan data fontend ekata return kranne json format eken nisa
     // (produces = "application/json")
-    @GetMapping(value = "/garbageremove/allempdata", produces = "application/json")
+    @GetMapping(value = "/garbageremove/alldata", produces = "application/json")
     public List<Garbageremove> getGarbageRemoveAllData() {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -112,6 +117,21 @@ public class GarbageRemoveController {
                 garbageremoveDao.save(garbageremove);
 
                 // manage dependancies
+
+                // get Existing inventory object from inventory dao layer
+                Inventory exInventory = inventoryDao.getReferenceById(garbageremove.getInventory_id().getId());
+
+                // set available quantity to existing inventory object by substracting removed
+                // quantity of garbage remove
+                exInventory
+                        .setAvailablequantity(exInventory.getAvailablequantity().subtract(garbageremove.getQuantity()));
+
+                // set removed quantity to existing inventory object by adding removed garbage
+                // quantity
+                exInventory.setRemovedquantity(exInventory.getRemovedquantity().add(garbageremove.getQuantity()));
+
+                // save updated inventory object
+                inventoryDao.save(exInventory);
 
                 return "OK";
 

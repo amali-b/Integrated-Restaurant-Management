@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Manage Garbage </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center m-0 mt-2">
+                <div class="col">
+                    <div class="card" style="border-style: outset; border-color:#f7d290;">
+                        <div class="card-head">
+                            <h4 class="card-title">Garbage Remove Form</h4>
+                        </div>
+                        <div class="card-body crdbdy">
+                            <!-- Start Form -->
+                            <form id="formGarbageRemove" onsubmit="return false">
+                                <div class="row mt-2">
+                                    <!-- Start Ingredient -->
+                                    <div class="col">
+                                        <label for="SelectIngredints" class="form-lable fw-bold">Select
+                                            Ingredients<span class="text-danger"> *</span></label>
+                                        <div class="col">
+                                            <select class="form-select" id="SelectIngredints"
+                                                onchange="selectDynamicElementValidator(this, 'garbageremove', 'ingredient_id')">
+                                                <option value="" selected disabled>
+                                                    Select
+                                                    Ingredients
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- End Ingredient -->
+
+                                    <!-- Start Quantity -->
+                                    <div class="col">
+                                        <label for="txtQuantity" class="form-lable fw-bold">Quantity<span
+                                                class="text-danger"> *</span></label>
+                                        <input type="text"
+                                            onkeyup="txtValidator(this,'^[1-9][0-9]{0,4}[.]{0,1}[0-9]{0,3}$', 'garbageremove', 'quantity')"
+                                            class="form-control" id="txtQuantity" placeholder="Enter Quantity" required>
+                                    </div>
+                                    <!-- End Quantity -->
+                                </div>
+
+                                <!-- Start Removed Reason -->
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="txtRemovedReason" class="form-lable fw-bold">
+                                            Removed Reason :<span class="text-danger"> *</span></label>
+                                        <div class="col">
+                                            <textarea class="form-control" id="txtRemovedReason"
+                                                placeholder="Enter Removed Reason"
+                                                onkeyup="txtValidator(this,'^([A-Za-z0-9\/]{1,20}[.]?[\s]?)+$','garbageremove','reason')"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Removed Reason-->
+
+                                <!-- Make Buttons -->
+                                <div class="row mt-4">
+                                    <div class="col-2 text-start">
+                                        <button class="btninput" type="reset" id="btnclr"
+                                            onclick="buttonFormClear()">Clear
+                                            <i class="fa-solid fa-arrows-rotate"></i></button>
+                                    </div>
+                                    <div class="col text-end">
+                                        <button class="btninput" onclick="buttonGarbageremoveSubmit()" id="btnsubmit">
+                                            Submit
+                                            <i class="fa-solid fa-user-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- End Buttons -->
+                            </form>
+                            <!-- End form -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Table -->
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="tablet table-bordered" id="tableGarbageRemove">
+                                <thead>
+                                    <tr id="tablehead">
+                                        <th> # </th>
+                                        <th> Ingredient </th>
+                                        <th> Quantity </th>
+                                        <th> Reason </th>
+                                        <th> Removed Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tableBody" id="tBodyGarbageRemove">
+                                    <tr>
+                                        <td> 1 </td>
+                                        <td> Leeks </td>
+                                        <td> 0.5kg </td>
+                                        <td> Rotten </td>
+                                        <td> 20205-07-12 </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Table -->
+            </div>
+        </div>
+
+    </div>
+
+    <script src="uIControllers/garbageremove.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>
