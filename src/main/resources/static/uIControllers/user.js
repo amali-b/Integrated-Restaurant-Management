@@ -481,6 +481,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshUserForm();
             $('#modalUser').modal('hide');
+            refreshUserTable();
         }
     });
 }

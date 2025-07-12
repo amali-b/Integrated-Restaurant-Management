@@ -580,6 +580,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalGrn').modal('hide');
+            refreshGrnTable();
         }
     });
 }

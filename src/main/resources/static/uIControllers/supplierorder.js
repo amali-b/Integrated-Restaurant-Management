@@ -593,6 +593,8 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalSupplierOrder').modal('hide');
+            //call refresh table function
+            refreshSupplierOrderTable();
         }
     });
 }

@@ -455,6 +455,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshSubmenuForm();
             $('#modalSubmenu').modal('hide');
+            refreshSubmenutable();
         }
     });
 }

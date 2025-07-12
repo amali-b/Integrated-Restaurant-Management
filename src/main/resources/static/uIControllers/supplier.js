@@ -595,6 +595,8 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalSupplier').modal('hide');
+            //call refresh table function
+            refreshSupplierTable();
         }
     });
 }

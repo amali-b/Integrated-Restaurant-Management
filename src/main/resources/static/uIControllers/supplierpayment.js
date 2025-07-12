@@ -158,7 +158,11 @@ SelectGrn.addEventListener("change", () => {
 
     /* ### Calculate the due amount ### */
     let netamount = parseFloat(grn.netamount).toFixed(2);
+    console.log("netamount : " + netamount);
+
     let payamount = grn.paidamount;
+    console.log("payamount : " + payamount);
+
     if (payamount != null) {
         payamount = parseFloat(grn.paidamount).toFixed(2);
     } else {
@@ -445,6 +449,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalSupplierPayment').modal('hide');
+            refreshSupplierPaymentTable();
         }
     });
 }

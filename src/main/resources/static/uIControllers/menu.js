@@ -360,6 +360,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalMenu').modal('hide');
+            refreshMenuTable();
         }
     });
 }

@@ -469,6 +469,8 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalPrivilege').modal('hide');
+            //call refresh table function
+            refreshPrivilegeTable();
         }
     });
 }

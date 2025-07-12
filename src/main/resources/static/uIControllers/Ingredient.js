@@ -329,6 +329,8 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshIngredientForm();
             $('#modalIngredient').modal('hide');
+            //call refresh Table
+            refreshIngredienttable();
         }
     });
 }
