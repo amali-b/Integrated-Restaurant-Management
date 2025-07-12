@@ -36,6 +36,7 @@ public class WebConfiguration {
                     .requestMatchers("/index").permitAll()
                     // allow access only for admin, manger, Cashier, Chef, As-Manaager
                     .requestMatchers("/dashboard").permitAll()
+                    .requestMatchers("/dashboard/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
                     // allow access only for admin, manger, As-Manaager
                     .requestMatchers("/employee/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
                     // allow access only for admin, manger
@@ -81,7 +82,7 @@ public class WebConfiguration {
                     .requestMatchers("/orderTakeaway/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/orderDelivery/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/orderStatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
-                    .requestMatchers("/orderType/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/order/Type/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/tables/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/vehicle/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/vehiclestatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
