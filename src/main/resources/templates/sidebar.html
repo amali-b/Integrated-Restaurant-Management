@@ -77,27 +77,10 @@
                     <a href="/order" class="sidebar-link">Orders</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/orderpayment" class="sidebar-link">Order Payments</a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Submenu & Menu -->
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#items"
-                aria-expanded="false" aria-controls="items">
-                <i class="fa-solid fa-utensils"></i>
-                <span>Order Items</span>
-            </a>
-            <ul id="items" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
                     <a href="/kitchen" class="sidebar-link">Kitchen</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/submenu" class="sidebar-link">Submenu</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="/menuitems" class="sidebar-link">Menu Items</a>
+                    <a href="/orderpayment" class="sidebar-link">Order Payments</a>
                 </li>
             </ul>
         </li>
@@ -125,18 +108,39 @@
             </ul>
         </li>
 
-        <!-- Ingredients -->
+        <!-- Submenu & Menu -->
         <li class="sidebar-item">
-            <a href="/ingredient" class="sidebar-link">
-                <i class="fa-solid fa-carrot"></i>
-                <span>Ingredients</span>
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#items"
+                aria-expanded="false" aria-controls="items">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Items</span>
             </a>
+            <ul id="items" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/submenu" class="sidebar-link">Submenu</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/menuitems" class="sidebar-link">Menu Items</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/ingredient" class="sidebar-link">Ingredients</a>
+                </li>
+            </ul>
         </li>
+
         <!-- Inventory -->
         <li class="sidebar-item">
             <a href="/inventory" class="sidebar-link">
                 <i class="fa-solid fa-store"></i>
                 <span>Inventory</span>
+            </a>
+        </li>
+
+        <!-- Garbage Remove -->
+        <li class="sidebar-item">
+            <a href="/garbageremove" class="sidebar-link">
+                <i class="fa-solid fa-recycle"></i>
+                <span>Garbage Remove</span>
             </a>
         </li>
 
@@ -200,16 +204,16 @@
             </a>
             <ul id="reports" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item">
-                    <a href="/reportPayment" class="sidebar-link">Payment Report</a>
+                    <a href="/reportPayment" class="sidebar-link">Supplier Payment Report</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/reportSales" class="sidebar-link">Sales Report</a>
+                    <a href="/reportSales" class="sidebar-link">GRN Report</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/reportPurchase" class="sidebar-link">Purchase Report</a>
+                    <a href="/reportPurchase" class="sidebar-link">Inventory Stock Report</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/reportCustomer" class="sidebar-link">Customer Report</a>
+                    <a href="/reportCustomer" class="sidebar-link">Sales Summary Report</a>
                 </li>
             </ul>
         </li>
