@@ -17,6 +17,8 @@
     <script src="jquery-3.7.1.min.js"></script>
     <!-- link icon files -->
     <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css">
+    <!-- link chart js file -->
+    <script src="chart/chart.js"></script>
 </head>
 
 <body>
@@ -31,10 +33,10 @@
             <!--Start Dashboard body -->
             <div class="main" id="dashboardItems">
                 <!-- ORDER UI START -->
-                <h3>Bando offers</h3>
-                <p class="pagecontent">The Best Tasting Experience</p>
+                <h3 class="mb-0">Bando offers</h3>
+                <p class="pagecontent mb-0">The Best Tasting Experience</p>
 
-                <div class="justify-content-md-center d-flex mb-4">
+                <div class="justify-content-md-center d-flex mb-3">
                     <h4 class="text-center d-grid txtorder">Make a Order</h4>
                 </div>
 
@@ -63,42 +65,77 @@
                 <!-- ORDER UI END -->
 
                 <!-- START DASHBOARD VIEW -->
-                <div class="row d-flex d-flex justify-content-evenly mt-5">
-                    <!-- d-grid : to collapse by clicking anywhere in the button -->
-                    <!-- <div class="d-grid text-center col-2 viewDashboard" id="btncustomer">
-                        <a class="btn btn-outline btn-lg" href="/customer" type="button" role="button">
-                            CUSTOMER
-                        </a>
+                <div class="row d-flex justify-content-evenly mt-3 p-3">
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <div class="row">
+                                    <p class="col card-text"> Weekly Sales</p>
+                                    <span class="col text-end"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                                </div>
+                                <h4 class="card-title" id="txtSaleSummary">LKR 25000</h4>
+                                <p class="card-text"><small>Increased by 10%</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/supplier" type="button" role="button">
-                            SUPLLIER
-                        </a>
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <p class="card-text">Order Summary</p>
+                                <h4 class="card-title">2050</h4>
+                                <p class="card-text"><small>Increased by 10%</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/submenu" type="button" role="button">
-                            SUBMENU
-                        </a>
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <div class="row">
+                                    <p class="col card-text">Supplier Payment</p>
+                                    <span class="col-1 text-end"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                                </div>
+                                <h4 class="card-title">LKR 15000</h4>
+                                <p class="card-text"><small>Increased by 10%</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/menuitems" type="button" role="button">
-                            MENU ITEMS
-                        </a>
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <p class="card-text">New Customer Registrations</p>
+                                <h4 class="card-title">10</h4>
+                                <p class="card-text"><small>Increased by 10%</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/ingredient" type="button" role="button">
-                            INGREDIENT
-                        </a>
-                    </div> -->
                 </div>
+                <!-- End Dashboard View -->
+
+                <!-- Start Chart View -->
+                <div class="row p-3">
+                    <div class="col-6 justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body">
+                                <canvas id="doughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Chart View -->
+
             </div>
-            <!-- End Dashboard body -->
-
+            <!-- End Dashboard head  -->
         </div>
-        <!-- End Dashboard head  -->
-    </div>
 
-    <script src="uIControllers/dashboard.js"></script>
+        <script src="uIControllers/dashboard.js"></script>
+        <script src="scripts/common.js"></script>
 </body>
 
 </html>
