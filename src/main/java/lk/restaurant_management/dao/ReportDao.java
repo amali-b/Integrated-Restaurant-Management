@@ -24,14 +24,28 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
                         "so where date(so.addeddatetime) between current_date()- interval 6 month and current_date() group by week(so.addeddatetime);", nativeQuery = true)
         String[][] getPaymentByWeekly(String strartdate, String enddate);
 
-        // get sales summary of past 6 months by orders
+        /* ##### reports for Dashboard ######## */
 
+        // get sales summary of last week by orders
         @Query(value = "SELECT sum(o.netamount) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 7 day and current_date();", nativeQuery = true)
         String[][] getOrderByPriviousLastweek();
 
-        // get top selling items of past week
-        /* 
-         * 
-         */
+        // get number of orders of last week
+        @Query(value = "SELECT count(o.ordercode) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 7 day and current_date();", nativeQuery = true)
+        String[][] getNumberofOrdersWeekly();
+
+        // get supplier payments of last week
+        @Query(value = "SELECT sum(sp.paidamount) FROM resturant_management_project.supplierpayment as sp where date(sp.addeddatetime) between current_date()-interval 1 month and current_date();", nativeQuery = true)
+        String[][] getSupplierPaymentsMonth();
+
+        @Query(value = "SELECT count(c.reg_no) FROM resturant_management_project.customer as c where date(c.added_datetime)between current_date()-interval 6 month and current_date();", nativeQuery = true)
+        String[][] getCustomerRegistrationMonthly();
+
+        /* get total of order payments by previous six month for line charts */
+        @Query(value = "SELECT monthname(o.addeddatetime), sum(o.netamount) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 6 month and current_date() group by monthname(o.addeddatetime);", nativeQuery = true)
+        String[][] getOrderPaymentByPriviousSixMonth();
+
+        @Query(value = "SELECT s.name, sum(ohs.quantity) FROM resturant_management_project.order AS o JOIN resturant_management_project.order_has_submenu AS ohs ON o.id = ohs.order_id JOIN resturant_management_project.submenu AS s ON ohs.submenu_id = s.id WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 6 month AND CURRENT_DATE() GROUP BY s.name;", nativeQuery = true)
+        String[][] getTopSellingSubmenuMonthly();
 
 }
