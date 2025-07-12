@@ -20,7 +20,7 @@ const refreshForm = () => {
     const customerStatus = getServiceRequest("/customerStatus/alldata");
     fillDropdown(cusStatus, "Select Status", customerStatus, "status");
 
-    setDefault([cusStatus, titleCus, txtfirstName, txtlastName, txtNumber, txtEmail, txtAdres, txtNote]);
+    setDefault([cusStatus, titleCus, txtfirstName, txtlastName, txtNumber, txtEmail, txtAdres]);
 
     // status eka form eka open weddima active wdyt select wenna
     //select value eka string wenna one nisa object eka string baweta convert krenw
@@ -87,13 +87,6 @@ const customerFormRefill = (ob, rowIndex) => {
         txtAdres.value = ob.address;
     } else {
         txtAdres.value = "";
-    }
-
-    cusStatus.value = JSON.stringify(ob.customerstatus_id);
-    if (ob.note == undefined) {
-        txtNote.value = "";
-    } else {
-        txtNote.value = ob.note;
     }
 }
 
