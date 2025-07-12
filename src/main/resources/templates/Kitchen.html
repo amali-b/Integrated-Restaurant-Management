@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Kitchen Management </div>
+                </div>
+            </div>
+
+            <div class="row table m-0">
+                <!-- Start Table -->
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableKitchen">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th>
+                                <th> Order No. </th>
+                                <th> Order Items </th>
+                                <th> Order Type </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody class="tableBody" id="tBodyKitchen">
+                            <tr>
+                                <td> 1 </td>
+                                <td> #2500001 </td>
+                                <td> Nimal </td>
+                                <td> Dine-in </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End of Table -->
+            </div>
+
+        </div>
+    </div>
+
+    <script src="uIControllers/kitchen.js"></script>
+</body>
+
+<body th:replace="~{footer :: footerFragment}"></body>
+
+</html>

@@ -64,6 +64,30 @@ public class OrderController implements CommonController<Order> {
         return OrderView;
     }
 
+    // request mapping for load order UI
+    @RequestMapping(value = "/kitchen")
+    public ModelAndView KitchenUI() {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ModelAndView KitchenView = new ModelAndView();
+        KitchenView.setViewName("Kitchen.html");
+        KitchenView.addObject("loggedusername", auth.getName());
+
+        // create user object
+        User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        KitchenView.addObject("loggeduserphoto", user.getUserphoto());
+
+        if (user.getEmployee_id() != null) {
+            KitchenView.addObject("loggedempname", user.getEmployee_id().getCallingname());
+        } else {
+            KitchenView.addObject("loggedempname", "Admin");
+        }
+        KitchenView.addObject("title", "BIT Project 2024 | Manage Kitchen");
+        return KitchenView;
+    }
+
     // request mapping for load order UI Dine In
     @RequestMapping(value = "/orderDinein")
     public ModelAndView UIDineIn() {
