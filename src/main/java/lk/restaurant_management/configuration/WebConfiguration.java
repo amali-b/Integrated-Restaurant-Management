@@ -42,17 +42,66 @@ public class WebConfiguration {
                     .requestMatchers("/privilege/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
                     // allow access only for admin, manger
                     .requestMatchers("/user/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+
+                    .requestMatchers("/reportPayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+                    .requestMatchers("/reportCustomer/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+
                     .requestMatchers("/designation/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+
+                    .requestMatchers("/module/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+
                     .requestMatchers("/employeestatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+
+                    // allow access to customer only for admin, manger, cashier
                     .requestMatchers("/customer/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/customerStatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+
+                    // allow access to submenu and menu flow only for admin, manger, chef
+                    .requestMatchers("/ingredient/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
+                    .requestMatchers("/unitType/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
+                    .requestMatchers("/ingredientstatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
+                    .requestMatchers("/ingredientcategory/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
+                    .requestMatchers("/inventory/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
+                    .requestMatchers("/inventorystatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
+
+                    // allow access to submenu and menu flow only for admin, manger, cashier
+                    .requestMatchers("/submenu/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef", "Cashier")
+                    .requestMatchers("/submenucategory/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef", "Cashier")
+                    .requestMatchers("/submenustatus/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef", "Cashier")
+                    .requestMatchers("/menuitems/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef", "Cashier")
+                    .requestMatchers("/menuStatus/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef", "Cashier")
+
+                    // allow access to order flow only for admin, manger, cashier
+                    .requestMatchers("/order/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderDinein/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderTakeaway/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderDelivery/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderStatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderType/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/tables/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/vehicle/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/vehiclestatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderpayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderPaymentmethod/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/kitchen/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier", "Chef", "Waiter")
+
+                    // allow access to supplier flow only for admin, manger, cashier
                     .requestMatchers("/supplier/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
                     .requestMatchers("/supplierstatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
-                    .requestMatchers("/ingredient/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
-                    .requestMatchers("/inventory/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
-                    .requestMatchers("/submenu/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
-                    .requestMatchers("/menuitem/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
-                    .requestMatchers("/order/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/supplierorder/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/supplyOrderStatus/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/grn/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/grnstatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/supplierpayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/paymentmethod/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+
                     .anyRequest().authenticated();
         })
                 // login details
