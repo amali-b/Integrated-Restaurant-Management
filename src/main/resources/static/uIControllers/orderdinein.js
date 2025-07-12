@@ -35,7 +35,7 @@ const refreshForm = () => {
     const customers = getServiceRequest("/customer/alldata");
     fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
 
-    const orderTypes = getServiceRequest("/orderType/alldata");
+    const orderTypes = getServiceRequest("/order/Type/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
 
     const orderStatuses = getServiceRequest("/orderStatus/alldata");

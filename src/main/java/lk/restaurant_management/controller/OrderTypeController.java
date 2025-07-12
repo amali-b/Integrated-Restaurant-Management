@@ -17,7 +17,7 @@ public class OrderTypeController {
     private OrderTypeDao orderTypeDao;
 
     // define mapping get all order type data -- URL [/orderType/alldata]
-    @GetMapping(value = "/orderType/alldata", produces = "application/json")
+    @GetMapping(value = "/order/Type/alldata", produces = "application/json")
     public List<OrderType> getAllOrderStatus() {
         return orderTypeDao.findAll(Sort.by(Direction.ASC, "id"));
     }

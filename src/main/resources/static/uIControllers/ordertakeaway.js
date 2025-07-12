@@ -34,14 +34,11 @@ const refreshForm = () => {
     const customers = getServiceRequest("/customer/alldata");
     fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
 
-    const orderTypes = getServiceRequest("/orderType/alldata");
+    const orderTypes = getServiceRequest("/order/Type/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
 
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
-
-    const orderTables = getServiceRequest("/tables/alldata");
-    fillDropdown(tableNO, "Select Table.!", orderTables, "number");
 
     setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtDiscount, txtNetAmount, orderStatus]);
 
@@ -78,17 +75,20 @@ const calculateTotal = () => {
     order.totalamount = txtTotalAmount.value;
     txtTotalAmount.style.border = "2px solid green";
 
-    /* ### Discount Charge ### */
-    let discount = parseFloat(txtDiscount.value);
-    order.discount = txtDiscount.value;
-    txtDiscount.style.border = "2px solid green";
+    // reset discount
+    txtDiscount.value = "";
+    order.discount = 0;
 
     /* ### Generate Net Amount ### */
     if (txtTotalAmount.value != 0.00) {
         let totalamount = parseFloat(txtTotalAmount.value);
-        let netamount = totalamount + discount;
+        let discount = parseFloat(txtDiscount.value) || 0;
 
+        // calculate net amount
+        let netamount = totalamount - discount;
+        // Update net amount input
         txtNetAmount.value = parseFloat(netamount).toFixed(2);
+        // Store in order object
         order.netamount = txtNetAmount.value;
         txtNetAmount.style.border = "2px solid green";
     }
@@ -557,10 +557,8 @@ const orderFormRefill = (ob, rowIndex) => {
     selectOrderType.value = JSON.stringify(ob.ordertype_id);
     txtTotalAmount.value = ob.totalprice;
     txtSecviceChg.value = ob.discount ? ob.discount : "";
-
     txtNetAmount.value = ob.netamount;
     orderStatus.value = JSON.stringify(ob.orderstatus_id);
-    tableNO.value = JSON.stringify(ob.tables_id);
 
     refreshInnerFormandTableSubmenu();
 }

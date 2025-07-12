@@ -36,7 +36,7 @@ const refreshForm = () => {
     const customers = getServiceRequest("/customer/alldata");
     fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
 
-    const orderTypes = getServiceRequest("/orderType/alldata");
+    const orderTypes = getServiceRequest("/order/Type/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
 
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
@@ -637,13 +637,13 @@ const getOrderVehicle = (dataOb) => {
 //define function for get  order status
 const getOrderType = (dataOb) => {
     if (dataOb.ordertype_id.type == "Dine-In") {
-        return "<p class='btn btn-outline-info text-center'>" + dataOb.ordertype_id.type + "</p>";
+        return "<p class='btn btn-sm btn-outline-secondary text-center'>" + dataOb.ordertype_id.type + "</p>";
     }
     if (dataOb.ordertype_id.type == "Take-Away") {
-        return "<p class='btn btn-outline-info text-center'>" + dataOb.ordertype_id.type + "</p>";
+        return "<p class='btn btn-sm btn-outline-secondary text-center'>" + dataOb.ordertype_id.type + "</p>";
     }
     if (dataOb.ordertype_id.type == "Delivery") {
-        return "<p class='btn btn-outline-info text-center'>" + dataOb.ordertype_id.type + "</p>";
+        return "<p class='btn btn-sm btn-outline-secondary text-center'>" + dataOb.ordertype_id.type + "</p>";
     }
     return dataOb.ordertype_id.type;
 }
