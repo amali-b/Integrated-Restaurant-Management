@@ -25,12 +25,9 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
         String[][] getPaymentByWeekly(String strartdate, String enddate);
 
         // get sales summary of past 6 months by orders
-        /*
-         * @Query(value =
-         * "SELECT sum(o.netamount) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 6 month and current_date();"
-         * ,nativeQuery = true)
-         * String getOrderByPriviousSixMonths();
-         */
+
+        @Query(value = "SELECT sum(o.netamount) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 7 day and current_date();", nativeQuery = true)
+        String[][] getOrderByPriviousLastweek();
 
         // get top selling items of past week
         /* 

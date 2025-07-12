@@ -61,4 +61,19 @@ public class ReportDataController {
         }
     }
 
+    @GetMapping(value = "/reportOrderPayments/bylastweek", produces = "application/json")
+    public String[][] getPaymentReportDateLastWeek() {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+
+        if (userPrivilege.getPrivi_select()) {
+            return reportDao.getOrderByPriviousLastweek();
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new String[0][0];
+        }
+    }
+
 }

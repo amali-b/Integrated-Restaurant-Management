@@ -4,6 +4,18 @@ hamburger.addEventListener("click", function () {
     document.querySelector("#sidebar").classList.toggle("expand");
 });
 
+window.addEventListener("load", () => {
+    // generate sales summary of order payments
+    let dataOb = getServiceRequest("/reportOrderPayments/bylastweek");
+
+    txtSaleSummary.innerHTML = "";
+    txtSaleSummary.innerText = dataOb;
+
+
+});
+
+
+
 // generate Chart
 const chrtline = document.getElementById('lineChart');
 
