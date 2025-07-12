@@ -2,6 +2,12 @@
 window.addEventListener("load", () => {
     //call refresh form function
     refreshForm();
+
+    $('#SelectCustomer').select2({
+        theme: "bootstrap-5",
+        width: 'resolve', //style="width:342px"
+        dropdownParent: $('#modalOrders')
+    });
 });
 
 //define function for refresh form
@@ -26,9 +32,7 @@ const refreshForm = () => {
     const customers = getServiceRequest("/customer/alldata");
     fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
 
-    const orderTypes = [{ id: 3, type: "Delivery" }];
-    console.log(orderTypes);
-
+    const orderTypes = getServiceRequest("/orderType/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
 
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
@@ -40,9 +44,9 @@ const refreshForm = () => {
     setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, deliveryVehicle, txtNetAmount, orderStatus, txtDeliveryChg]);
 
     // type eka form eka open weddima active wdyt select wenna
-    selectOrderType.value = JSON.stringify(orderTypes[0]);//select value eka string wenna one nisa object eka string baweta convert krenw
+    selectOrderType.value = JSON.stringify(orderTypes[2]);//select value eka string wenna one nisa object eka string baweta convert krenw
     // orderTypes list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
-    order.ordertype_id = orderTypes[0];
+    order.ordertype_id = orderTypes[2];
     selectOrderType.style.border = "2px solid green";
 
     // status eka form eka open weddima active wdyt select wenna
@@ -342,11 +346,10 @@ const generateLineprice = (ob) => {
         //input fields wela values convert krenewa string walin float bawat
         let unitprice = parseFloat(txtPriceMenu.value);
         let quantity = parseFloat(txtQuantityMenu.value);
-        let discount = parseFloat(SeasonalDiscount.value) || 0;
 
         //multiply quantity and unit price
         // let lineprice = quantity * unitprice;
-        let lineprice = (quantity * unitprice) - discount;
+        let lineprice = (quantity * unitprice);
 
         // Assign to the object
         orderHasMenuitem.lineprice = lineprice;
@@ -420,7 +423,6 @@ const orderItemFormRefill = (ob, index) => {
 
     SelectMenu.disabled = false;
     SelectMenu.value = JSON.stringify(ob.menuitems_id);
-    SeasonalDiscount.value = ob.menuitems_id.seasonaldiscount_id ? JSON.stringify(ob.menuitems_id.seasonaldiscount_id) : ""; //empty if null
     txtPriceMenu.value = ob.price;
     txtQuantityMenu.value = ob.quantity;
     txtLinePriceMenu.value = parseFloat(ob.lineprice).toFixed(2);

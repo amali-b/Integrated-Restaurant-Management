@@ -2,6 +2,12 @@
 window.addEventListener("load", () => {
     //call refresh form function
     refreshForm();
+
+    $('#SelectCustomer').select2({
+        theme: "bootstrap-5",
+        width: 'resolve', //style="width:342px"
+        dropdownParent: $('#modalOrders')
+    });
 });
 
 //define function for refresh form
@@ -355,11 +361,9 @@ const generateLineprice = (ob) => {
         //input fields wela values convert krenewa string walin float bawat
         let unitprice = parseFloat(txtPriceMenu.value);
         let quantity = parseFloat(txtQuantityMenu.value);
-        let discount = parseFloat(SeasonalDiscount.value) || 0;
 
         //multiply quantity and unit price
-        // let lineprice = quantity * unitprice;
-        let lineprice = (quantity * unitprice) - discount;
+        let lineprice = quantity * unitprice;
 
         // Assign to the object
         orderHasMenuitem.lineprice = lineprice;

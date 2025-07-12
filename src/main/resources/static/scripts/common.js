@@ -313,7 +313,7 @@ const fillTableThree = (tBodyId, datalist, columnList, editFunction, buttonVisib
             tr.onclick = () => {
                 window['editob'] = dataOb;
                 window['editrowno'] = index;
-                activeTableRow(tBodyId, index, "Cornsilk");
+                activeTableRow(tBodyId, index, "white");
                 divModifybtn.className = "d-block";
                 editFunction(dataOb, index);
             }

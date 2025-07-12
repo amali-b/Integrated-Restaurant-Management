@@ -6,6 +6,12 @@ window.addEventListener("load", () => {
 
     //call refresh table function
     refreshOrderTable();
+
+    $('#SelectCustomer').select2({
+        theme: "bootstrap-5",
+        width: 'resolve', //style="width:342px"
+        dropdownParent: $('#modalOrders')
+    });
 });
 
 //define function for refresh form
@@ -401,10 +407,9 @@ const generateLineprice = () => {
         //input fields wela values convert krenewa string walin float bawat
         let unitprice = parseFloat(txtPriceMenu.value);
         let quantity = parseFloat(txtQuantityMenu.value);
-        let discount = parseFloat(SeasonalDiscount.value) || 0;
 
         //multiply quantity and unit price
-        let lineprice = (quantity * unitprice) - discount;
+        let lineprice = (quantity * unitprice);
 
         // Assign to the object
         orderHasMenuitem.lineprice = lineprice;
@@ -478,7 +483,7 @@ const orderItemFormRefill = (ob, index) => {
 
     SelectMenu.disabled = "disabled";
     SelectMenu.value = JSON.stringify(ob.menuitems_id);
-    SeasonalDiscount.value = ob.menuitems_id.seasonaldiscount_id ? JSON.stringify(ob.menuitems_id.seasonaldiscount_id) : ""; //empty if null
+    // SeasonalDiscount.value = ob.menuitems_id.seasonaldiscount_id ? JSON.stringify(ob.menuitems_id.seasonaldiscount_id) : ""; //empty if null
     txtPriceMenu.value = ob.price;
     txtQuantityMenu.value = ob.quantity;
     txtLinePriceMenu.value = parseFloat(ob.lineprice).toFixed(2);
@@ -756,7 +761,7 @@ const checkFormError = () => {
         txtNetAmount.style.border = "2px solid red";
         errors = errors + "Please Fill Inner Form/s.! \n";
     }
-    if (order.ordertype_id.name === "Dine-In") {
+    if (order.ordertype_id.type === "Dine-In") {
         if (order.servicecharge == null || order.servicecharge.trim() === "") {
             txtServiceChg.style.border = "2px solid red";
         }
@@ -764,7 +769,7 @@ const checkFormError = () => {
             tableNO.style.border = "2px solid red";
             errors = errors + "Please Select Table No.! \n";
         }
-    } else if (order.ordertype_id.name === "Delivery") {
+    } else if (order.ordertype_id.type === "Delivery") {
         if (order.deliverycharge == null || order.deliverycharge.trim() === "") {
             txtDeliveryChg.style.border = "2px solid red";
         }
@@ -828,7 +833,7 @@ const buttonOrderSubmit = () => {
     let errors = checkFormError();
     title = "Are you sure to Submit following Customer Order";
     obName = "";
-    text = "Type : " + order.ordertype_id.name
+    text = "Type : " + order.ordertype_id.type
         + ", Net Amount : " + order.netamount;
     let submitResponse = getHTTPServiceRequest('/order/insert', "POST", order);
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
@@ -929,6 +934,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalOrders').modal('hide');
+            refreshOrderTable();
         }
     });
 }

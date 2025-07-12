@@ -14,6 +14,22 @@ const selectDynamicElementValidator = (element, object, property) => {
     }
 }
 
+// define common validation function for dynamic element
+const select2DynamicElementValidator = (element, object, property) => {
+    const elementValue = element.value;
+    const ob = window[object];
+
+    //value not empty
+    if (elementValue != "") {
+        element.parentNode.children[2].children[0].children[0].style.border = "2px solid green";
+        ob[property] = JSON.parse(elementValue);
+    } else {
+        // value is empty
+        element.parentNode.children[2].children[0].children[0].style.border = "2px solic red";
+        ob[property] = null;
+    }
+}
+
 // txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'employee', 'email') --> employee object eke email propery eka
 const txtValidator = (elementId, pattern, object, property) => {
     const elementValue = elementId.value;
