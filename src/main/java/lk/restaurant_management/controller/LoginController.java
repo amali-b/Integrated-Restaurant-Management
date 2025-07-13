@@ -1,6 +1,7 @@
 package lk.restaurant_management.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -174,65 +175,65 @@ public class LoginController {
         if (extUserEmail != null && extUserEmail.getId() != extUser.getId()) {
             return "Update not Completed : Entered Email Already exist.!";
         }
-        if (userPrivilege.getPrivi_update()) {
-            try {
-                // password eka ewela thyenewanm
-                if (loggedUser.getOldpassword() != null) {
 
+        try {
+            // password eka ewela thyenewanm
+            if (loggedUser.getOldpassword() != null) {
+
+                /*
+                 * existing user ge password eka & dn log wela change eka krepu password eka
+                 * samanada blnewa.
+                 */
+
+                // denna match wenewamnm true return krnw
+                if (bCryptPasswordEncoder.matches(loggedUser.getOldpassword(), extUser.getPassword())) {
                     /*
-                     * existing user ge password eka & dn log wela change eka krepu password eka
-                     * samanada blnewa.
+                     * existing password eka & logged user enter kela new password eka samanada blnw
                      */
-
-                    // denna match wenewamnm true return krnw
-                    if (bCryptPasswordEncoder.matches(loggedUser.getOldpassword(), extUser.getPassword())) {
-                        /*
-                         * existing password eka & logged user enter kela new password eka samanada blnw
-                         */
-                        // denna matchnm true return krnw.. ethakota save kranna denna ba
-                        // e nisa api password deka not equal da kyla blnewa..
-                        if (!bCryptPasswordEncoder.matches(loggedUser.getNewpassword(), extUser.getPassword())) {
-                            // true nm password eka save wenw
-                            extUser.setPassword(bCryptPasswordEncoder.encode(loggedUser.getNewpassword()));
-                        } else {
-                            return " Change not Completed : Entered Password is Same.! ";
-                        }
-
-                        // denna match wenne naththan false return krnw
+                    // denna matchnm true return krnw.. ethakota save kranna denna ba
+                    // e nisa api password deka not equal da kyla blnewa..
+                    if (!bCryptPasswordEncoder.matches(loggedUser.getNewpassword(), extUser.getPassword())) {
+                        // true nm password eka save wenw
+                        extUser.setPassword(bCryptPasswordEncoder.encode(loggedUser.getNewpassword()));
                     } else {
-                        // match wenne naththan
-                        return " Change not Completed : Entered Password is not matched with Old Password.! ";
+                        return " Change not Completed : Entered Password is Same.! ";
                     }
+
+                    // denna match wenne naththan false return krnw
+                } else {
+                    // match wenne naththan
+                    return " Change not Completed : Entered Password is not matched with Old Password.! ";
                 }
-
-                // process PUT request for set updated values
-                extUser.setUsername(loggedUser.getUsername());
-                extUser.setEmail(loggedUser.getEmail());
-                extUser.setUserphoto(loggedUser.getUserphoto());
-                extUser.setPassword(bCryptPasswordEncoder.encode(loggedUser.getNewpassword()));
-
-                // do save operation
-                userDao.save(user);
-
-                return "OK";
-            } catch (Exception e) {
-                // handle exception
-                return "Save not Completed : " + e.getMessage();
             }
-        } else {
-            return "Couldn't Complete Change : You don't have permission..!";
+
+            // process PUT request for set updated values
+            extUser.setUsername(loggedUser.getUsername());
+            extUser.setEmail(loggedUser.getEmail());
+            extUser.setUserphoto(loggedUser.getUserphoto());
+            extUser.setPassword(bCryptPasswordEncoder.encode(loggedUser.getNewpassword()));
+
+            // do save operation
+            userDao.save(user);
+
+            return "OK";
+        } catch (Exception e) {
+            // handle exception
+            return "Save not Completed : " + e.getMessage();
         }
 
     }
 
     @RequestMapping(value = "/modulewithoutuserprivi")
     public List<Module> getModuleListByuser() {
+        // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         // create user object
         User user = userDao.getByUsername(auth.getName());
-
-        return moduleDao.getModuleByusername(user.getUsername());
-
+        // log una user Admin nm sarema module penna one
+        if (auth.getName().equalsIgnoreCase("Admin")) {
+            return new ArrayList<>();
+        } else {
+            return moduleDao.getModuleByusername(user.getUsername());
+        }
     }
 }

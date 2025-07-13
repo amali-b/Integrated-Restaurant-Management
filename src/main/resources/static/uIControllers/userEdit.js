@@ -32,16 +32,16 @@ const refreshUserForm = () => {
 checkFormChanges = () => {
     let changes = "";
     if (loguser.userphoto != oldloguser.userphoto) {
-        changes = changes + "Employee Photo has Changed.! \n";
+        changes = changes + "User Image has Changed.! \n";
     }
     if (loguser.username != oldloguser.username) {
-        changes = changes + "Employee Name has Changed.! \n";
+        changes = changes + "User Name has Changed.! \n";
     }
     if (loguser.oldpassword != oldloguser.newpassword) {
-        changes = changes + "Employee Name has Changed.! \n";
+        changes = changes + "Password has Changed.! \n";
     }
     if (loguser.email != oldloguser.email) {
-        changes = changes + "Employee Name has Changed.! \n";
+        changes = changes + "User Email has Changed.! \n";
     }
     return changes;
 }

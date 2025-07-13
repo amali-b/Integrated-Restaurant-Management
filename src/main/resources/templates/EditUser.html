@@ -39,7 +39,7 @@
                                                             class="form-control" style="display: none;"
                                                             onchange="fileValidator(this, 'loguser', 'userphoto',document.getElementById('imgPreviewUser'),'', '')">
                                                         <img src="images/userimage.png" id="imgPreviewUser"
-                                                            alt="Upload here" class="d-flex" style="max-width: 80px;">
+                                                            alt="Upload here" class="d-flex" style="max-width: 100px;">
                                                     </div>
                                                     <div class="col-3 text-center">
                                                         <button class="btn btn-outline-warning" type="button"
@@ -75,11 +75,11 @@
                                                         <!-- Old password -->
                                                         <input type="password" id="txtPwd" class="form-control mb-2"
                                                             placeholder="Old Password" readonly disabled
-                                                            onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'loguser', 'oldpassword')" />
+                                                            onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'loguser', 'oldpassword')">
 
                                                         <!-- New password -->
                                                         <input type="password" id="txtNewPwd" class="form-control mb-2"
-                                                            placeholder="New Password"
+                                                            placeholder="Enter New Password"
                                                             onkeyup="txtValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'loguser', 'newpassword')">
 
                                                         <input type="password" id="txtReNewPwd"
