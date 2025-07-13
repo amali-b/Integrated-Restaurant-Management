@@ -28,7 +28,7 @@
                                 <div class="row mt-2">
                                     <!-- Start Ingredient -->
                                     <div class="col">
-                                        <label for="SelectIngredints" class="form-lable fw-bold">Select
+                                        <label for="SelectIngredints" class="form-label fw-bold">Select
                                             Ingredients<span class="text-danger"> *</span></label>
                                         <div class="col">
                                             <select class="form-select" id="SelectIngredints"
@@ -44,7 +44,7 @@
 
                                     <!-- Start Quantity -->
                                     <div class="col">
-                                        <label for="txtQuantity" class="form-lable fw-bold">Quantity<span
+                                        <label for="txtQuantity" class="form-label fw-bold">Quantity<span
                                                 class="text-danger"> *</span></label>
                                         <input type="text"
                                             onkeyup="txtValidator(this,'^[1-9][0-9]{0,4}[.]{0,1}[0-9]{0,3}$', 'garbageremove', 'quantity')"
@@ -56,12 +56,12 @@
                                 <!-- Start Removed Reason -->
                                 <div class="row">
                                     <div class="col">
-                                        <label for="txtRemovedReason" class="form-lable fw-bold">
+                                        <label for="txtRemovedReason" class="form-label fw-bold">
                                             Removed Reason :<span class="text-danger"> *</span></label>
                                         <div class="col">
                                             <textarea class="form-control" id="txtRemovedReason"
                                                 placeholder="Enter Removed Reason"
-                                                onkeyup="txtValidator(this,'^([A-Za-z0-9\/]{1,20}[.]?[\s]?)+$','garbageremove','reason')"></textarea>
+                                                onkeyup="txtValidator(this,'^([A-Za-z0-9\/]{1,20}[.]?[\s]?)$','garbageremove','reason')"></textarea>
                                         </div>
                                     </div>
                                 </div>

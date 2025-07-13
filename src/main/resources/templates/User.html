@@ -68,7 +68,7 @@
                                             <form id="formUser" onsubmit="return false">
                                                 <!-- Start Employee Name -->
                                                 <div class="row mt-3">
-                                                    <label for="empName" class="form-lable col-2 fw-bold">Employee
+                                                    <label for="empName" class="form-label col-2 fw-bold">Employee
                                                         Name
                                                         :
                                                         <span class="text-danger">*</span></label>
@@ -82,7 +82,7 @@
 
                                                 <!-- Start UserName -->
                                                 <div class="row mt-3">
-                                                    <label for="txtUid" class="form-lable col-2 fw-bold">User Name :
+                                                    <label for="txtUid" class="form-label col-2 fw-bold">User Name :
                                                         <span class="text-danger">*</span></label>
                                                     <div class="col">
                                                         <input type="text" id="txtUid" class="form-control"
@@ -97,7 +97,7 @@
 
                                                 <!-- Start Password -->
                                                 <div class="row mt-3">
-                                                    <label for="txtUserPwd" class="form-lable col-2 fw-bold">Password :
+                                                    <label for="txtUserPwd" class="form-label col-2 fw-bold">Password :
                                                         <span class="text-danger">*</span></label>
                                                     <div class="col">
                                                         <input type="password" id="txtUserPwd" class="form-control"
@@ -113,21 +113,21 @@
 
                                                 <!-- Start Confirm password -->
                                                 <div class="row mt-3">
-                                                    <label for="txtrePwd" class="form-lable col-2 fw-bold"> Password
+                                                    <label for="txtrePwd" class="form-label col-2 fw-bold"> Password
                                                         Confirm
                                                         :
                                                         <span class="text-danger">*</span></label>
                                                     <div class="col">
                                                         <input type="password" class="form-control" id="txtrePwd"
                                                             placeholder="Re Enter your password" required
-                                                            onkeyup="pswdValidator(this,'^[a-zA-Z0-9@]{6,10}$', 'user', 'password')">
+                                                            onkeyup="pswdValidator(this,'^[a-zA-Z0-9@]{6,20}$', 'user', 'password')">
                                                     </div>
                                                 </div>
                                                 <!-- End Confirm password -->
 
                                                 <!-- Start Email -->
                                                 <div class="row mt-3">
-                                                    <label for="txtEmail" class="form-lable col-2 fw-bold">Email :
+                                                    <label for="txtEmail" class="form-label col-2 fw-bold">Email :
                                                         <span class="text-danger">*</span></label>
                                                     <div class="col">
                                                         <input type="email" class="form-control col" id="txtEmail"
@@ -141,7 +141,7 @@
 
                                                 <!-- Start Role -->
                                                 <div class="row mt-3">
-                                                    <lable class="form-lable col-2 fw-bold">Role : <span
+                                                    <lable class="form-label col-2 fw-bold">Role : <span
                                                             class="text-danger">*</span>
                                                     </lable>
                                                     <!-- <div class="col">
@@ -152,14 +152,14 @@
                                                     <div class="col form-check" id="divRoles">
                                                         <!-- <input type="checkbox" class="form-check-input" id="rAdmin" name="role"
                                                         value="Admin">
-                                                        <label for="rAdmin" class="form-lable"> Admin </label> -->
+                                                        <label for="rAdmin" class="form-label"> Admin </label> -->
                                                     </div>
                                                 </div>
                                                 <!-- End Role -->
 
                                                 <!-- Start Status -->
                                                 <div class="row mt-3">
-                                                    <lable class="labelSwitch form-lable col-2 fw-bold">Status :
+                                                    <lable class="labelSwitch form-label col-2 fw-bold">Status :
                                                         <span class="text-danger">*</span>
                                                     </lable>
                                                     <div class="col form-switch">
@@ -180,7 +180,7 @@
 
                                                 <!-- Start Note -->
                                                 <div class="row mt-3">
-                                                    <label for="txtNote" class="form-lable fw-bold col-2">Note
+                                                    <label for="txtNote" class="form-label fw-bold col-2">Note
                                                         :</label>
                                                     <div class="col">
                                                         <textarea id="txtNote" class="form-control"
