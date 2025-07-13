@@ -43,7 +43,7 @@ const refreshForm = () => {
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
 
     const orderTables = getServiceRequest("/tables/alldata");
-    fillDropdown(tableNO, "Select Table.!", orderTables, "number");
+    fillDropdownTwo(tableNO, "Select Table.!", orderTables, "number", "seatcount");
 
     const orderVehicles = getServiceRequest("/vehicle/alldata");
     fillDropdown(deliveryVehicle, "Select Vehicle.!", orderVehicles, "name");
@@ -793,15 +793,20 @@ const checkFormUpdate = () => {
     let updates = "";
 
     if (order != null && oldorder != null) {
-        if (order.customer_id.contact_no != oldorder.customer_id.contact_no) {
-            updates = updates + " Mobile No. has updated from " + oldorder.customer_id._contact_no + " \n";
+        if (order.customer_id != null) {
+            if (order.customer_id.contact_no != oldorder.customer_id.contact_no) {
+                updates = updates + " Mobile No. has updated from " + oldorder.customer_id._contact_no + " \n";
+            }
         }
-        if (order.customername != oldorder.customername) {
-            updates = updates + "Customer Name has updated from " + oldorder.customername + " \n";
+        if (order.customername != null) {
+            if (order.customername != oldorder.customername) {
+                updates = updates + "Customer Name has updated from " + oldorder.customername + " \n";
+            }
+            if (order.customercontact != oldorder.customercontact) {
+                updates = updates + "Customer Contact has updated from " + oldorder.customercontact + " \n";
+            }
         }
-        if (order.customercontact != oldorder.customercontact) {
-            updates = updates + "Customer Contact has updated from " + oldorder.customercontact + " \n";
-        }
+
         if (order.totalamount != oldorder.totalamount) {
             updates = updates + "Total Amount has updated from " + oldorder.totalamount + " \n";
         }
@@ -1149,7 +1154,7 @@ const generateOrderPrintHTML = (order) => {
                     <th> Customer</th>
                     <td>${order.customer_id?.firstname ? order.customer_id.firstname : order.customername}</td>
                     <th> User</th>
-                    <td>${order.addeduser}</td>
+                    <td>${order.addeduser.username}</td>
                 </tr>
             </table>
         </div>
@@ -1193,10 +1198,10 @@ const generateOrderPrintHTML = (order) => {
                     <th> Delivery Charge</th>
                     <td>Rs. ${formatCurrency(order.deliverycharge ? order.deliverycharge : 0)}</td>
                 </tr >
-    <tr>
-        <th colspan="3"> Net Amount</th>
-        <td><strong>Rs. ${formatCurrency(order.netamount)}</strong></td >
-    </tr >
+                <tr>
+                    <th colspan="3"> Net Amount</th>
+                    <td><strong>Rs. ${formatCurrency(order.netamount)}</strong></td >
+                </tr >
             </table >
         </div >
 
@@ -1232,7 +1237,7 @@ const generateItemRows = (order) => {
             itemName = item.submenu_id.name;
         }
         // Check if it's a menu item  
-        else if (item.menuitem_id) {
+        else if (item.menuitems_id) {
             itemName = item.menuitems_id.name;
         }
         // Fallback to direct properties
@@ -1250,7 +1255,7 @@ const generateItemRows = (order) => {
         console.log(`Extracted data - Name: ${itemName}, Price: ${unitPrice}, Qty: ${quantity}, Total: ${lineTotal} `);
 
         return `
-    < tr >
+            < tr >
                 <td>${index + 1}</td>
                 <td>${itemName}</td>
                 <td>Rs. ${formatCurrency(unitPrice)}</td>
