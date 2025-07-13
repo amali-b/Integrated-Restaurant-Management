@@ -18,7 +18,7 @@ const refreshGarbageRemoveForm = () => {
     garbageremove = new Object();
 
     const ingredients = getServiceRequest("/ingredient/alldata");
-    fillDropdown(SelectIngredints, "Select Ingredient.!", ingredients, "name");
+    fillDropdown(SelectIngredints, "Select Ingredient.!", ingredients, "ingredient_name");
 
     setDefault([SelectIngredints, txtQuantity, txtRemovedReason]);
 }
