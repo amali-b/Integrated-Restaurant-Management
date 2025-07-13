@@ -613,6 +613,72 @@ const checkFormUpdate = () => {
         if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
             updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
         }
+
+        /* ###### CHECK SUBMENU INNER FORM CHANGES ###### */
+
+        // list wela length eka wenas welanm update ekk wela
+        if (order.orderHasSubmenuList.length != oldorder.orderHasSubmenuList.length) {
+            updates = updates + "Order Submenus has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldOhsubmenu of oldorder.orderHasSubmenuList) {
+                for (const newOhsubmenu of order.orderHasSubmenuList) {
+                    // old & new item wela id samanainm
+                    if (oldOhsubmenu.submenu_id.id == newOhsubmenu.submenu_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != order.orderHasSubmenuList) {
+                updates = updates + "Order Submenus has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldOhsubmenu of oldorder.orderHasSubmenuList) {
+                    for (const newOhsubmenu of order.orderHasSubmenuList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldOhsubmenu.submenu_id.id == newOhsubmenu.submenu_id.id && oldOhsubmenu.quantity != newOhsubmenu.quantity) {
+                            updates = updates + "Order Submenu Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        /* ###### CHECK MENU INNER FORM CHANGES ###### */
+
+        // list wela length eka wenas welanm update ekk wela
+        if (order.orderHasMenuitemList.length != oldorder.orderHasMenuitemList.length) {
+            updates = updates + "Order Menu Items has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldOmenu of oldorder.orderHasMenuitemList) {
+                for (const newOmenu of order.orderHasMenuitemList) {
+                    // old & new item wela id samanainm
+                    if (oldOmenu.menuitems_id.id == newOmenu.menuitems_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != order.orderHasMenuitemList) {
+                updates = updates + "Order Menu Items has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldOmenu of oldorder.orderHasMenuitemList) {
+                    for (const newOmenu of order.orderHasMenuitemList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldOmenu.menuitems_id.id == newOmenu.menuitems_id.id && oldOmenu.quantity != newOmenu.quantity) {
+                            updates = updates + "Order Menuitem Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
     return updates;
 }

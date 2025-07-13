@@ -411,9 +411,37 @@ const checkFormUpdate = () => {
         if (supplierorder.supplyorderstatus_id.status != oldsupplierorder.supplyorderstatus_id.status) {
             updates = updates + "Status has updated from " + oldsupplierorder.supplyorderstatus_id.status + " \n";
         }
-        if (supplierorder.supplierorderHasIngredientList.length != oldsupplier.supplierorderHasIngredientList.length) {
+        // list wela length eka wenas welanm update ekk wela
+        if (supplierorder.supplierorderHasIngredientList.length != oldsupplierorder.supplierorderHasIngredientList.length) {
             updates = updates + "Supplier Ingredients has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldsoitem of oldsupplierorder.supplierorderHasIngredientList) {
+                for (const newsoitem of supplierorder.supplierorderHasIngredientList) {
+                    // old & new item wela id samanainm
+                    if (oldsoitem.ingredient_id.id == newsoitem.ingredient_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != supplierorder.supplierorderHasIngredientList) {
+                updates = updates + "Supplier Ingredients has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldsoitem of oldsupplierorder.supplierorderHasIngredientList) {
+                    for (const newsoitem of supplierorder.supplierorderHasIngredientList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldsoitem.ingredient_id.id == newsoitem.ingredient_id.id && oldsoitem.quantity != newsoitem.quantity) {
+                            updates = updates + "Supplier Ingredient Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
         }
+
     }
     return updates;
 }
