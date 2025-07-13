@@ -586,7 +586,7 @@ const buttonModalClose = () => {
 }
 
 //function define for print Supplier Order record
-const GrnPrint = (ob, rowIndex) => {
+/* const GrnPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodyGrn, rowIndex, "White");
     let newWindow = window.open();
@@ -702,4 +702,172 @@ const GrnPrint = (ob, rowIndex) => {
         newWindow.print();
         newWindow.close();
     }, 300);
-}
+} */
+
+
+//function define for print Order record
+const GrnPrint = (ob, rowIndex) => {
+
+    console.log("Print", ob, rowIndex);
+
+    // table eke row eka click kalama color eka change wenw
+    activeTableRow(tBodyGrn, rowIndex, "White");
+
+    // Print eke content eka generate krena function eka cll krenewa
+    const printContent = generateGrnPrintHTML(ob);
+
+    // Create and configure the print window
+    const newWindow = window.open();
+
+    // Write content and handle printing
+    newWindow.document.writeln(printContent);
+    newWindow.document.close();
+
+    // Wait for content to load, then print
+    newWindow.onload = () => {
+        setTimeout(() => {
+            newWindow.print();
+            newWindow.close();
+        }, 300);
+    };
+};
+// Print eke content eka generate krena function eka define krenewa
+// @param {Object} order - order object eke thama all order details thyenne
+const generateGrnPrintHTML = (ob) => {
+    ob = grn;
+    const currentDateTime = new Date().toLocaleString();
+
+    //  @returns {string} - print window eke display wenna one html eka return krnw
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- link bs5 -->
+        <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+        <!-- link css -->
+        <link rel="stylesheet" href="css/print.css">
+
+        <title> Good Receive Management - BIT 2025</title>
+    </head>
+    <body>
+        <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Good Receive Note</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th>GRN Number</th>
+                    <td>${ob.grnnumber}</td>
+                    <th>Purchase Order Number</th>
+                    <td>${ob.supplierorder_id.ordercode}</td>
+                </tr>
+                <tr>
+                    <th>Supplier Invoice Number</th>
+                    <td>${ob.supplierinvoiceno}</td>
+                    <th> Status </th>
+                    <td>${ob.grnstatus_id.status}</td>
+                </tr>
+                <tr>
+                    <th>Received Date</th>
+                    <td>${ob.dateofreceived}</td>
+                    <th> Received By </th>
+                    <td>${ob.receivedby}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="items-section">
+            <h3> Order Ingredients </h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ingredient Name</th>
+                        <th>Batch Number</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${generateItemRows(ob)}
+                </tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="5">Total</td>
+                        <td>Rs.  ${formatCurrency(ob.totalamount)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th> Total Amount</th>
+                    <td>Rs. ${formatCurrency(ob.totalamount)}</td>
+                    <th> Discount</th>
+                    <td>Rs. ${formatCurrency(ob.discountamount ? ob.discountamount : 0)}</td>
+                </tr>
+                <tr>
+                    <th colspan="3"> Net Amount</th>
+                    <td><strong>Rs. ${formatCurrency(ob.netamount)}</strong></td>
+                </tr >
+            </table >
+        </div >
+
+        <div class="footer">
+            <p>Thank you for your business! </p>
+            &copy; 2025 BIT Project. All rights reserved.
+            <p>Generated on ${currentDateTime}</p>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
+//@param {Array} items - Array of order items
+//@returns {string} - HTML string for table rows
+const generateItemRows = (grn) => {
+    // Extract items from the correct association names
+    const items = grn.grnHasIngredientList || [];
+
+    return items.map((item, index) => {
+        // Handle different possible database structures
+        const itemName = item.ingredient_id?.ingredient_name || "";
+
+        const batchNumber = item.batchnumber;
+
+        const unitPrice = item.price;
+
+        const quantity = item.quantity;
+
+        const lineTotal = item.lineprice;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${batchNumber}</td>
+                <td>${itemName}</td>
+                <td>Rs. ${formatCurrency(unitPrice)}</td>
+                <td>${quantity}</td>
+                <td>Rs. ${formatCurrency(lineTotal)}</td>
+            </tr>
+        `;
+    }).join('');
+};
+
+//  @param {number} amount - The amount to format
+//  @returns {string} - Formatted currency string
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount || 0);
+};
