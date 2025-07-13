@@ -27,7 +27,8 @@
     <script th:inline="javascript">
         window.addEventListener("load", () => {
             // string ekk wdyt ena photo eka allegnnewa
-            let loggedUserPhoto = /* [[${loggeduserphoto}]] */'${loggeduserphoto}';
+            // let loggedUserPhoto = /*[[${loggeduserphoto}]]*/'${loggeduserphoto}';
+            let loggedUserPhoto = /*[[${loggeduserphoto}]]*/ null;
             if (loggedUserPhoto != null) {
                 imgLoggedUser.src = atob(loggedUserPhoto);
             }

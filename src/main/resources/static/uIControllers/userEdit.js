@@ -5,90 +5,100 @@ window.addEventListener("load", () => {
 
 //create form refresh function
 const refreshUserForm = () => {
+    // open modal when browser load
     $('#modalUserProfile').modal('show');
-    userProfile = new Object();
 
-    setDefault([empName, userName, empPwd, txtEmail]);
-
-}
-
-userProfileRefill = (ob) => {
-    userProfile = JSON.parse(JSON.stringify(ob));
-    olduserProfile = JSON.parse(JSON.stringify(ob));
+    // logged user object ekak arn eka store kregnnewa variable deheka
+    loguser = getServiceRequest("/loggeduserdetails");
+    oldloguser = getServiceRequest("/loggeduserdetails");
 
     // reset photo
-    if (ob.userphoto != null) {
-        imgPreview.src = atob(ob.userphoto);
+    if (loguser.userphoto != null) {
+        imgPreviewUser.src = atob(loguser.userphoto);
     } else {
-        imgPreview.src = "images/userimage.png";
+        imgPreviewUser.src = "images/userimage.png";
     }
-    empName.value = ob.username;
-    userName.value = ob.username;
-    empPwd.value = ob.password;
-    txtEmail.value = ob.email;
+    // set logged username 
+    txtuserName.value = loguser.username;
+
+    // set log user email
+    txtEmail.value = loguser.email;
+
+    setDefault([txtuserName, txtEmail]);
 
 }
 
 //define function for check for updates 
-checkFormUpdate = () => {
-    let updates = "";
-    if (userProfile.userphoto != olduserProfile.userphoto) {
-        updates = updates + "Employee Photo has Updated! \n";
+checkFormChanges = () => {
+    let changes = "";
+    if (loguser.userphoto != oldloguser.userphoto) {
+        changes = changes + "Employee Photo has Changed.! \n";
     }
-    if (userProfile.empName != olduserProfile.empName) {
-        updates = updates + "Employee Name has updated from " + olduserProfile.empName + " \n";
+    if (loguser.username != oldloguser.username) {
+        changes = changes + "Employee Name has Changed.! \n";
     }
-    if (userProfile.username != olduserProfile.username) {
-        updates = updates + "Employee Name has updated from " + olduserProfile.username + " \n";
+    if (loguser.oldpassword != oldloguser.newpassword) {
+        changes = changes + "Employee Name has Changed.! \n";
     }
-    if (userProfile.password != olduserProfile.password) {
-        updates = updates + "Employee Name has updated from " + olduserProfile.password + " \n";
+    if (loguser.email != oldloguser.email) {
+        changes = changes + "Employee Name has Changed.! \n";
     }
-    if (userProfile.email != olduserProfile.email) {
-        updates = updates + "Employee Name has updated from " + olduserProfile.email + " \n";
-    }
-    return updates;
+    return changes;
 }
 
 //define function for submit button
 const buttonUserProfileSubmit = () => {
+    console.log("User Object : " + loguser);
+
     //check updates
-    let updates = checkFormUpdate();
-    let title = "Are you sure you want to Save following changes.?";
-    let text = updates;
-    let updateResponse = getHTTPServiceRequest('/editUser/submit', "POST", user);
-    swalUpdate(updates, title, text, updateResponse, modalUserProfile);
+    let changes = checkFormChanges();
+
+    if (changes) {
+        Swal.fire({
+            title: "Are you sure you want to Save following changes.?",
+            text: changes,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "green",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //call put servuce
+                let saveResponse = getHTTPServiceRequest('/editUser/submit', "PUT", loguser);
+                if (saveResponse == "OK") {
+                    Swal.fire({
+                        title: "Saved Profile Changes.!",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    window.location.replace("/logout");
+                } else {
+                    Swal.fire({
+                        title: "Failed to Save.! Has following errors :",
+                        text: saveResponse,
+                        icon: "info"
+                    });
+                }
+            }
+        });
+    } else {
+        Swal.fire({
+            title: "Nothing Changed.!",
+            icon: "info",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    }
 }
 
-//define function for validate employee
-userName.addEventListener("keyup", () => {
-    const userValue = userName.value;
-    //pattern to validate name
-    const regPattern = new RegExp("^([A-Z][a-z]{1,20}[ ])+([a-z]{2}[ ])?([A-Z][a-z]{1,20})$");
-    if (regPattern.test(userValue)) {
-        //valid value
-        userProfile.empName = userValue;
-        userName.style.border = "2px solid green";
+const pswdValidator = () => {
+    if (txtNewPwd.value === txtReNewPwd.value) {
+        loguser.newpassword = txtNewPwd.value;
+        txtReNewPwd.style.border = "2px solid green";
     } else {
-        //invalid value
-        userProfile.empName = null;
-        userName.style.border = "red solid 2px";
+        loguser.newpassword = null;
+        txtReNewPwd.style.border = "solid red 2px";
     }
-});
-
-
-//define function for validate full name
-empName.addEventListener("keyup", () => {
-    const fullNameValue = empName.value;
-    //pattern to validate name
-    const regPattern = new RegExp("^([A-Z][a-z]{1,20}[ ])+([a-z]{2}[ ])?([A-Z][a-z]{1,20})$");
-    if (regPattern.test(fullNameValue)) {
-        //valid value
-        userProfile.fullname = fullNameValue;
-        empName.style.border = "2px solid green";
-    } else {
-        //invalid value
-        userProfile.fullname = null;
-        empName.style.border = "red solid 2px";
-    }
-});
+}
