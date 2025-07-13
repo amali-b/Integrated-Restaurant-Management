@@ -12,6 +12,6 @@ import lk.restaurant_management.entity.Module;
 public interface ModuleDao extends JpaRepository<Module, Integer> {
 
     /*  */
-    @Query(value = "SELECT m.name FROM resturant_management_project.module as m where m.id in (SELECT p.module_id FROM resturant_management_project.privilege as p where p.privi_select=0 and role_id in (SELECT uhr.role_id FROM resturant_management_project.user_has_role as uhr where uhr.user_id in (SELECT u.id FROM resturant_management_project.user as u where u.username=?1)));", nativeQuery = true)
+    @Query(value = "SELECT * FROM resturant_management_project.module as m where m.id not in (SELECT p.module_id FROM resturant_management_project.privilege as p where p.privi_select=true and role_id in (SELECT uhr.role_id FROM resturant_management_project.user_has_role as uhr where uhr.user_id in (SELECT u.id FROM resturant_management_project.user as u where u.username=?1)));", nativeQuery = true)
     List<Module> getModuleByusername(String username);
 }
