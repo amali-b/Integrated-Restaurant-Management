@@ -503,7 +503,7 @@ const buttonGrnSubmit = () => {
         + ", Received By : " + grn.receivedby
         + ", Supplier Invoice No. : " + grn.supplierinvoiceno
         + ", Net Amount : " + grn.netamount;
-    let submitResponse = getHTTPServiceRequest('/grn/insert', "POST", grn);
+    let submitResponse = ['/grn/insert', "POST", grn];
     swalSubmit(errors, title, obName, text, submitResponse, modalGrn);
 }
 
@@ -517,7 +517,7 @@ const buttonGrnUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/grn/update', "PUT", grn);
+        let updateResponse = ['/grn/update', "PUT", grn];
         swalUpdate(updates, title, text, updateResponse, modalGrn);
     } else {
         Swal.fire({
@@ -537,7 +537,7 @@ const GrnDelete = (ob, rowIndex) => {
         + ", Received Date : " + grn.dateofreceived
         + ", Received By : " + grn.receivedby
         + ", Supplier Invoice No. : " + grn.supplierinvoiceno;
-    let deleteResponse = getHTTPServiceRequest('/grn/delete', "DELETE", grn);
+    let deleteResponse = ['/grn/delete', "DELETE", grn];
     message = "GRN has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalGrn, message);
 }

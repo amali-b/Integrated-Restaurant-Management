@@ -691,7 +691,7 @@ const buttonOrderSubmit = () => {
     obName = "";
     text = "Type : " + order.ordertype_id.type
         + ", Net Amount : " + order.netamount;
-    let submitResponse = getHTTPServiceRequest('/order/insert', "POST", order);
+    let submitResponse = ['/order/insert', "POST", order];
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
 }
 
@@ -706,7 +706,7 @@ const buttonOrderUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/order/update', "PUT", order);
+        let updateResponse = ['/order/update', "PUT", order];
         swalUpdate(updates, title, text, updateResponse, modalOrders);
     } else {
         Swal.fire({
@@ -724,7 +724,7 @@ const orderDelete = (ob, rowIndex) => {
     obName = "";
     text = "Order : " + order.id
         + ", Net Amount : " + order.netamount;
-    let deleteResponse = getHTTPServiceRequest('/order/delete', "DELETE", order);
+    let deleteResponse = ['/order/delete', "DELETE", order];
     message = "Customer Order has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalOrders, message);
 }

@@ -265,7 +265,7 @@ const buttonItemUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/ingredient/update', "PUT", ingredient);
+        let updateResponse = ['/ingredient/update', "PUT", ingredient];
         swalUpdate(updates, title, text, updateResponse, modalIngredient);
 
     } else {
@@ -285,7 +285,7 @@ const buttonItemSubmit = () => {
     obName = ingredient.ingredient_name;
     text = "Unit Size : " + ingredient.measuring_unit + ingredient.unittype_id.name
         + ", Purchase Price : " + ingredient.purchase_price;
-    let submitResponse = getHTTPServiceRequest('/ingredient/insert', "POST", ingredient);
+    let submitResponse = ['/ingredient/insert', "POST", ingredient];
     swalSubmit(errors, title, obName, text, submitResponse, modalIngredient);
 }
 
@@ -295,7 +295,7 @@ const itemDelete = (ob, rowIndex) => {
     title = "Are you sure to Delete followong Ingredient.?";
     obName = "";
     text = ob.ingredient_name;
-    let deleteResponse = getHTTPServiceRequest('/ingredient/delete', "DELETE", ingredient);
+    let deleteResponse = ['/ingredient/delete', "DELETE", ingredient];
     message = "Ingredient has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalIngredient, message);
 }

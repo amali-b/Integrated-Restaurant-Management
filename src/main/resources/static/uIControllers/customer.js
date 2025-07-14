@@ -81,12 +81,19 @@ const customerFormRefill = (ob, rowIndex) => {
     txtlastName.value = ob.lastname;
     txtNumber.value = ob.contact_no;
     txtEmail.value = ob.email;
+    cusStatus.value = JSON.stringify(ob.customerstatus_id);
 
     //for optional properties, use as this
     if (ob.address != undefined || ob.address != null) {
         txtAdres.value = ob.address;
     } else {
         txtAdres.value = "";
+    }
+
+    if (ob.customerstatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
     }
 }
 
@@ -161,7 +168,7 @@ const buttonCustomerUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/customer/update', "PUT", customer);
+        let updateResponse = ['/customer/update', "PUT", customer];
         swalUpdate(updates, title, text, updateResponse, modalCustomer);
 
         /* if (updates == "") {
@@ -222,7 +229,7 @@ const buttonCustomerRegister = () => {
     text = "Phone Number : " + customer.contact_no
         + ", Email : " + customer.email
         + ", Status : " + customer.customerstatus_id.status;
-    let submitResponse = getHTTPServiceRequest('/customer/insert', "POST", customer);
+    let submitResponse = ['/customer/insert', "POST", customer];
     swalSubmit(errors, title, obName, text, submitResponse, modalCustomer);
 
     /* //check errors
@@ -278,7 +285,7 @@ const customerDelete = (ob, rowIndex) => {
     title = "Are you sure to Delete Customer : ";
     obName = ob.title + " " + ob.firstname + " " + ob.lastname;
     text = "Email : " + ob.email;
-    let deleteResponse = getHTTPServiceRequest('/customer/delete', "DELETE", customer);
+    let deleteResponse = ['/customer/delete', "DELETE", customer];
     message = "Customer has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalCustomer, message);
 
@@ -359,6 +366,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalCustomer').modal('hide');
+            refreshCustomerTable();
         }
     });
 }

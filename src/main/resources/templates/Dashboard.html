@@ -1,25 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIT Project 2024 | Dashboard </title>
-    <!-- link image -->
-    <link rel="icon" href="images/Bando.png">
-    <!-- link css -->
-    <link rel="stylesheet" href="css/dashboard.css">
-    <!-- link bs5 css -->
-    <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
-    <!-- link bs5 js files -->
-    <script src="bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
-    <!-- link jquery file-->
-    <script src="jquery-3.7.1.min.js"></script>
-    <!-- link icon files -->
-    <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css">
-    <!-- link chart js file -->
-    <script src="chart/chart.js"></script>
-</head>
+<head th:replace="~{header :: headerFragment}"></head>
 
 <body>
     <div class="container-fluid p-0">
@@ -68,7 +50,7 @@
                 <div class="row d-flex justify-content-evenly mt-3 p-3">
                     <div class="col justify-content-md-center">
                         <div class="card viewDashboard">
-                            <div class="card-body ms-3 me-3">
+                            <div class="card-body ms-3 me-3" id="">
                                 <div class="row">
                                     <p class="col card-text"> Weekly Sales</p>
                                     <span class="col-1 text-end"><i class="fa-solid fa-arrow-trend-up"></i></span>

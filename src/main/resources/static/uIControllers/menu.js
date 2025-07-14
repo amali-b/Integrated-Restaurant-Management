@@ -310,7 +310,7 @@ const buttonmenuItemSubmit = () => {
     title = "Are you sure to Submit following Menu Item.?";
     obName = menuitem.name;
     text = "Price : " + menuitem.price;
-    let submitResponse = getHTTPServiceRequest('/menuitem/insert', "POST", menuitem);
+    let submitResponse = ['/menuitem/insert', "POST", menuitem];
     swalSubmit(errors, title, obName, text, submitResponse, modalMenu);
 }
 
@@ -325,7 +325,7 @@ const buttonmenuItemUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/menuitem/update', "PUT", menuitem);
+        let updateResponse = ['/menuitem/update', "PUT", menuitem];
         swalUpdate(updates, title, text, updateResponse, modalMenu);
     } else {
         Swal.fire({
@@ -342,7 +342,7 @@ const menuItemDelete = (ob, rowIndex) => {
     title = "Are you sure to Delete Selected Menu Item";
     obName = menuitem.name;
     text = "Price : " + menuitem.price;
-    let deleteResponse = getHTTPServiceRequest('/menuitem/delete', "DELETE", menuitem);
+    let deleteResponse = ['/menuitem/delete', "DELETE", menuitem];
     message = "Menu Item has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalMenu, message);
 }

@@ -199,6 +199,13 @@ const employeeFormRefill = (ob, rowIndex) => {
     civilStatus.value = JSON.stringify(ob.civilstatus_id);
     selectDesignation.value = JSON.stringify(ob.designation_id);
     empStatus.value = JSON.stringify(ob.employeestatus_id);
+
+    if (ob.employeestatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
+
     // reset photo
     if (ob.employeeimage != null) {
         imgPreview.src = atob(ob.employeeimage);
@@ -264,7 +271,7 @@ const employeeDelete = (ob, rowIndex) => {
     obName = ob.fullname;
     text = "Email : " + ob.email
         + ", Supplier Status : " + ob.employeestatus_id.status;
-    let deleteResponse = getHTTPServiceRequest('/employee/delete', "DELETE", employee);
+    let deleteResponse = ['/employee/delete', "DELETE", employee];
     message = "Employee has Deleted.";
     swalDelete(title, obName, text, deleteResponse, collapsEmpForm, message);
 
@@ -392,7 +399,7 @@ const buttonEmployeeSubmit = () => {
         + ", NIC : " + employee.nic
         + ", Designatiom : " + employee.designation_id.name
         + ", Status : " + employee.employeestatus_id.status;
-    let submitResponse = getHTTPServiceRequest('/employee/insert', "POST", employee);
+    let submitResponse = ['/employee/insert', "POST", employee];
     swalSubmit(errors, title, obName, text, submitResponse, collapsEmpForm);
 
     /* if (errors == "") {
@@ -528,7 +535,7 @@ const buttonEmployeeUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/employee/update', "PUT", employee);
+        let updateResponse = ['/employee/update', "PUT", employee];
         swalUpdate(updates, title, text, updateResponse, collapsEmpForm);
 
         /* if (updates == "") {

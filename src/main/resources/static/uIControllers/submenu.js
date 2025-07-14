@@ -374,7 +374,7 @@ const buttonProductUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/submenu/update', "PUT", submenu);
+        let updateResponse = ['/submenu/update', "PUT", submenu];
         swalUpdate(updates, title, text, updateResponse, modalSubmenu);
     } else {
         Swal.fire({
@@ -394,7 +394,7 @@ const buttonProductSubmit = () => {
     text = "Category : " + submenu.category_id.name
         + ", Email : " + submenu.price
         + ", Status : " + submenu.submenustatus_id.name;
-    let submitResponse = getHTTPServiceRequest('/submenu/insert', "POST", submenu);
+    let submitResponse = ['/submenu/insert', "POST", submenu];
     swalSubmit(errors, title, obName, text, submitResponse, modalSubmenu);
 }
 
@@ -405,7 +405,7 @@ const productDelete = (ob, rowIndex) => {
     obName = ob.name + " .?";
     text = "Category : " + ob.category_id.name
         + ", Price : " + ob.price;
-    let deleteResponse = getHTTPServiceRequest('/submenu/delete', "DELETE", submenu);
+    let deleteResponse = ['/submenu/delete', "DELETE", submenu];
     message = "Product has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalSubmenu, message);
 }

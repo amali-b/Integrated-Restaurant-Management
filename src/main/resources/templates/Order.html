@@ -195,7 +195,7 @@
                                                         <label for="txtDeliveryChg" class="form-label fw-bold">Delivery
                                                             Charge<span class="text-danger"> *</span></label>
                                                         <div class="col">
-                                                            <input type="text" required
+                                                            <input type="text"
                                                                 onkeyup="priceValidator(this,'order', 'deliverycharge')"
                                                                 class="form-control" id="txtDeliveryChg"
                                                                 placeholder="Delivery Charge will display here">
@@ -723,8 +723,7 @@
     </div>
 
     <script src="uIControllers/order.js"></script>
+    <div th:replace="~{footer :: footerFragment}"></div>
 </body>
-
-<body th:replace="~{footer :: footerFragment}"></body>
 
 </html>

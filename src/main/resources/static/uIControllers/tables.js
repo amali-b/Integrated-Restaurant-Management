@@ -115,7 +115,7 @@ const buttonTablesUpdate = () => {
         }
         let title = "Are you sure to update following table seat count.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/tables/update', "PUT", tableDinein);
+        let updateResponse = ['/tables/update', "PUT", tableDinein];
         swalUpdate(updates, title, text, updateResponse, "");
     } else {
         Swal.fire({
@@ -137,7 +137,7 @@ const buttonTablesSubmit = () => {
     title = "Are you sure to Submit following Table ";
     obName = tableDinein.number;
     text = "Seats : " + tableDinein.seatcount;
-    let submitResponse = getHTTPServiceRequest('/tables/insert', "POST", tableDinein);
+    let submitResponse = ['/tables/insert', "POST", tableDinein];
     swalSubmit(errors, title, obName, text, submitResponse, "");
 }
 
@@ -147,7 +147,7 @@ const tableDelete = (ob, index) => {
     title = "Are you sure to Delete Selected ";
     obName = "Table No. : " + ob.number;
     text = "Seats : " + ob.seatcount;
-    let deleteResponse = getHTTPServiceRequest('/tables/delete', "DELETE", tableDinein);
+    let deleteResponse = ['/tables/delete', "DELETE", tableDinein];
     message = "Table has Deleted.";
     swalDelete(title, obName, text, deleteResponse, "", message);
 }

@@ -403,7 +403,7 @@ const buttonSupplierUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/supplier/update', "PUT", supplier);
+        let updateResponse = ['/supplier/update', "PUT", supplier];
         swalUpdate(updates, title, text, updateResponse, modalSupplier);
     } else {
         Swal.fire({
@@ -469,7 +469,7 @@ const buttonSupplierSubmit = () => {
     obName = supplier.supplier_name;
     text = "Phone Number : " + supplier.contact_no
         + ", Email : " + supplier.email;
-    let submitResponse = getHTTPServiceRequest('/supplier/insert', "POST", supplier);
+    let submitResponse = ['/supplier/insert', "POST", supplier];
     swalSubmit(errors, title, obName, text, submitResponse, modalSupplier);
 
     //check errors
@@ -533,7 +533,7 @@ const supplierDelete = (ob, rowIndex) => {
         + ", Holder Name: " + ob.holdername
         + ", Supplier Type : " + ob.supplier_type
         + ", Supplier Status : " + ob.supplierstatus_id.status;
-    let deleteResponse = getHTTPServiceRequest('/supplier/delete', "DELETE", supplier);
+    let deleteResponse = ['/supplier/delete', "DELETE", supplier];
     message = "Supplier has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalSupplier, message);
 

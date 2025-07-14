@@ -126,7 +126,7 @@ const buttonGarbageremoveSubmit = () => {
     obName = garbageremove.ingredient_id.ingredient_name;
     text = "Quantity : " + garbageremove.quantity
         + ", Reason : " + garbageremove.reason;
-    let submitResponse = getHTTPServiceRequest('/garbageremove/insert', "POST", garbageremove);
+    let submitResponse = ['/garbageremove/insert', "POST", garbageremove];
     swalSubmit(errors, title, obName, text, submitResponse, "");
 }
 

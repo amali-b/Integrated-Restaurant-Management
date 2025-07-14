@@ -402,7 +402,7 @@ const buttonSupplierPaymentSubmit = () => {
         + ", Paid Amount : " + supplierPayment.paidamount
         + ", Balanced Amount : " + supplierPayment.balanceamount
         + ",  Payment Method : " + supplierPayment.paymentmethod_id.method;
-    let submitResponse = getHTTPServiceRequest('/supplierpayment/insert', "POST", supplierPayment);
+    let submitResponse = ['/supplierpayment/insert', "POST", supplierPayment];
     swalSubmit(errors, title, obName, text, submitResponse, modalSupplierPayment);
 }
 

@@ -742,6 +742,7 @@ const orderFormRefill = (ob, rowIndex) => {
     txtNetAmount.value = ob.netamount;
     orderStatus.value = JSON.stringify(ob.orderstatus_id);
     tableNO.value = ob.tables_id != null ? JSON.stringify(ob.tables_id) : "";
+    deliveryVehicle.value = ob.vehicle_id != null ? JSON.stringify(ob.vehicle_id) : "";
 
     refreshInnerFormandTableSubmenu();
 }
@@ -797,8 +798,7 @@ const checkFormUpdate = () => {
             if (order.customer_id.contact_no != oldorder.customer_id.contact_no) {
                 updates = updates + " Mobile No. has updated from " + oldorder.customer_id._contact_no + " \n";
             }
-        }
-        if (order.customername != null) {
+        } else {
             if (order.customername != oldorder.customername) {
                 updates = updates + "Customer Name has updated from " + oldorder.customername + " \n";
             }
@@ -806,27 +806,31 @@ const checkFormUpdate = () => {
                 updates = updates + "Customer Contact has updated from " + oldorder.customercontact + " \n";
             }
         }
-
         if (order.totalamount != oldorder.totalamount) {
             updates = updates + "Total Amount has updated from " + oldorder.totalamount + " \n";
-        }
-        if (order.servicecharge != oldorder.servicecharge) {
-            updates = updates + "Service Charge has updated from " + oldorder.servicecharge + " \n";
-        }
-        if (order.deliverycharge != oldorder.deliverycharge) {
-            updates = updates + "Delivery Charge has updated from " + oldorder.deliverycharge + " \n";
         }
         if (order.netamount != oldorder.netamount) {
             updates = updates + "Net Amount has updated from " + oldorder.netamount + " \n";
         }
-        if (order.tables_id.number != oldorder.tables_id.number) {
-            updates = updates + "Table No. has updated from " + oldorder.tables_id.number + " \n";
-        }
-        if (order.vehicle_id.name != oldorder.vehicle_id.name) {
-            updates = updates + "Vehicle has updated from " + oldorder.vehicle_id.name + " \n";
-        }
+
         if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
             updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
+        }
+
+        if (order.ordertype_id.type === "Dine-In") {
+            if (order.servicecharge != oldorder.servicecharge) {
+                updates = updates + "Service Charge has updated from " + oldorder.servicecharge + " \n";
+            }
+            if (order.tables_id.number != oldorder.tables_id.number) {
+                updates = updates + "Table No. has updated from " + oldorder.tables_id.number + " \n";
+            }
+        } else if (order.ordertype_id.type === "Delivery") {
+            if (order.deliverycharge != oldorder.deliverycharge) {
+                updates = updates + "Delivery Charge has updated from " + oldorder.deliverycharge + " \n";
+            }
+            if (order.vehicle_id.name != oldorder.vehicle_id.name) {
+                updates = updates + "Vehicle has updated from " + oldorder.vehicle_id.name + " \n";
+            }
         }
 
         /* ###### CHECK SUBMENU INNER FORM CHANGES ###### */
@@ -907,7 +911,7 @@ const buttonOrderSubmit = () => {
     obName = "";
     text = "Type : " + order.ordertype_id.type
         + ", Net Amount : " + order.netamount;
-    let submitResponse = getHTTPServiceRequest('/order/insert', "POST", order);
+    let submitResponse = ['/order/insert', "POST", order];
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
 }
 
@@ -922,7 +926,7 @@ const buttonOrderUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/order/update', "PUT", order);
+        let updateResponse = ['/order/update', "PUT", order];
         swalUpdate(updates, title, text, updateResponse, modalOrders);
     } else {
         Swal.fire({

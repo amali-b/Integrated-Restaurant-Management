@@ -126,7 +126,7 @@ const buttonVehicleUpdate = () => {
         }
         let title = "Are you sure to update following updates.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/vehicle/update', "PUT", vehicle);
+        let updateResponse = ['/vehicle/update', "PUT", vehicle];
         swalUpdate(updates, title, text, updateResponse, "");
     } else {
         Swal.fire({
@@ -156,7 +156,7 @@ const buttonVehicleSubmit = () => {
     title = "Are you sure to Submit following Table";
     obName = vehicle.name;
     text = "Vehicle Number : " + vehicle.vehiclenumber;
-    let submitResponse = getHTTPServiceRequest('/vehicle/insert', "POST", vehicle);
+    let submitResponse = ['/vehicle/insert', "POST", vehicle];
     swalSubmit(errors, title, obName, text, submitResponse, "");
 }
 
@@ -166,7 +166,7 @@ const vehicleDelete = (ob, index) => {
     title = "Are you sure to Delete Selected Vehicle";
     obName = ob.name;
     text = "Vehicle Number : " + ob.vehiclenumber;
-    let deleteResponse = getHTTPServiceRequest('/vehicle/delete', "DELETE", vehicle);
+    let deleteResponse = ['/vehicle/delete', "DELETE", vehicle];
     message = "Vehicle has Deleted.";
     swalDelete(title, obName, text, deleteResponse, "", message);
 }

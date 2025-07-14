@@ -455,7 +455,7 @@ const buttonSupplierOrderSubmit = () => {
     text = "Supplier : " + supplierorder.supplier_id.supplier_name
         + ", Required Date : " + supplierorder.daterequired
         + ", Total Amount : " + supplierorder.totalamount;
-    let submitResponse = getHTTPServiceRequest('/supplierorder/insert', "POST", supplierorder);
+    let submitResponse = ['/supplierorder/insert', "POST", supplierorder];
     swalSubmit(errors, title, obName, text, submitResponse, modalSupplierOrder);
 
     /* //check errors
@@ -512,7 +512,7 @@ const buttonSupplierOrderUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/supplierorder/update', "PUT", supplierorder);
+        let updateResponse = ['/supplierorder/update', "PUT", supplierorder];
         swalUpdate(updates, title, text, updateResponse, modalSupplierOrder);
 
         /* if (updates == "") {
@@ -571,7 +571,7 @@ const supplierOrderDelete = (ob, rowIndex) => {
     text = "Supplier : " + supplierorder.supplier_id.supplier_name
         + ", Required Date : " + supplierorder.daterequired
         + ", Total Amount : " + supplierorder.totalamount;
-    let deleteResponse = getHTTPServiceRequest('/supplierorder/delete', "DELETE", supplierorder);
+    let deleteResponse = ['/supplierorder/delete', "DELETE", supplierorder];
     message = "Purchase Order has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalSupplierOrder, message);
 }
