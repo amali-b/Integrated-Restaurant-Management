@@ -17,30 +17,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity // Specifies that the class is an entity
-@Table(name = "order_has_submenu") // Specifies the primary table for the annotated entity
+@Table(name = "order_has_ingredient") // Specifies the primary table for the annotated entity
 @Data // generate setter, getter, toString by lombok
 @AllArgsConstructor // All argument constructor
 @NoArgsConstructor // generate default constructor
-public class OrderHasSubmenu {
-    @Id
+public class OrderHasIngredient {
+    @Id // Specifies the primary key of an entity
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
     private Integer id;
 
     @NotNull
-    private BigDecimal price;
+    private BigDecimal required_qty;
 
     @NotNull
-    private BigDecimal quantity;
-
-    @NotNull
-    private BigDecimal lineprice;
+    private BigDecimal available_qty;
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @JsonIgnore // block supplierorder_id property from reading
     private Order order_id;
 
-    @ManyToOne
-    @JoinColumn(name = "submenu_id", referencedColumnName = "id")
-    private Submenu submenu_id;
+    @ManyToOne // order_has_ingredient and ingredient has many to one relationship
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
+    private Ingredient ingredient_id;
 }

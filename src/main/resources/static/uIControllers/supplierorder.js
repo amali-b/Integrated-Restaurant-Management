@@ -15,6 +15,7 @@ const refreshForm = () => {
     btnsubmit.style.display = "inline";
     btnupdate.style.display = "none";
     SelectSupplier.disabled = "";
+    supplyorderStatus.disabled = true;
     //define new object
     supplierorder = new Object();
     supplierorder.supplierorderHasIngredientList = new Array();
@@ -25,7 +26,7 @@ const refreshForm = () => {
     const supplierOrderStatuses = getServiceRequest("/supplyOrderStatus/alldata");
     fillDropdown(supplyorderStatus, "Select Status.!", supplierOrderStatuses, "status");
 
-    setDefault([SelectSupplier, dateRequired, txtTotalAmount, supplyorderStatus, txtNote]);
+    setDefault([SelectSupplier, dateRequired, txtTotalAmount, supplyorderStatus]);
 
     // status eka form eka open weddima active wdyt select wenna
     //select value eka string wenna one nisa object eka string baweta convert krenw
@@ -87,6 +88,9 @@ const filteringredientsbySupplier = () => {
     let ingredients = getServiceRequest("/ingredient/listbysupplier?supplierid=" + JSON.parse(SelectSupplier.value).id);
     fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
     SelectIngredints.disabled = false;
+    SelectIngredints.style.border = "2px solid #ced4da";
+    txtPrice.value = "";
+    txtPrice.style.border = "2px solid #ced4da";
 }
 
 //define function for refresh inner form
@@ -323,19 +327,19 @@ const refreshSupplierOrderTable = () => {
 
 //define function for get supplier order status
 const getSupplyOrderStatus = (dataOb) => {
-    if (dataOb.supplyorderstatus_id.status == "Completed") {
-        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
-    }
-    if (dataOb.supplyorderstatus_id.status == "Received") {
-        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
-    }
-    if (dataOb.supplyorderstatus_id.status == "Pending") {
+    if (dataOb.supplyorderstatus_id.id == 1) {
         return "<p class='btn btn-outline-warning text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
     }
-    if (dataOb.supplyorderstatus_id.status == "Canceled") {
-        return "<p class='btn btn-outline-warning text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
+    if (dataOb.supplyorderstatus_id.id == 2) {
+        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
     }
-    if (dataOb.supplyorderstatus_id.status == "Removed") {
+    if (dataOb.supplyorderstatus_id.id == 3) {
+        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
+    }
+    if (dataOb.supplyorderstatus_id.id == 4) {
+        return "<p class='btn btn-outline-danger text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
+    }
+    if (dataOb.supplyorderstatus_id.id == 5) {
         return "<p class='btn btn-outline-danger text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
     }
     return dataOb.supplyorderstatus_id.status;
@@ -359,12 +363,8 @@ const supplierOrderFormRefill = (ob, rowIndex) => {
     SelectSupplier.value = JSON.stringify(supplierorder.supplier_id);
     dateRequired.value = ob.daterequired;
     supplyorderStatus.value = JSON.stringify(ob.supplyorderstatus_id);
+    supplyorderStatus.disabled = false;
 
-    if (ob.note == undefined) {
-        txtNote.value = "";
-    } else {
-        txtNote.value = ob.note;
-    }
     // innerform eke date tika fill kregnna one nisa
     refreshInnerFormandTable();
 }

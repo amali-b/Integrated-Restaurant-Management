@@ -74,7 +74,7 @@ const refreshForm = () => {
         }
     });
 
-    setDefault([supStatus, nameSupplier, txtNumber, txtEmail, txtAdres, txtBankname, txtBranch, accNo, accHolder, supplierTypes, SelectBycategory, SelectedIngredints, txtNote]);
+    setDefault([supStatus, nameSupplier, txtNumber, txtEmail, txtAdres, txtBankname, txtBranch, accNo, accHolder, supplierTypes, SelectBycategory, SelectedIngredints]);
 
     const supplierStatuses = getServiceRequest("/supplierstatus/alldata");
     fillDropdown(supStatus, "Select Status", supplierStatuses, "status");
@@ -292,13 +292,6 @@ const supplierFormRefill = (ob, rowIndex) => {
     fillDropdown(SelectedIngredints, "", supplier.supplyIngredients, "ingredient_name");
 
     supStatus.value = JSON.stringify(ob.supplierstatus_id);
-
-    if (ob.note == undefined) {
-        txtNote.value = "";
-    } else {
-        txtNote.value = ob.note;
-    }
-
 }
 
 //define function to check errors

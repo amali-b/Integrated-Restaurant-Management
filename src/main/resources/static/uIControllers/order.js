@@ -18,7 +18,7 @@ window.addEventListener("load", () => {
 const refreshForm = () => {
     formOrder.reset();
     // btnsubmit.disabled = false;
-    btnsubmit.style.display = "inline";
+    // btnsubmit.style.display = "inline";
     btnupdate.style.display = "none";
     SelectCustomer.disabled = "";
     txtTotalAmount.value = "";
@@ -314,7 +314,7 @@ const orderSubmenuDelete = (ob, index) => {
     });
 }
 
-const buttonorderSubemnuSubmit = () => {
+/* const buttonorderSubemnuSubmit = () => {
     console.log(orderHasSubmenu);
 
     Swal.fire({
@@ -341,7 +341,7 @@ const buttonorderSubemnuSubmit = () => {
     // main eke thyena list ekta inner object eka push krenewa
     order.orderHasSubmenuList.push(orderHasSubmenu);
     refreshInnerFormandTableSubmenu();
-}
+} */
 
 const buttonorderSubemnuUpdate = () => {
     console.log(orderHasSubmenu);
@@ -610,9 +610,9 @@ const refreshOrderTable = () => {
         { property: getCustomerName, dataType: "function" },
         { property: getOrderType, dataType: "function" },
         { property: "totalamount", dataType: "decimal" },
-        { property: "discount", dataType: "decimal" },
-        { property: "servicecharge", dataType: "decimal" },
-        { property: "deliverycharge", dataType: "decimal" },
+        { property: getDiscount, dataType: "function" },
+        { property: getServiceChg, dataType: "function" },
+        { property: getDeliveryChg, dataType: "function" },
         { property: "netamount", dataType: "decimal" },
         { property: getOrderStatus, dataType: "function" },
         { property: getOrderTable, dataType: "function" },
@@ -627,6 +627,16 @@ const refreshOrderTable = () => {
 //define function for get  table number
 const getOrderTable = (dataOb) => {
     return dataOb.tables_id?.number ?? "-";
+}
+
+const getDiscount = (dataOb) => {
+    return dataOb.discount ? discount : " - ";
+}
+const getServiceChg = (dataOb) => {
+    return dataOb.discount ? discount : " - ";
+}
+const getDeliveryChg = (dataOb) => {
+    return dataOb.discount ? discount : " - ";
 }
 
 //define function for get  vehicle name
@@ -650,19 +660,24 @@ const getOrderType = (dataOb) => {
 
 //define function for get  order status
 const getOrderStatus = (dataOb) => {
-    if (dataOb.orderstatus_id.status == "New") {
+    // Nwe
+    if (dataOb.orderstatus_id.id == 1) {
         return "<p class='btn btn-outline-info text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    if (dataOb.orderstatus_id.status == "In-Progress") {
+    // In-Progress
+    if (dataOb.orderstatus_id.id == 2) {
         return "<p class='btn btn-outline-success text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    if (dataOb.orderstatus_id.status == "Completed") {
+    // Ready
+    if (dataOb.orderstatus_id.id == 3) {
         return "<p class='btn btn-outline-success text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    if (dataOb.orderstatus_id.status == "Canceled") {
+    // Canceled
+    if (dataOb.orderstatus_id.id == 4) {
         return "<p class='btn btn-outline-warning text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    if (dataOb.orderstatus_id.status == "Removed") {
+    // Removed
+    if (dataOb.orderstatus_id.id == 5) {
         return "<p class='btn btn-outline-danger text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
     return dataOb.orderstatus_id.status;
@@ -725,22 +740,38 @@ selectOrderTypeElement.addEventListener("change", () => {
 //define Form edit function
 const orderFormRefill = (ob, rowIndex) => {
     $('#modalOrders').modal('show');
-    btnsubmit.style.display = "none";
     btnupdate.style.display = "inline";
 
     order = JSON.parse(JSON.stringify(ob)); //pass wenne object nisa property value pair ekak enne.. object eken value eka allagnne json.stringify walin
     oldorder = JSON.parse(JSON.stringify(ob));
 
-    SelectCustomer.disabled = "disabled";
+    SelectCustomer.disabled = true;
     SelectCustomer.value = ob.customer_id != null ? JSON.stringify(ob.customer_id) : "";
+
+    txtCustName.disabled = true;
     txtCustName.value = ob.customername != null ? ob.customername : "";
+
+    txtNumber.disabled = true;
     txtNumber.value = ob.customercontact != null ? ob.customercontact : "";
+
+    selectOrderType.disabled = true;
     selectOrderType.value = JSON.stringify(ob.ordertype_id);
+
+    txtTotalAmount.disabled = true;
     txtTotalAmount.value = ob.totalamount;
+
+    txtServiceChg.disabled = true;
     txtServiceChg.value = ob.servicecharge != null ? ob.servicecharge : "";
+
+    txtDeliveryChg.disabled = true;
     txtDeliveryChg.value = ob.deliverycharge != null ? ob.deliverycharge : "";
+
+    txtNetAmount.disabled = true;
     txtNetAmount.value = ob.netamount;
+
+    orderStatus.disabled = true;
     orderStatus.value = JSON.stringify(ob.orderstatus_id);
+
     tableNO.value = ob.tables_id != null ? JSON.stringify(ob.tables_id) : "";
     deliveryVehicle.value = ob.vehicle_id != null ? JSON.stringify(ob.vehicle_id) : "";
 
@@ -748,7 +779,7 @@ const orderFormRefill = (ob, rowIndex) => {
 }
 
 //define function to check errors
-const checkFormError = () => {
+/* const checkFormError = () => {
     let errors = "";
     if (order.ordertype_id == null) {
         selectOrderType.style.border = "2px solid red";
@@ -762,16 +793,16 @@ const checkFormError = () => {
         txtNetAmount.style.border = "2px solid red";
         errors = errors + "Please Fill Inner Form/s.! \n";
     }
-    if (order.ordertype_id.type === "Dine-In") {
-        if (order.servicecharge == null || order.servicecharge.trim() === "") {
+    if (order.ordertype_id.type == "Dine-In") {
+        if (order.servicecharge == null || order.servicecharge.trim() == "") {
             txtServiceChg.style.border = "2px solid red";
         }
         if (order.tables_id == null) {
             tableNO.style.border = "2px solid red";
             errors = errors + "Please Select Table No.! \n";
         }
-    } else if (order.ordertype_id.type === "Delivery") {
-        if (order.deliverycharge == null || order.deliverycharge.trim() === "") {
+    } else if (order.ordertype_id.type == "Delivery") {
+        if (order.deliverycharge == null || order.deliverycharge.trim() == "") {
             txtDeliveryChg.style.border = "2px solid red";
         }
         if (order.vehicle_id == null) {
@@ -787,14 +818,14 @@ const checkFormError = () => {
         errors = errors + "Please Select Status.! \n";
     }
     return errors;
-}
+} */
 
 //define function for check for updates 
 const checkFormUpdate = () => {
     let updates = "";
 
     if (order != null && oldorder != null) {
-        if (order.customer_id != null) {
+        /* if (order.customer_id != null) {
             if (order.customer_id.contact_no != oldorder.customer_id.contact_no) {
                 updates = updates + " Mobile No. has updated from " + oldorder.customer_id._contact_no + " \n";
             }
@@ -815,9 +846,9 @@ const checkFormUpdate = () => {
 
         if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
             updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
-        }
+        } */
 
-        if (order.ordertype_id.type === "Dine-In") {
+        /* if (order.ordertype_id.type === "Dine-In") {
             if (order.servicecharge != oldorder.servicecharge) {
                 updates = updates + "Service Charge has updated from " + oldorder.servicecharge + " \n";
             }
@@ -831,7 +862,7 @@ const checkFormUpdate = () => {
             if (order.vehicle_id.name != oldorder.vehicle_id.name) {
                 updates = updates + "Vehicle has updated from " + oldorder.vehicle_id.name + " \n";
             }
-        }
+        } */
 
         /* ###### CHECK SUBMENU INNER FORM CHANGES ###### */
 
@@ -904,7 +935,7 @@ const checkFormUpdate = () => {
 }
 
 //define function for submit button
-const buttonOrderSubmit = () => {
+/* const buttonOrderSubmit = () => {
     //check if there are any errors
     let errors = checkFormError();
     title = "Are you sure to Submit following Customer Order";
@@ -913,28 +944,17 @@ const buttonOrderSubmit = () => {
         + ", Net Amount : " + order.netamount;
     let submitResponse = ['/order/insert', "POST", order];
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
-}
+} */
 
 //define function for update button
 const buttonOrderUpdate = () => {
-    //check if there are any errors
-    let errors = checkFormError();
-    //check errors
-    if (errors == "") {
-        //check updates
-        let updates = checkFormUpdate();
+    //check updates
+    let updates = checkFormUpdate();
 
-        let title = "Are you sure you want to update following changes.?";
-        let text = updates;
-        let updateResponse = ['/order/update', "PUT", order];
-        swalUpdate(updates, title, text, updateResponse, modalOrders);
-    } else {
-        Swal.fire({
-            title: "Failed to Update.! Form has following errors :",
-            text: errors,
-            icon: "error"
-        });
-    }
+    let title = "Are you sure you want to update following changes.?";
+    let text = updates;
+    let updateResponse = ['/order/update', "PUT", order];
+    swalUpdate(updates, title, text, updateResponse, modalOrders);
 }
 
 //function define for delete Order record

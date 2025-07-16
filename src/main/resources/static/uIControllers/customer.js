@@ -28,6 +28,7 @@ const refreshForm = () => {
     // customerStatus list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     customer.customerstatus_id = customerStatus[0];
     cusStatus.style.border = "2px solid green";
+    cusStatus.disabled = true;
 }
 
 //create refresh table function
@@ -82,6 +83,7 @@ const customerFormRefill = (ob, rowIndex) => {
     txtNumber.value = ob.contact_no;
     txtEmail.value = ob.email;
     cusStatus.value = JSON.stringify(ob.customerstatus_id);
+    cusStatus.disabled = false;
 
     //for optional properties, use as this
     if (ob.address != undefined || ob.address != null) {

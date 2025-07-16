@@ -76,9 +76,18 @@ const refreshEmpForm = () => {
     // status eka form eka open weddima active wdyt select wenna
     //select value eka string wenna one nisa object eka string baweta convert krenw
     empStatus.value = JSON.stringify(employeeStatuses[0]);
-    // customerStatus list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
+    // employeeStatus list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     employee.employeestatus_id = employeeStatuses[0];
     empStatus.style.border = "2px solid green";
+
+    // hide krnwa ona nathi status
+    // DOM walin manipulate krnwa //remove 3 and 4 option
+    if (empStatus.options[3]) {
+        empStatus.options[3].classList.add("d-none");
+    }
+    if (empStatus.options[4]) {
+        empStatus.options[4].classList.add("d-none");
+    }
 }
 
 //define function for refresh table data
@@ -189,6 +198,7 @@ const employeeFormRefill = (ob, rowIndex) => {
     txtEmail.value = ob.email;
     txtNumber.value = ob.mobile_no;
     dateDOB.value = ob.dob;
+    dateDOB.disabled = true;
 
     if (ob.gender == "Male") {
         radioMale.checked = "checked";

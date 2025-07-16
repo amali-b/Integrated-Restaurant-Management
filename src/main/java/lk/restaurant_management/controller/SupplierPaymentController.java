@@ -129,7 +129,7 @@ public class SupplierPaymentController {
                 // grn object eka database ekata save krenewa ingredient list ekth ekkama
                 grnDao.save(grn);
 
-                return "OK";
+                return "\"OK\"";
 
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();

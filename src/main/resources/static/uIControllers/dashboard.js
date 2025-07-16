@@ -7,22 +7,22 @@ hamburger.addEventListener("click", function () {
 window.addEventListener("load", () => {
     // get sales summary of order payments
     let dataObPayments = getServiceRequest("/dashboard/paymentsbylastweek");
-    txtSaleSummary.innerHTML = "";
+    txtSaleSummary.innerText = "";
     txtSaleSummary.innerText = "LKR " + dataObPayments;
 
     // get sales summary of orders
     let dataObOrders = getServiceRequest("/dashboard/ordersbylastweek");
-    txtOrderSummary.innerHTML = "";
+    txtOrderSummary.innerText = "";
     txtOrderSummary.innerText = dataObOrders;
 
     // get summary of supplier payments
     let dataObSupplyPaymnets = getServiceRequest("/dashboard/supplyPaymentsbyonemonth");
-    txtSupplierPayments.innerHTML = "";
+    txtSupplierPayments.innerText = "";
     txtSupplierPayments.innerText = "LKR " + dataObSupplyPaymnets;
 
     // get summary of supplier payments
     let dataObCustomerRegister = getServiceRequest("/dashboard/customerregistration");
-    txtCustomerRegister.innerHTML = "";
+    txtCustomerRegister.innerText = "";
     txtCustomerRegister.innerText = dataObCustomerRegister;
 
     // call chart functions when browser load

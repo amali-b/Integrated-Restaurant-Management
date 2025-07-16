@@ -419,7 +419,7 @@ const getHTTPServiceRequest = (url, method, dataOb) => {
         type: method,//The HTTP method to use for the request (GET, POST, PUT, DELETE, etc.)
         data: JSON.stringify(dataOb), //{key1: 'value1',key2: 'value2'} //Data to be sent to the server
         async: false, //wait for response
-        contentType: "application/json", //Json is storing and transporting format ekak 
+        contentType: "application/json", //Json is storing --> transporting format ekak 
         success: function (response) {
             //Code to execute if the request succeeds
             console.log('Success: ', response);

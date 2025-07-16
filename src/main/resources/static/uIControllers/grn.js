@@ -36,7 +36,7 @@ const refreshForm = () => {
     const grnstatuses = getServiceRequest("/grnstatus/alldata");
     fillDropdown(SelectStatus, "Select Status.!", grnstatuses, "status");
 
-    setDefault([selectPurchaseOrder, txtSupplierInvoice, dateReceived, txtReceivedBy, txtTotalAmount, txtDiscount, txtNetamount, SelectStatus, txtNote]);
+    setDefault([selectPurchaseOrder, txtSupplierInvoice, dateReceived, txtTotalAmount, txtDiscount, txtNetamount, SelectStatus]);
 
     // status eka form eka open weddima active wdyt select wenna
     SelectStatus.value = JSON.stringify(grnstatuses[0]);//select value eka string wenna one nisa object eka string baweta convert krenw
@@ -52,19 +52,18 @@ const refreshForm = () => {
 }
 
 const calculateNetAmount = () => {
-    // reset discount
-    txtDiscount.value = "";
-    grn.discountamount = 0;
+    if (txtTotalAmount.value > 0) {
+        /* ### Generate Net Amount ### */
+        let totalamount = parseFloat(txtTotalAmount.value);
+        let discountamount = parseFloat(txtDiscount.value);
+        let netamount = totalamount - discountamount;
 
-    /* ### Generate Net Amount ### */
-    let totalamount = parseFloat(txtTotalAmount.value) || 0;
-    let discountamount = parseFloat(txtDiscount.value) || 0;
-    let netamount = totalamount - discountamount;
-    // Update net amount input
-    txtNetamount.value = netamount.toFixed(2);
-    // Store in grn object
-    grn.netamount = txtNetamount.value;
-    txtNetamount.style.border = "2px solid green";
+        // Update net amount input
+        txtNetamount.value = netamount.toFixed(2);
+        // Store in grn object
+        grn.netamount = txtNetamount.value;
+        txtNetamount.style.border = "2px solid green";
+    }
 }
 
 /* ############################## INNER FORM FUNCTIONS ################################# */
@@ -93,6 +92,9 @@ const filteringredientsbySupplierOrder = () => {
     let ingredients = getServiceRequest("/ingredient/listbysupplierOrder?supplierorderid=" + JSON.parse(selectPurchaseOrder.value).id);
     fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
     SelectIngredints.disabled = false;
+    SelectIngredints.style.border = "2px solid #ced4da";
+    txtPrice.value = "";
+    txtPrice.style.border = "2px solid #ced4da";
 }
 
 //define function for refresh inner form
@@ -135,7 +137,7 @@ const refreshInnerFormandTable = () => {
     //define function for refresh inner table
     let columns = [
         { property: getIngredientName, dataType: "function" },
-        { property: "batchnumber", dataType: "string" },
+        { property: getBatchnumber, dataType: "function" },
         { property: "price", dataType: "decimal" },
         { property: "quantity", dataType: "decimal" },
         { property: "lineprice", dataType: "decimal" },
@@ -159,6 +161,10 @@ const refreshInnerFormandTable = () => {
     fillInnerTableFooter(tfootGrnhasIngredient, grn.grnHasIngredientList, column, columns.length);
 
     calculateNetAmount();
+}
+
+const getBatchnumber = (ob) => {
+    return ob.batchnumber ? ob.batchnumber : "-";
 }
 
 const getIngredientName = (ob) => {
@@ -284,9 +290,6 @@ checkInnerFormUpdate = () => {
     let updates = "";
 
     if (grnHasIngredient != null && oldgrnHasIngredient != null) {
-        if (grn.receivedby != oldgrn.receivedby) {
-            updates = updates + "Receiver has updated from " + oldgrn.receivedby + " \n";
-        }
         if (grnHasIngredient.batchnumber != oldgrnHasIngredient.batchnumber) {
             updates = updates + "Batch Number has updated from " + oldgrnHasIngredient.batchnumbert + " \n";
         }
@@ -363,7 +366,6 @@ const refreshGrnTable = () => {
         { property: getSupplierOrderCode, dataType: "function" },
         { property: "supplierinvoiceno", dataType: "string" },
         { property: "dateofreceived", dataType: "string" },
-        { property: "receivedby", dataType: "string" },
         { property: "totalamount", dataType: "decimal" },
         { property: "discountamount", dataType: "decimal" },
         { property: "netamount", dataType: "decimal" },
@@ -377,11 +379,17 @@ const refreshGrnTable = () => {
 
 //define function for get supplier order status
 const getGrnStatus = (dataOb) => {
-    if (dataOb.grnstatus_id.status == "Received") {
-        return "<p class='btn btn-outline-success text-center'>" + dataOb.grnstatus_id.status + "</p>";
+    // Received
+    if (dataOb.grnstatus_id.id == 1) {
+        return "<p class='btn btn-outline-primary text-center'>" + dataOb.grnstatus_id.status + "</p>";
     }
-    if (dataOb.grnstatus_id.status == "Removed") {
-        return "<p class='btn btn-outline-danger text-center'>" + dataOb.grnstatus_id.status + "</p>";
+    // Partially Complete
+    if (dataOb.grnstatus_id.id == 2) {
+        return "<p class='btn btn-outline-warning text-center'>" + dataOb.grnstatus_id.status + "</p>";
+    }
+    // Complete
+    if (dataOb.grnstatus_id.id == 3) {
+        return "<p class='btn btn-outline-success text-center'>" + dataOb.grnstatus_id.status + "</p>";
     }
     return dataOb.grnstatus_id.status;
 }
@@ -410,19 +418,12 @@ const GrnFormRefill = (ob, rowIndex) => {
     selectPurchaseOrder.value = JSON.stringify(grn.supplierorder_id);
     txtSupplierInvoice.value = ob.supplierinvoiceno;
     dateReceived.value = ob.dateofreceived;
-    txtReceivedBy.value = ob.receivedby;
     txtTotalAmount.value = ob.totalamount;
     txtDiscount.disabled = true;
     txtDiscount.value = ob.discountamount;
     txtNetamount.value = ob.netamount;
     SelectStatus.disabled = true;
     SelectStatus.value = JSON.stringify(ob.grnstatus_id);
-
-    if (ob.note == undefined) {
-        txtNote.value = "";
-    } else {
-        txtNote.value = ob.note;
-    }
     refreshInnerFormandTable();
 }
 
@@ -441,10 +442,6 @@ const checkFormError = () => {
         dateReceived.style.border = "2px solid red";
         errors = errors + "Please Select Date of Received.! \n";
     }
-    if (grn.receivedby == null) {
-        txtReceivedBy.style.border = "2px solid red";
-        errors = errors + "Please Enter Goods Receiver.! \n";
-    }
     if (grn.grnHasIngredientList.length == 0) {
         errors = errors + "Please Select Grn Ingredients First.! \n";
     }
@@ -462,36 +459,6 @@ const checkFormError = () => {
     return errors;
 }
 
-//define function for check for updates 
-const checkFormUpdate = () => {
-    let updates = "";
-
-    if (grn != null && oldgrn != null) {
-        if (grn.supplierinvoiceno != oldgrn.supplierinvoiceno) {
-            updates = updates + "Supplier Invoice Number has updated from " + oldgrn.supplierinvoiceno + " \n";
-        }
-        if (grn.dateofreceived != oldgrn.dateofreceived) {
-            updates = updates + "Received Date has updated from " + oldgrn.dateofreceived + " \n";
-        }
-        if (grn.receivedby != oldgrn.receivedby) {
-            updates = updates + "Receiver has updated from " + oldgrn.receivedby + " \n";
-        }
-        if (grn.totalamount != oldgrn.totalamount) {
-            updates = updates + "Total Amount has updated from " + oldgrn.totalamount + " \n";
-        }
-        if (grn.discountamount != oldgrn.discountamount) {
-            updates = updates + "Discount Amount has updated from " + oldgrn.discountamount + " \n";
-        }
-        if (grn.netamount != oldgrn.netamount) {
-            updates = updates + "Net Amount has updated from " + oldgrn.netamount + " \n";
-        }
-        if (grn.grnstatus_id.status != oldgrn.grnstatus_id.status) {
-            updates = updates + "Status has updated from " + oldgrn.grnstatus_id.status + " \n";
-        }
-    }
-    return updates;
-}
-
 //define function for submit button
 const buttonGrnSubmit = () => {
     //check if there are any errors
@@ -500,46 +467,10 @@ const buttonGrnSubmit = () => {
     obName = "";
     text = "Purchase Order No. : " + grn.supplierorder_id.ordercode
         + ", Received Date : " + grn.dateofreceived
-        + ", Received By : " + grn.receivedby
         + ", Supplier Invoice No. : " + grn.supplierinvoiceno
         + ", Net Amount : " + grn.netamount;
     let submitResponse = ['/grn/insert', "POST", grn];
     swalSubmit(errors, title, obName, text, submitResponse, modalGrn);
-}
-
-//define function for update button
-const buttonGrnUpdate = () => {
-    //check if there are any errors
-    let errors = checkFormError();
-    //check errors
-    if (errors == "") {
-        //check updates
-        let updates = checkFormUpdate();
-        let title = "Are you sure you want to update following changes.?";
-        let text = updates;
-        let updateResponse = ['/grn/update', "PUT", grn];
-        swalUpdate(updates, title, text, updateResponse, modalGrn);
-    } else {
-        Swal.fire({
-            title: "Failed to Update.! Form has following errors :",
-            text: errors,
-            icon: "error"
-        });
-    }
-}
-
-//function define for delete Supplier Order record
-const GrnDelete = (ob, rowIndex) => {
-    supplier = ob;
-    title = "Are you sure to Delete Selected GRN";
-    obName = "";
-    text = "Purchase Order No. : " + grn.supplierorder_id.ordercode
-        + ", Received Date : " + grn.dateofreceived
-        + ", Received By : " + grn.receivedby
-        + ", Supplier Invoice No. : " + grn.supplierinvoiceno;
-    let deleteResponse = ['/grn/delete', "DELETE", grn];
-    message = "GRN has Deleted.";
-    swalDelete(title, obName, text, deleteResponse, modalGrn, message);
 }
 
 //define function for clear Supplier Order form
@@ -776,7 +707,7 @@ const generateGrnPrintHTML = (ob) => {
                     <th>Received Date</th>
                     <td>${ob.dateofreceived}</td>
                     <th> Received By </th>
-                    <td>${ob.receivedby}</td>
+                    <td>${ob.addeduser.username}</td>
                 </tr>
             </table>
         </div>

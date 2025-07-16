@@ -10,7 +10,7 @@ window.addEventListener("load", () => {
 
 // define function for ingredient category form
 const refreshIngCategoryForm = () => {
-    formIngCategory.reset();
+    // formCategory.reset();
 
     ingredientcategory = new Object();
 
@@ -32,6 +32,11 @@ const buttonCategorySubmit = () => {
             if (result.isConfirmed) {
                 let submitResponse = getHTTPServiceRequest('/ingredientcategory/insert', "POST", ingredientcategory);
                 if (submitResponse == "OK") {
+                    let ingredientcategories = getServiceRequest("/ingredientcategory/alldata");
+                    fillDropdown(SelectCategory, "Select Ingredient Category.!", ingredientcategories, "name");
+                    SelectCategory.value = JSON.stringify(ingredientcategories[0]);
+                    SelectCategory.style.border = "2px solid green";
+                    ingredient.ingredientcategory_id = JSON.parse(SelectCategory.value);
                     Swal.fire({
                         title: "Saved Successfully..!",
                         icon: "success",
@@ -39,11 +44,6 @@ const buttonCategorySubmit = () => {
                         timer: 1800
                     });
                     refreshIngCategoryForm();
-                    let ingredientcategories = getServiceRequest("/ingredientcategory/alldata");
-                    fillDropdown(SelectCategory, "Select Ingredient Category.!", ingredientcategories, "name");
-                    SelectCategory.value = JSON.stringify(ingredientcategories[0]);
-                    SelectCategory.style.border = "2px solid green";
-                    ingredient.ingredientcategory_id = JSON.parse(SelectCategory.value);
                 } else {
                     Swal.fire({
                         title: "Save not Completed..! Has following errors :",
@@ -88,6 +88,7 @@ const refreshIngredientForm = () => {
     ingredient.ingredientstatus_id = JSON.parse(SelectStatus.value);
     //select element eke border color eka change kranna one
     SelectStatus.style.border = "2px solid green";
+    SelectStatus.disabled = true;
 }
 
 /* 
@@ -175,12 +176,6 @@ const ingredientFormRefill = (ob, rowIndex) => {
     txtPrice.value = ob.purchase_price;
     txtRop.value = ob.reoder_point;
     txtRoq.value = ob.reorder_quantity;
-
-    if (ob.note == undefined) {
-        txtNote.value = "";
-    } else {
-        txtNote.value = ob.note;
-    }
 }
 
 //define function to check errors

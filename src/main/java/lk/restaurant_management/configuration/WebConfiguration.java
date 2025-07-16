@@ -21,13 +21,19 @@ public class WebConfiguration {
                     // allow all request to access
                     .requestMatchers("/css/**").permitAll()
                     // allow all request to access
+                    .requestMatchers("/chart/**").permitAll()
+                    // allow all request to access
                     .requestMatchers("/fontawesome-free-6.6.0-web/**").permitAll()
                     // allow all request to access
                     .requestMatchers("/images/**").permitAll()
                     // allow all request to access
                     .requestMatchers("/scripts/**").permitAll()
                     // allow all request to access
-                    // .requestMatchers("/resources/**").permitAll()
+                    .requestMatchers("/uIControllers/**").permitAll()
+                    // allow all request to access
+                    .requestMatchers("/select2/**").permitAll()
+                    // allow all request to access
+                    .requestMatchers("/sweetalert2-11.17.2/**").permitAll()
                     // allow all request to access
                     .requestMatchers("/createadmin").permitAll()
                     // allow all request to access
@@ -86,11 +92,10 @@ public class WebConfiguration {
                     .requestMatchers("/tables/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/vehicle/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/vehiclestatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
-                    .requestMatchers("/orderpayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
-                    .requestMatchers("/orderPaymentmethod/**")
-                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
-                    .requestMatchers("/kitchen/**")
-                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier", "Chef", "Waiter")
+
+                    .requestMatchers("/orderpayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+                    .requestMatchers("/orderPaymentmethod/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+                    .requestMatchers("/kitchen/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
 
                     // allow access to supplier flow only for admin, manger, cashier
                     .requestMatchers("/supplier/**").hasAnyAuthority("Admin", "Manager", "As-Manager")

@@ -6,6 +6,12 @@ window.addEventListener("load", () => {
 
     //call refresh Table
     refreshSubmenutable();
+
+    $('#SelectIngredint').select2({
+        theme: "bootstrap-5",
+        width: 'resolve', //style="width:342px"
+        dropdownParent: $('#modalSubmenu')
+    });
 });
 
 // function for display clear button when hover on img
@@ -60,6 +66,7 @@ const refreshSubmenuForm = () => {
     // Submenustatuses list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     submenu.submenustatus_id = Submenustatuses[0];
     productStatus.style.border = "2px solid green";
+    productStatus.disabled = true;
 
     refreshInnerFormandTable();
 }
@@ -356,8 +363,36 @@ const checkFormUpdate = () => {
         if (submenu.submenustatus_id.name != oldsubmenu.submenustatus_id.name) {
             updates = updates + "Status has Updated from " + oldsubmenu.submenustatus_id.name + "--> " + submenu.submenustatus_id.name + " \n";
         }
+
+        // list wela length eka wenas welanm update ekk wela
         if (submenu.submenuHasIngredientList.length != oldsubmenu.submenuHasIngredientList.length) {
             updates = updates + "Submenu Ingredients has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldsitem of oldsubmenu.submenuHasIngredientList) {
+                for (const newsitem of submenu.submenuHasIngredientList) {
+                    // old & new item wela id samanainm
+                    if (oldsitem.ingredient_id.id == newsitem.ingredient_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != submenu.submenuHasIngredientList) {
+                updates = updates + "Supplier Ingredients has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldsitem of oldsubmenu.submenuHasIngredientList) {
+                    for (const newsitem of submenu.submenuHasIngredientList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldsitem.ingredient_id.id == newsitem.ingredient_id.id && oldsitem.quantity != newsitem.quantity) {
+                            updates = updates + "Supplier Ingredient Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     return updates;
@@ -461,7 +496,7 @@ const buttonModalClose = () => {
 }
 
 //function define for print Supplier Order record
-const productPrint = (ob, rowIndex) => {
+/* const productPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodySubmenu, rowIndex, "White");
 
@@ -558,4 +593,119 @@ const productPrint = (ob, rowIndex) => {
         newWindow.close();
     }, 300);
 };
+ */
 
+//function define for print Order record
+const productPrint = (ob, rowIndex) => {
+    console.log("Printing order:", ob, rowIndex);
+
+    // table eke row eka click kalama color eka change wenw
+    activeTableRow(tBodySubmenu, rowIndex, "White");
+
+    // Print eke content eka generate krena function eka cll krenewa
+    const printContent = generateSupplyOrderPrintHTML(ob);
+
+    // Create and configure the print window
+    const printWindow = window.open();
+
+    // Write content and handle printing
+    printWindow.document.writeln(printContent);
+    printWindow.document.close();
+
+    // Wait for content to load, then print
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    };
+};
+
+// Print eke content eka generate krena function eka define krenewa
+// @param {Object} order - order object eke thama all order details thyenne
+const generateSupplyOrderPrintHTML = (ob) => {
+    ob = submenu;
+    const currentDateTime = new Date().toLocaleString();
+
+    //  @returns {string} - print window eke display wenna one html eka return krnw
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- link bs5 -->
+        <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+        <!-- link css -->
+        <link rel="stylesheet" href="css/print.css">
+
+        <title> Submenu Management - BIT 2025</title>
+    </head>
+    <body>
+        <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Submenu Details</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th>${ob.name}</th>
+                </tr>
+                <tr>
+                    <td>${ob.submenuimage}</td>
+                    <td>${ob.category_id.name}</td>
+                    <td>${ob.price}</td>
+                    <td>${ob.submenustatus_id.name}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="items-section">
+            <h3> Order Ingredients </h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ingredient Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${generateItemRows(ob)}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your business! </p>
+            &copy; 2025 BIT Project. All rights reserved.
+            <p>Generated on ${currentDateTime}</p>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
+//@param {Array} items - Array of order items
+//@returns {string} - HTML string for table rows
+const generateItemRows = (submenu) => {
+    // Extract items from the correct association names
+    const items = submenu.submenuHasIngredient || [];
+
+    return items.map((item, index) => {
+        // Handle different possible database structures
+        const itemName = item.ingredient_id?.ingredient_name || "";
+
+        const quantity = item.quantity;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${itemName}</td>
+                <td>${quantity}</td>
+            </tr>
+        `;
+    }).join('');
+};

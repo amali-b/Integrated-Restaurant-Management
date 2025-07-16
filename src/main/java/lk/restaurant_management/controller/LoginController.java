@@ -21,7 +21,6 @@ import lk.restaurant_management.dao.RoleDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.LoggedUser;
 import lk.restaurant_management.entity.Module;
-import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.Role;
 import lk.restaurant_management.entity.User;
 
@@ -40,9 +39,6 @@ public class LoginController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private UserPrivilegeController userPrivilegeController;
-
     @RequestMapping(value = "/login")
     public ModelAndView loadLoginUI() {
         ModelAndView loginView = new ModelAndView();
@@ -60,6 +56,9 @@ public class LoginController {
 
         User loggeduser = userDao.getByUsername(auth.getName());
         dashboardView.addObject("loggeduserphoto", loggeduser.getUserphoto());
+
+        // Html title eka wdyt pennannewa
+        dashboardView.addObject("title", "BIT Project 2024 | Dashboard ");
 
         if (loggeduser.getEmployee_id() != null) {
             dashboardView.addObject("loggedempname", loggeduser.getEmployee_id().getCallingname());
@@ -157,8 +156,6 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // create user object
         User user = userDao.getByUsername(auth.getName());
-
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "User");
 
         // check user exist
         User extUser = userDao.getByUsername(loggedUser.getOldusername());

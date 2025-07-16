@@ -21,5 +21,4 @@ public interface OrderDao extends JpaRepository<Order, Integer> {
      */
     @Query(value = "SELECT coalesce(concat('#' , lpad(substring(max(co.ordercode), 2) + 1, 9, 0)) , '#250000000')   FROM resturant_management_project.order as co;", nativeQuery = true)
     String getNextOrderCode();
-
 }

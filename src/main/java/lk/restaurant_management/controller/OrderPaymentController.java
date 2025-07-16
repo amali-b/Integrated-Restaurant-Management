@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import lk.restaurant_management.dao.OrderDao;
 import lk.restaurant_management.dao.OrderPaymentDao;
+import lk.restaurant_management.dao.OrderstatusDao;
 import lk.restaurant_management.dao.UserDao;
+import lk.restaurant_management.entity.Order;
 import lk.restaurant_management.entity.OrderPayment;
 import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.User;
@@ -28,6 +31,10 @@ public class OrderPaymentController {
     private OrderPaymentDao orderPaymentDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private OrderstatusDao orderstatusDao;
     @Autowired
     private UserPrivilegeController userPrivilegeController;
 
@@ -96,6 +103,12 @@ public class OrderPaymentController {
 
                 // do save
                 orderPaymentDao.save(orderPayment);
+
+                // manage dependancies
+                // order object ekak oderdao hareha id eken aregena hdagnnw
+                Order order = orderDao.getReferenceById(orderPayment.getOrder_id().getId());
+
+                order.setOrderstatus_id(orderstatusDao.getReferenceById(4));
 
                 return "OK";
 

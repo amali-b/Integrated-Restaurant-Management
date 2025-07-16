@@ -36,7 +36,6 @@
                                 <th> Purchase Order No. </th>
                                 <th> Supplier Invoice No. </th>
                                 <th> Received Date </th>
-                                <th> Received By </th>
                                 <th> Total Amount </th>
                                 <th> Discount </th>
                                 <th> Netamount </th>
@@ -50,7 +49,6 @@
                                 <td> SO25000001 </td>
                                 <td> #I00001 </td>
                                 <td> 2025-01-05 </td>
-                                <td> Nimal </td>
                                 <td> 1000.00 </td>
                                 <td> 50.00 </td>
                                 <td> 950.00 </td>
@@ -129,20 +127,6 @@
                                                         </div>
                                                         <!-- End Received Date -->
 
-                                                        <!--Start Received By -->
-                                                        <div class="row mt-1">
-                                                            <label for="txtReceivedBy" class="form-label fw-bold">
-                                                                Received
-                                                                By <span class="text-danger">*</span></label>
-                                                            <div class="col">
-                                                                <input type="text" class="form-control"
-                                                                    id="txtReceivedBy" placeholder="Enter Receiver"
-                                                                    required
-                                                                    onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'grn', 'receivedby')">
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Received By -->
-
                                                         <!--Start Total Amount -->
                                                         <div class="row mt-1">
                                                             <label for="txtTotalAmount" class="form-label fw-bold">Total
@@ -199,17 +183,6 @@
                                                         </div>
                                                         <!-- End Status -->
 
-                                                        <!-- Start Note -->
-                                                        <div class="row mt-1">
-                                                            <label for="txtNote" class="form-label fw-bold">Notes
-                                                                <span class="text-danger"></span></label>
-                                                            <div class="col">
-                                                                <input type="text" id="txtNote" class="form-control"
-                                                                    onkeyup="grn.note = this.value; this.style.border = 'solid 2px green'"
-                                                                    placeholder="Enter Notes">
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Note -->
                                                     </div>
                                                     <!-- End Main form -->
 

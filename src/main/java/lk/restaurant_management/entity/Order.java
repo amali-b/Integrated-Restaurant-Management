@@ -61,6 +61,9 @@ public class Order {
 
     private LocalDateTime deletedatetime;
 
+    private LocalDateTime kitchenconfirmdatetime;
+    private Integer kitchenconfirmuser;
+
     @ManyToOne
     @JoinColumn(name = "ordertype_id", referencedColumnName = "id")
     private OrderType ordertype_id;
@@ -85,6 +88,10 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer_id;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "kitchenstatus_id", referencedColumnName = "id")
+    private KitchenStatus kitchenstatus_id;
+
     /*
      * Order object eheka order_has_submenu or order_has_menuitems ekak
      * orderHasSubmenuList list eken or orderHasMenuitemList eken
@@ -100,4 +107,8 @@ public class Order {
     // Order and order_has_menuitems has one to many relationship
     @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderHasMenuitem> orderHasMenuitemList;
+
+    // Order and order_has_menuitems has one to many relationship
+    @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderHasIngredient> orderHasIngredientList;
 }

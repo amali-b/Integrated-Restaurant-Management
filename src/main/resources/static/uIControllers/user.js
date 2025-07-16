@@ -67,7 +67,7 @@ const refreshUserForm = () => {
     txtUserPwd.disabled = false;
     txtrePwd.disabled = false;
 
-    setDefault([empName, txtUid, txtUserPwd, txtrePwd, txtEmail, empStatus, txtNote]);
+    setDefault([empName, txtUid, txtUserPwd, txtrePwd, txtEmail, empStatus]);
 
 }
 //create refresh function
@@ -154,12 +154,6 @@ const userFormRefill = (ob, index) => {
         labelUserStatus.innerText = "User Account is In-Active ";
     }
 
-    if (ob.note = null || ob.note != undefined) {
-        txtNote.value = ob.note;
-    } else {
-        txtNote.value = "";
-    }
-
     const roles = getServiceRequest("/role/withoutadmin");
     let divRole = document.querySelector("#divRoles");
     divRole.innerHTML = "";
@@ -240,9 +234,6 @@ const checkFormUpdate = () => {
         }
         if (user.status != olduser.status) {
             updates = updates + "Status has changed.!\n";
-        }
-        if (user.note != olduser.note) {
-            updates = updates + "Note has changed.!\n";
         }
         if (user.roles.length != olduser.roles.length) {
             updates = updates + "Role has changed.!\n";

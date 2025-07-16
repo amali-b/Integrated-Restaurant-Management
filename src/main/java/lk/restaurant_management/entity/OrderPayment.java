@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,16 +26,19 @@ public class OrderPayment {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
     private Integer id;
 
+    @NotNull
     private String code;
 
+    @NotNull
     private BigDecimal totalamount;
 
-    private LocalDateTime datatime;
-
+    @NotNull
     private Integer addeduser;
 
+    @NotNull
     private LocalDateTime addeddatetime;
 
+    @NotNull
     private BigDecimal paidamount;
 
     private BigDecimal balanceamount;

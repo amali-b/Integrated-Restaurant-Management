@@ -28,6 +28,7 @@ const refreshForm = () => {
     // menuStatuses list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     menuitem.menustatus_id = menuStatuses[0];
     menuStatus.style.border = "2px solid green";
+    menuStatus.disabled = true;
 
     refreshInnerFormandTable();
 }
@@ -296,8 +297,36 @@ const checkFormUpdate = () => {
         if (menuitem.menustatus_id.status != oldmenuitem.menustatus_id.status) {
             updates = updates + "Status has updated from " + oldmenuitem.menustatus_id.status + " \n";
         }
+
+        // list wela length eka wenas welanm update ekk wela
         if (menuitem.menuHasSubmenusList.length != oldmenuitem.menuHasSubmenusList.length) {
             updates = updates + "Submenus has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldmitem of oldmenuitem.menuHasSubmenusList) {
+                for (const newmitem of menuitem.menuHasSubmenusList) {
+                    // old & new item wela id samanainm
+                    if (oldmitem.submenu_id.id == newmitem.submenu_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != menuitem.menuHasSubmenusList) {
+                updates = updates + "Submenus has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldmitem of oldmenuitem.menuHasSubmenusList) {
+                    for (const newmitem of menuitem.menuHasSubmenusList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldmitem.submenu_id.id == newmitem.submenu_id.id && oldmitem.quantity != newmitem.quantity) {
+                            updates = updates + "Submenus Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     return updates;

@@ -19,6 +19,7 @@ import lk.restaurant_management.entity.User;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class InventoryController {
@@ -73,4 +74,19 @@ public class InventoryController {
         }
     }
 
+    // define mapping get all customer status data
+    @GetMapping(value = "/inventory/byingredient/", params = { "ingredient_id" }, produces = "application/json")
+    public List<Inventory> getAvailableIng(@RequestParam("ingredient_id") Integer ingredientid) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Inventory");
+        if (userPrivilege.getPrivi_select()) {
+            return inventoryDao.byAvailableIng(ingredientid);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new ArrayList<>();
+        }
+    }
 }

@@ -179,7 +179,7 @@
                                                                 <label for="txtCheckno" class="form-label fw-bold">Check
                                                                     No. <span class="text-danger">*</span></label>
                                                                 <input type="text" id="txtCheckno" class="form-control"
-                                                                    placeholder="Enter Check Number" required
+                                                                    placeholder="Enter Check Number"
                                                                     onkeyup="txtValidator(this,'^[A-Za-z0-9]{5,20}$','supplierPayment','checknumber')">
                                                             </div>
                                                             <!-- End Check No -->
@@ -190,8 +190,8 @@
                                                                     class="form-label fw-bold">Check Date
                                                                     <span class="text-danger">*</span>
                                                                 </span>
-                                                                <input type="date" class="form-control"
-                                                                    id="dateCheckDate" required onkeydown="return false"
+                                                                <input type="date" class="form-control mt-2"
+                                                                    id="dateCheckDate" onkeydown="return false"
                                                                     onchange="dateElementValidator(this, 'supplierPayment', 'checkdate')">
                                                             </div>
                                                             <!--End Check Date -->
@@ -204,7 +204,6 @@
                                                                         class="text-danger">*</span></label>
                                                                 <input type="text" id="txtTransferID"
                                                                     class="form-control" placeholder="Enter Transfer ID"
-                                                                    required
                                                                     onkeyup="txtValidator(this,'^[A-Za-z0-9]{5,20}$','supplierPayment','transferid')">
                                                             </div>
                                                             <!--End Transfer ID -->
@@ -216,8 +215,7 @@
                                                                     <span class="text-danger">*</span>
                                                                 </span>
                                                                 <input type="datetime-local" id="dateTimeTransfer"
-                                                                    class="form-control" required
-                                                                    onkeydown="return false"
+                                                                    class="form-control mt-2" onkeydown="return false"
                                                                     onchange="dateElementValidator(this,'supplierPayment','transferdatetime')">
                                                             </div>
                                                             <!--End Transfer DateTime -->

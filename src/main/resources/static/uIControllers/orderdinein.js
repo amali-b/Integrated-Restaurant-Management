@@ -42,7 +42,8 @@ const refreshForm = () => {
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
 
     const orderTables = getServiceRequest("/tables/alldata");
-    fillDropdown(tableNO, "Select Table.!", orderTables, "number");
+    fillDropdownTwo(tableNO, "Select Table.!", orderTables, "number", "seatcount");
+
 
     setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtServiceChg, txtNetAmount, orderStatus, tableNO]);
 

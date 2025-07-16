@@ -62,7 +62,7 @@ const txtValidator = (elementId, pattern, object, property) => {
 
 const priceValidator = (elementId, object, property) => {
     const elementValue = elementId.value;
-    const regPattern = new RegExp("^([1-9][0-9]{2,8})|([1-9][0-9]{2,8}[.][0-9]{2})$");
+    const regPattern = new RegExp("^([1-9][0-9]{2,8})|([1-9][0-9]{1,8}[.][0-9]{2})$");
     ob = window[object];
 
     if (elementValue != "") {

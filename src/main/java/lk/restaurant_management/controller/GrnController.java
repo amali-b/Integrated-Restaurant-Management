@@ -24,11 +24,15 @@ import org.springframework.web.servlet.ModelAndView;
 import lk.restaurant_management.dao.GrnDao;
 import lk.restaurant_management.dao.InventoryDao;
 import lk.restaurant_management.dao.InventoryStatusDao;
+import lk.restaurant_management.dao.SupplierOrderDao;
+import lk.restaurant_management.dao.SupplyOrderStatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Grn;
 import lk.restaurant_management.entity.GrnHasIngredient;
 import lk.restaurant_management.entity.Inventory;
 import lk.restaurant_management.entity.Privilege;
+import lk.restaurant_management.entity.SupplierOrder;
+import lk.restaurant_management.entity.SupplierorderHasIngredient;
 import lk.restaurant_management.entity.User;
 
 @RestController
@@ -44,6 +48,12 @@ public class GrnController implements CommonController<Grn> {
 
     @Autowired
     private InventoryStatusDao inventoryStatusDao;
+
+    @Autowired
+    private SupplierOrderDao supplierOrderDao;
+
+    @Autowired
+    private SupplyOrderStatusDao supplyOrderStatusDao;
 
     @Autowired
     private UserPrivilegeController userPrivilegeController;
@@ -198,6 +208,27 @@ public class GrnController implements CommonController<Grn> {
                             inventoryDao.save(newInventory);
                         }
                     }
+
+                    // manage Dependencies
+                    // supplierOrder object ekak hdagnnewa supplierOrderDao layer eka hareha
+                    // reference eken supplierorder id eka illagenawa
+                    SupplierOrder supplierorder = supplierOrderDao.getReferenceById(grn.getSupplierorder_id().getId());
+
+                    if (grn.getGrnstatus_id().getId() == 1) {
+                        supplierorder.setSupplyorderstatus_id(supplyOrderStatusDao.getReferenceById(2));
+                    }
+                    if (grn.getGrnstatus_id().getId() == 3) {
+                        supplierorder.setSupplyorderstatus_id(supplyOrderStatusDao.getReferenceById(3));
+                    }
+
+                    // getSupplierorderHasIngredientList list ekata loop ekak dala read krela
+                    for (SupplierorderHasIngredient sohi : supplierorder.getSupplierorderHasIngredientList()) {
+                        // onebyone (sohi) illegena purchase order eka set krnw
+                        sohi.setSupplierorder_id(supplierorder);
+                    }
+                    // supplierOrder object eka database ekata save krenewa
+                    supplierOrderDao.save(supplierorder);
+
                 }
                 return "OK";
 

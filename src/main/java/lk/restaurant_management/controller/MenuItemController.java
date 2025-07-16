@@ -70,7 +70,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
 
         if (userPrivilege.getPrivi_select()) {
             // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
@@ -90,7 +90,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
         if (userPrivilege.getPrivi_insert()) {
             MenuItem extMenuItem = menuItemDao.getByMenuName(menuitem.getName());
             // extMenuItem null ndda da blenewa
@@ -134,7 +134,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
 
         // check data Exist
         if (menuitem.getId() == null) {
@@ -178,7 +178,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
 
         if (userPrivilege.getPrivi_delete()) {
             // check data Exist

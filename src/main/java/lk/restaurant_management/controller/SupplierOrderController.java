@@ -73,7 +73,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
 
         if (userPrivilege.getPrivi_select()) {
             // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
@@ -93,7 +93,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
 
         if (userPrivilege.getPrivi_insert()) {
             try {
@@ -132,7 +132,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
 
         if (userPrivilege.getPrivi_update()) {
             try {
@@ -169,7 +169,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
 
         if (userPrivilege.getPrivi_delete()) {
             // check data Exist

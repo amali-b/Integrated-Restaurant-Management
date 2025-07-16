@@ -14,7 +14,7 @@ window.addEventListener("load", () => {
 const filtergrnsBySupplier = () => {
     // supplier kenek select krelada kyl check krenewa
     if (SelectSupplier.value != "") {
-        // filteringredientsbySupplier function eken ena data innerform eka refresh weddi makenewa.. e nisa methanadi api eka aye aregnna one
+        // filter grns by supplier due amount function eken ena data innerform eka refresh weddi makenewa.. e nisa methanadi api eka aye aregnna one
         grns = getServiceRequest("/grn/listbysupplierdueamount?supplierid=" + JSON.parse(SelectSupplier.value).id);
         console.log("Selected Supplier" + JSON.parse(SelectSupplier.value).id);
         fillDropdown(SelectGrn, "Select Grn.!", grns, "grnnumber");
@@ -89,10 +89,6 @@ const refreshForm = () => {
     const suppliers = getServiceRequest("/supplier/alldata");
     fillDropdown(SelectSupplier, "Select Supplier.!", suppliers, "supplier_name");
 
-    // request grn all data
-    /* const grns = getServiceRequest("/grn/alldata");
-    fillDropdown(SelectGrn, "Select GRN.!", grns, "grnnumber"); */
-
     // request payment method all data
     const supplierPaymentMethods = getServiceRequest("/paymentmethod/alldata");
     fillDropdown(selectPaymentMethod, "Select Method.!", supplierPaymentMethods, "method");
@@ -110,8 +106,8 @@ const refreshForm = () => {
     let currentMonth = currentDate.getMonth() + 1; // [0-11]
     if (currentMonth < 10) { currentMonth = '0' + currentMonth; }
 
-    let currentDay = currentDate.getDate(); // [1-31]
-    if (currentDay < 10) { currentDay = '0' + currentDay; }
+    let maxcurrentDay = currentDate.getDate(); // [1-31]
+    if (maxcurrentDay < 10) { maxcurrentDay = '0' + maxcurrentDay; }
 
     let currentHours = currentDate.getHours();// [0-23]
     if (currentHours < 10) currentHours = '0' + currentHours;
@@ -121,7 +117,7 @@ const refreshForm = () => {
 
     // Set the maximum datetime for the transfer date/time to the current datetime
     // date/time eka future ewa select kranna ba
-    dateTimeTransfer.max = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay + " T " + currentHours + ":" + currentMinutes;
+    dateTimeTransfer.max = currentDate.getFullYear() + "-" + currentMonth + "-" + maxcurrentDay + "T" + currentHours + ":" + currentMinutes;
 
     // set min value for Transfer date time field [yyyy-mm-dd T0000:0000]
     currentDate.setDate(currentDate.getDate() - 7); //current date ekata dawas 7kata kalin
@@ -142,11 +138,11 @@ const refreshForm = () => {
 
     // set date range for payment date & check date
     // check date eke min = today, max date = today + 90
-    formatDateRange("", dateCheckDate, 7, 90);
+    formatDateRange("", dateCheckDate, "", 90);
     //formatDateRange = (minInputElement, maxInputElement, minrange, maxrange)
 }
 
-//onkeyup ekedi wada krenewa (adala html input field eka athule function eka call kranne one)
+// select grn field eke onchange ekedi trigger wenw
 SelectGrn.addEventListener("change", () => {
     let grn = JSON.parse(SelectGrn.value);
     console.log("GRN" + SelectGrn.value);
@@ -310,7 +306,7 @@ const supplierPaymentFormRefill = (ob) => {
     SelectSupplier.disabled = true;
     SelectSupplier.value = JSON.stringify(ob.supplier_id);
     SelectGrn.disabled = true;
-    SelectGrn.value = JSON.stringify(ob.grn_id.grnnumber);
+    SelectGrn.value = JSON.stringify(ob.grn_id);
     txtTotalAmount.value = ob.grn_id.netamount;
 
     selectPaymentMethod.value = JSON.stringify(ob.paymentmethod_id);
@@ -366,27 +362,29 @@ const checkFormError = () => {
     if (supplierPayment.paymentmethod_id == null) {
         selectPaymentMethod.style.border = "2px solid red";
         errors = errors + "Please Select Payment Method.! \n";
+    } else {
+        if (supplierPayment.paymentmethod_id.id == 1) {
+            if (supplierPayment.transferid == null) {
+                txtTransferID.style.border = "2px solid red";
+                errors = errors + "Please Enter Transfer Id.! \n";
+            }
+            if (supplierPayment.transferdatetime == null) {
+                dateTimeTransfer.style.border = "2px solid red";
+                errors = errors + "Please Select Transfer Date & Time.! \n";
+            }
+        } if (supplierPayment.paymentmethod_id.id == 2) {
+            if (supplierPayment.checknumber == null) {
+                txtCheckno.style.border = "2px solid red";
+                errors = errors + "Please Enter Cheque Number.! \n";
+            }
+            if (supplierPayment.checkdate == null) {
+                dateCheckDate.style.border = "2px solid red";
+                errors = errors + "Please Select Cheque Date.! \n";
+            }
+        }
     }
 
-    if (supplierPayment.paymentmethod_id.method === "Bank Transfer") {
-        if (supplierPayment.transferid == null || supplierPayment.transferid.trim() === "") {
-            txtTransferID.style.border = "2px solid red";
-            errors = errors + "Please Enter Transfer Id.! \n";
-        }
-        if (supplierPayment.transferdatetime == null) {
-            dateTimeTransfer.style.border = "2px solid red";
-            errors = errors + "Please Select Transfer Date & Time.! \n";
-        }
-    } else {
-        if (supplierPayment.checknumber == null || supplierPayment.checknumber.trim() === "") {
-            txtCheckno.style.border = "2px solid red";
-            errors = errors + "Please Enter Cheque Number.! \n";
-        }
-        if (supplierPayment.checkdate == null) {
-            dateCheckDate.style.border = "2px solid red";
-            errors = errors + "Please Select Cheque Date.! \n";
-        }
-    }
+
     return errors;
 }
 
