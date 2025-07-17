@@ -40,13 +40,15 @@ public class TablesController implements CommonController<Tables> {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView tableView = new ModelAndView();
         tableView.setViewName("Tables.html");
-        tableView.addObject("loggedusername", auth.getName());
 
         // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
 
         // log wela inna user ge username eka set krenewa
         tableView.addObject("loggedusername", auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        tableView.addObject("loggeduserphoto", user.getUserphoto());
 
         if (user.getEmployee_id() != null) {
             tableView.addObject("loggedempname", user.getEmployee_id().getCallingname());

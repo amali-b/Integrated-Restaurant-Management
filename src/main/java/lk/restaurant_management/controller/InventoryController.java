@@ -74,8 +74,9 @@ public class InventoryController {
         }
     }
 
-    // define mapping get all customer status data
-    @GetMapping(value = "/inventory/byingredient/", params = { "ingredient_id" }, produces = "application/json")
+    // request mapping for load submenu by given category id [ URL -->
+    // /inventory/byingredient?ingredient_id=1 ]
+    @GetMapping(value = "/inventory/byingredient", params = { "ingredient_id" }, produces = "application/json")
     public List<Inventory> getAvailableIng(@RequestParam("ingredient_id") Integer ingredientid) {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

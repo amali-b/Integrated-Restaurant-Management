@@ -55,6 +55,9 @@ public class SubmenuController implements CommonController<Submenu> {
         // log wela inna user ge username eka set krenewa
         SubmenuView.addObject("loggedusername", auth.getName());
 
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        SubmenuView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             SubmenuView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {

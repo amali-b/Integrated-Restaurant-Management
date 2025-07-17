@@ -47,6 +47,9 @@ public class PrivilegeController {
         // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
 
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        privilegeView.addObject("loggeduserphoto", user.getUserphoto());
+
         // log wela inna user ge username eka set krenewa
         privilegeView.addObject("loggedusername", auth.getName());
 

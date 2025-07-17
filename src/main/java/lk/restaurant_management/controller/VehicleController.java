@@ -40,13 +40,15 @@ public class VehicleController implements CommonController<Vehicle> {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView vehicleView = new ModelAndView();
         vehicleView.setViewName("Vehicle.html");
-        vehicleView.addObject("loggedusername", auth.getName());
 
         // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
 
         // log wela inna user ge username eka set krenewa
         vehicleView.addObject("loggedusername", auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        vehicleView.addObject("loggeduserphoto", user.getUserphoto());
 
         if (user.getEmployee_id() != null) {
             vehicleView.addObject("loggedempname", user.getEmployee_id().getCallingname());

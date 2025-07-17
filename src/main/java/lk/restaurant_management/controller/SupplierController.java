@@ -54,7 +54,6 @@ public class SupplierController implements CommonController<Supplier> {
         // create ModelAndView instance
         ModelAndView supplierView = new ModelAndView();
         supplierView.setViewName("Supplier.html");
-        supplierView.addObject("loggedusername", auth.getName());
         supplierView.addObject("title", "BIT Project 2024 | Supplier");
 
         // user object ekak gennagnnewa
@@ -62,6 +61,9 @@ public class SupplierController implements CommonController<Supplier> {
 
         // log wela inna user ge username eka set krenewa
         supplierView.addObject("loggedusername", auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        supplierView.addObject("loggeduserphoto", user.getUserphoto());
 
         if (user.getEmployee_id() != null) {
             supplierView.addObject("loggedempname", user.getEmployee_id().getCallingname());
