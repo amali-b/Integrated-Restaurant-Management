@@ -84,6 +84,7 @@ const refreshForm = () => {
     // supplierStatuses list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     supplier.supplierstatus_id = supplierStatuses[0];
     supStatus.style.border = "2px solid green";
+    supStatus.disabled = false;
 
     fillDropdown(SelectedIngredints, "", supplier.supplyIngredients, "ingredient_name");
 }
@@ -292,6 +293,7 @@ const supplierFormRefill = (ob, rowIndex) => {
     fillDropdown(SelectedIngredints, "", supplier.supplyIngredients, "ingredient_name");
 
     supStatus.value = JSON.stringify(ob.supplierstatus_id);
+    supStatus.disabled = false;
 }
 
 //define function to check errors

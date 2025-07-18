@@ -666,19 +666,23 @@ const getOrderStatus = (dataOb) => {
     }
     // In-Progress
     if (dataOb.orderstatus_id.id == 2) {
-        return "<p class='btn btn-outline-success text-center'>" + dataOb.orderstatus_id.status + "</p>";
+        return "<p class='btn btn-outline-warning text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
     // Ready
     if (dataOb.orderstatus_id.id == 3) {
         return "<p class='btn btn-outline-success text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    // Canceled
+    // Completed
     if (dataOb.orderstatus_id.id == 4) {
-        return "<p class='btn btn-outline-warning text-center'>" + dataOb.orderstatus_id.status + "</p>";
+        return "<p class='btn btn-outline-success text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    // Removed
+    // Cancelled
     if (dataOb.orderstatus_id.id == 5) {
         return "<p class='btn btn-outline-danger text-center'>" + dataOb.orderstatus_id.status + "</p>";
+    }
+    // Removed
+    if (dataOb.orderstatus_id.id == 6) {
+        return "<button class='btn btn-sm btn-outline-danger text-center'>" + dataOb.orderstatus_id.status + "</button>";
     }
     return dataOb.orderstatus_id.status;
 }
@@ -774,6 +778,12 @@ const orderFormRefill = (ob, rowIndex) => {
 
     tableNO.value = ob.tables_id != null ? JSON.stringify(ob.tables_id) : "";
     deliveryVehicle.value = ob.vehicle_id != null ? JSON.stringify(ob.vehicle_id) : "";
+
+    if (ob.orderstatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
 
     refreshInnerFormandTableSubmenu();
 }

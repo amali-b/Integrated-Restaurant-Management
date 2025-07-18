@@ -142,7 +142,7 @@ const refreshForm = () => {
     //formatDateRange = (minInputElement, maxInputElement, minrange, maxrange)
 }
 
-// select grn field eke onchange ekedi trigger wenw
+// Get Due Amount
 SelectGrn.addEventListener("change", () => {
     let grn = JSON.parse(SelectGrn.value);
     console.log("GRN" + SelectGrn.value);

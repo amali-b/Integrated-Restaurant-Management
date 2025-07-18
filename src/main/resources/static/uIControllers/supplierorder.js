@@ -365,6 +365,12 @@ const supplierOrderFormRefill = (ob, rowIndex) => {
     supplyorderStatus.value = JSON.stringify(ob.supplyorderstatus_id);
     supplyorderStatus.disabled = false;
 
+    if (ob.supplyorderstatus_id.id == 1) {
+        btndelete.style.display = "inline";
+    } else {
+        btndelete.style.display = "none";
+    }
+
     // innerform eke date tika fill kregnna one nisa
     refreshInnerFormandTable();
 }

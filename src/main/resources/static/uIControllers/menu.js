@@ -144,6 +144,8 @@ const buttonmenuSubmenuSubmit = () => {
         confirmButtonText: "Yes, Submit!"
     }).then((result) => {
         if (result.isConfirmed) {
+            // main eke thyena list ekta inner object eka push krenewa
+            menuitem.menuHasSubmenusList.push(menuHasSubmenu);
             Swal.fire({
                 title: "Saved Successfully..!",
                 icon: "success",
@@ -154,9 +156,6 @@ const buttonmenuSubmenuSubmit = () => {
         }
     });
 
-    // main eke thyena list ekta inner object eka push krenewa
-    menuitem.menuHasSubmenusList.push(menuHasSubmenu);
-    refreshInnerFormandTable();
 }
 
 const buttonmenuSubmenuUpdate = () => {
@@ -258,6 +257,12 @@ const menuFormRefill = (ob, rowIndex) => {
     txtMenuname.value = ob.name;
     txtPrice.value = ob.price;
     menuStatus.value = JSON.stringify(ob.menustatus_id);
+
+    if (ob.menustatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
 
     refreshInnerFormandTable();
 }
