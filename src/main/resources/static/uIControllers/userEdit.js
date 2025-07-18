@@ -48,7 +48,6 @@ checkFormChanges = () => {
 
 //define function for submit button
 const buttonUserProfileSubmit = () => {
-    console.log("User Object : " + loguser);
 
     //check updates
     let changes = checkFormChanges();
