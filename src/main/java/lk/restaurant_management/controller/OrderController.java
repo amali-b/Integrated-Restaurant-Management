@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import lk.restaurant_management.dao.InventoryDao;
 import lk.restaurant_management.dao.OrderDao;
 import lk.restaurant_management.dao.OrderstatusDao;
 import lk.restaurant_management.dao.UserDao;
+import lk.restaurant_management.entity.Inventory;
 import lk.restaurant_management.entity.Order;
+import lk.restaurant_management.entity.OrderHasIngredient;
 import lk.restaurant_management.entity.OrderHasMenuitem;
 import lk.restaurant_management.entity.OrderHasSubmenu;
 import lk.restaurant_management.entity.Privilege;
@@ -36,6 +39,8 @@ public class OrderController implements CommonController<Order> {
     private OrderDao orderDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private InventoryDao inventoryDao;
     @Autowired
     private UserPrivilegeController userPrivilegeController;
 
@@ -188,8 +193,28 @@ public class OrderController implements CommonController<Order> {
                     ohm.setOrder_id(order);
                 }
 
+                // getOrderHasIngredientList list ekata loop ekak dala read krela
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    ohi.setOrder_id(order);
+                }
+
                 // do save
                 orderDao.save(order);
+
+                // ### manage dependancies ###
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // get Existing inventory object from inventory dao layer
+                    Inventory extInventory = inventoryDao.getReferenceById(ohi.getIngredient_id().getId());
+
+                    // set available quantity to existing inventory object by substracting removed
+                    // quantity of garbage remove
+                    extInventory
+                            .setAvailablequantity(extInventory.getAvailablequantity().subtract(ohi.getRequired_qty()));
+
+                    // save updated inventory object
+                    inventoryDao.save(extInventory);
+                }
 
                 return "OK";
 
@@ -231,8 +256,29 @@ public class OrderController implements CommonController<Order> {
                     // onebyone (sohi) illegena purchase order eka set krnw
                     ohm.setOrder_id(order);
                 }
+
+                // getOrderHasIngredientList list ekata loop ekak dala read krela
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    ohi.setOrder_id(order);
+                }
+
                 // do save
                 orderDao.save(order);
+
+                // ### manage dependancies ###
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // get Existing inventory object from inventory dao layer
+                    Inventory extInventory = inventoryDao.getReferenceById(ohi.getIngredient_id().getId());
+
+                    // set available quantity to existing inventory object by substracting removed
+                    // quantity of garbage remove
+                    extInventory
+                            .setAvailablequantity(extInventory.getAvailablequantity().subtract(ohi.getRequired_qty()));
+
+                    // save updated inventory object
+                    inventoryDao.save(extInventory);
+                }
 
                 return "OK";
 
@@ -263,7 +309,7 @@ public class OrderController implements CommonController<Order> {
                 // set auto generate value
                 extOrder.setDeleteuser(loggedUser.getId());
                 extOrder.setDeletedatetime(LocalDateTime.now());
-                extOrder.setOrderstatus_id(orderstatusDao.getReferenceById(5));
+                extOrder.setOrderstatus_id(orderstatusDao.getReferenceById(6));
 
                 // save operator
 
@@ -279,8 +325,28 @@ public class OrderController implements CommonController<Order> {
                     ohm.setOrder_id(order);
                 }
 
+                // getOrderHasIngredientList list ekata loop ekak dala read krela
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    ohi.setOrder_id(order);
+                }
+
                 // do save
                 orderDao.save(extOrder);
+
+                // ### manage dependancies ###
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // get Existing inventory object from inventory dao layer
+                    Inventory extInventory = inventoryDao.getReferenceById(ohi.getIngredient_id().getId());
+
+                    // set available quantity to existing inventory object by substracting removed
+                    // quantity of garbage remove
+                    extInventory
+                            .setAvailablequantity(extInventory.getAvailablequantity().add(ohi.getRequired_qty()));
+
+                    // save updated inventory object
+                    inventoryDao.save(extInventory);
+                }
 
                 return "OK";
 
