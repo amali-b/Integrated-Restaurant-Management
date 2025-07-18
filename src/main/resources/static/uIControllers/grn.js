@@ -55,14 +55,16 @@ const calculateNetAmount = () => {
     if (txtTotalAmount.value > 0) {
         /* ### Generate Net Amount ### */
         let totalamount = parseFloat(txtTotalAmount.value);
-        let discountamount = parseFloat(txtDiscount.value);
-        let netamount = totalamount - discountamount;
+        let discountamount = parseFloat(txtDiscount.value) || 0;
+        let netamount = parseFloat(totalamount - discountamount).toFixed(2);
 
         // Update net amount input
-        txtNetamount.value = netamount.toFixed(2);
-        // Store in grn object
-        grn.netamount = txtNetamount.value;
+        txtNetamount.value = netamount;
         txtNetamount.style.border = "2px solid green";
+
+        // Store in database
+        grn.netamount = txtNetamount.value;
+        grn.discountamount = parseFloat(discountamount).toFixed(2);
     }
 }
 
@@ -70,20 +72,64 @@ const calculateNetAmount = () => {
 
 // define function for check ingredients existance
 const checkIngredientExt = () => {
-    //dropdown eken select krena value eka aregnnewa object ekak lesa convert krela 
+    // Dropdown eken select krena value eka aregnnewa object ekak lesa convert krela 
     let Selectedingredient = JSON.parse(SelectIngredints.value);
-    // grnHasIngredientList list eke purchace order item ekin eka search krela eke id eka selected ingredient eke id ekata samana wenewanm index eka return krenw
+
+    // grnHasIngredientList list eke ingredient ekin eka search krela eke id eka selected ingredient eke id ekata samana wenewanm index eka return krenw
     let extIndex = grn.grnHasIngredientList.map(item => item.ingredient_id.id).indexOf(Selectedingredient.id);
+
     // index eka -1 ta wada wadinm,
     if (extIndex > -1) {
         // ema selected ingredient eka already list eke thyena item ekak
-        window.alert("selected ingredient already existed.!");
+        window.alert("Selected ingredient already existed.!");
         refreshInnerFormandTable();
-    } else { //list eke naththan
+    } else { // list eke naththan
         // price eka input box eke show krnw
         txtPrice.value = parseFloat(Selectedingredient.purchase_price).toFixed(2); //ingredient entity eken Selectedingredient eke purchase_price eka gnnewa
         grnHasIngredient.price = parseFloat(txtPrice.value).toFixed(2);
         txtPrice.style.border = "2px solid green";
+
+        // Get supplier order object
+        let supplierorder = JSON.parse(selectPurchaseOrder.value);
+        console.log("Supplier order:", supplierorder);
+
+        // supplierorderHasIngredientList eke selected ingredient ekata samana ingredient eka hoyagnnewa
+        let matchingOrderItem = null;
+        for (const orderItem of supplierorder.supplierorderHasIngredientList) {
+            if (orderItem.ingredient_id.id == Selectedingredient.id) {
+                matchingOrderItem = orderItem;
+                // break;
+            }
+        }
+        if (matchingOrderItem) {
+            // Set the maximum quantity from the order
+            let maxQuantity = parseFloat(matchingOrderItem.quantity);
+            console.log("Max quantity from order:", maxQuantity);
+
+            // Set the quantity to the ordered quantity
+            txtQuantity.value = maxQuantity;
+            txtQuantity.style.border = "2px solid green";
+            grnHasIngredient.quantity = maxQuantity;
+
+            // set max amount as ordered quantity and set it as placeholder
+            txtQuantity.setAttribute('max', maxQuantity);
+            txtQuantity.placeholder = `Orderd Quantity : ${maxQuantity}`;
+
+            // Add event listener to validate quantity input
+            txtQuantity.addEventListener("input", () => {
+                let enteredQuantity = parseFloat(txtQuantity.value);
+
+                if (enteredQuantity <= 0 || enteredQuantity > maxQuantity) {
+                    txtQuantity.style.border = "2px solid red";
+                    grnHasIngredient.quantity = null;
+                } else {
+                    txtQuantity.style.border = "2px solid green";
+                    grnHasIngredient.quantity = enteredQuantity;
+                }
+            });
+            generateLineprice();
+        }
+
     }
 }
 
@@ -198,9 +244,9 @@ const generateLineprice = (ob) => {
 const grnIngredientFormRefill = (ob, index) => {
     innerFormindex = index;
     // btnInnerUpdate.style.display = "none"; wdyt gnnth puluwn
-    btnInnerUpdate.style.display = "none";
+    btnInnerUpdate.style.display = "inline";
     btnInnerSubmit.style.display = "none";
-    btnInnerClr.style.display = "none";
+    btnInnerClr.style.display = "inline";
 
     grnHasIngredient = JSON.parse(JSON.stringify(ob));
     oldgrnHasIngredient = JSON.parse(JSON.stringify(ob));

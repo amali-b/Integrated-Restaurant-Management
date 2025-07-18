@@ -34,9 +34,6 @@ public class Grn {
     private LocalDate dateofreceived;
 
     @NotNull
-    private String receivedby;
-
-    @NotNull
     private String supplierinvoiceno;
 
     @NotNull
@@ -48,8 +45,6 @@ public class Grn {
     private BigDecimal netamount;
 
     private BigDecimal paidamount;
-
-    private String note;
 
     @NotNull
     private String grnnumber;
