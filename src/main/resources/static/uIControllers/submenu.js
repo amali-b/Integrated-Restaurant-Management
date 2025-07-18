@@ -9,7 +9,8 @@ window.addEventListener("load", () => {
 
     $('#SelectIngredint').select2({
         theme: "bootstrap-5",
-        width: 'resolve', //style="width:342px"
+        width: 'resolve',
+        style: "width:273px",
         dropdownParent: $('#modalSubmenu')
     });
 });
@@ -166,31 +167,36 @@ const submenuIngredientDelete = (ob, index) => {
 
 const buttonSubmenuIngredientSubmit = () => {
     console.log(submenuHasIngredient);
-
-    Swal.fire({
-        title: "Are you sure to Submit Following Details.?",
-        text: "Ingredient : " + submenuHasIngredient.ingredient_id.ingredient_name
-            + ", Quantity : " + submenuHasIngredient.quantity,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "green",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Submit!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: "Saved Successfully..!",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1800
-            });
-            refreshInnerFormandTable();
-        }
-    });
-
-    // main eke thyena list ekta inner object eka push krenewa
-    submenu.submenuHasIngredientList.push(submenuHasIngredient);
-    refreshInnerFormandTable();
+    if (submenuHasIngredient.quantity != null || submenuHasIngredient.quantity > 0) {
+        Swal.fire({
+            title: "Are you sure to Submit Following Details.?",
+            text: "Ingredient : " + JSON.stringify(submenuHasIngredient.ingredient_id)
+                + ", Quantity : " + submenuHasIngredient.quantity,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "green",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Submit!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                submenu.submenuHasIngredientList.push(submenuHasIngredient);
+                Swal.fire({
+                    title: "Saved Successfully..!",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1800
+                });
+                refreshInnerFormandTable();
+            }
+        });
+    } else {
+        Swal.fire({
+            title: "Failed to Submit.!",
+            text: "Enter valid Quantity.!",
+            icon: "error"
+        });
+    }
 }
 
 const buttonSubmenuIngredientUpdate = () => {
@@ -311,6 +317,13 @@ const submenuFormRefill = (ob, rowIndex) => {
     txtProductname.value = ob.name;
     txtPrice.value = ob.price;
     productStatus.value = JSON.stringify(ob.submenustatus_id);
+    productStatus.disabled = false;
+
+    if (ob.submenustatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
 
     refreshInnerFormandTable();
 }
