@@ -96,9 +96,38 @@ const fillDropdownTwo = (parentId, message, datalist, property1, property2) => {
 } */
 
 //call fill data into table
-fillReportTable = (tBodyId, datalist, columnList) => {
+fillReportTable = (tHeadId, tBodyId, datalist, columnList) => {
+    tHeadId.innerHTML = "";
     tBodyId.innerHTML = "";
 
+    // Handle empty data
+    if (!datalist || datalist.length == 0) {
+        tBodyId.innerHTML = '<div class="no-data">No data available</div>';
+    }
+
+    // Get unique keys from data
+    let headers = Object.keys(datalist[0]);
+
+    // Create header row
+    let headertr = document.createElement('tr');
+    headertr.id = "tablehead";
+
+    // create index header
+    let thIndex = document.createElement("th");
+    thIndex.innerText = "#";
+    thIndex.className = "text-center";
+    headertr.appendChild(thIndex);
+
+    headers.forEach(header => {
+        let th = document.createElement('th');
+
+        th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
+        headertr.appendChild(th);
+
+        tHeadId.appendChild(headertr);
+    });
+
+    // create table body
     datalist.forEach((dataOb, index) => {
         let tr = document.createElement("tr");
 

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> System Usesr Report </div>
+                </div>
+            </div>
+
+            <div class="row m-2">
+                <span class="text-end"> Select both Designation and Status to genarate report
+                    <span class="text-danger"> *</span>
+                </span>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-1"></div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row">
+                                <label class="col-3 fw-bold form-label" for="selectDesignation">Designation</label>
+                                <select class="form-select col" id="selectDesignation">
+                                    <option value="" disabled selected>Select Designation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <label class="col-3 fw-bold form-label" for="selectStatus">Status</label>
+                                <select class="form-select col" id="selectStatus">
+                                    <option value="" disabled selected>Select Status</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <button class="btn me-1" type="button" id="btnModal" onclick="generateReport();">
+                                Generate</button>
+                            <button class="btn me-3" type="button" id="btnModal" onclick="printTable()">
+                                Print Table</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+            <div class="table row mt-3">
+                <div class="col-1"></div>
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableUserReport">
+                        <thead id="tHeadUserReport">
+                            <tr>
+                                <th>#</th>
+                                <th>Employee Name</th>
+                                <th>User Name</th>
+                                <th>Email</th>
+                                <th>Designation</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider" id="tBodyUserReport">
+                            <tr>
+                                <td>1</td>
+                                <td>Sunil</td>
+                                <td>suni235</td>
+                                <td>sunli@gmail.com</td>
+                                <td>Waiter</td>
+                                <td>Working</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="uIControllers/userReport.js"></script>
+
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
+
+</html>

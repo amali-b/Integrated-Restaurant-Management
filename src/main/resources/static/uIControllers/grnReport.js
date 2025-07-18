@@ -6,81 +6,45 @@ selectType.addEventListener("change", () => {
 // define fucntion to generate report
 const generateReport = () => {
     // generate Table
-    let datalist = getServiceRequest("/reportPayment/bystedtype?startdate=" + dateStartDate.value + "&enddate=" + dateEndDate.value + "&type=" + selectType.value);
+    let datalist = getServiceRequest("/reportGrn/bystedtype?startdate=" + dateStartDate.value + "&enddate=" + dateEndDate.value + "&type=" + selectType.value);
     // let datalist = getServiceRequest("/reportPayment/bystedtype?startdate=2025-03-01&enddate=2025-06-30&type=Monthly");
 
     // define new array for datalist
     let reportDataList = new Array();
-    // 
-    let label = new Array();
-    // 
-    let data = new Array();
 
     // datalist eke ena data array eke each index ekin eka aran object welata dagnnewa
     for (const index in datalist) {
         // define new object
         let object = new Object();
         // hadagaththa object ekata datalist eken ena data array dagnnewa
-        object.month = datalist[index][0];
-        object.amount = datalist[index][1];
+        object.month_or_week = datalist[index][0]; //datalist eke ena eka array ekakin ena palaweni insex eka
+        object.received_date = datalist[index][1];
+        object.quantity = datalist[index][2];
+        object.amount = datalist[index][3];
 
         // push objects in to defined array --> (reportDataList)
         // hdagaththta object tika push krenewa
         reportDataList.push(object);
-
-        label.push(datalist[index][0]);
-        data.push(datalist[index][1]);
     }
 
     let columns = [
-        { property: "month", dataType: "string" },
+        { property: "month_or_week", dataType: "string" },
+        { property: "received_date", dataType: "string" },
+        { property: "quantity", dataType: "string" },
         { property: "amount", dataType: "decimal" }
     ];
 
     //call fill data into table
-    fillReportTable(tHeadPaymentReport, tBodyPaymentReport, reportDataList, columns);
-
-    // generate Chart
-    const ctx = document.getElementById('myChart');
-
-    if (Chart.getChart("myChart") != undefined) {
-        Chart.getChart("myChart").destroy();
-
-
-    }
-    new Chart(ctx, {
-        // chart type eka mkkd
-        type: 'bar',
-        // x axis eke dala thyena data
-        data: {
-            labels: label,
-            datasets: [{
-                label: 'Payment Amount',
-                data: data, //lable array ekata samana wenna one
-                borderWidth: 1,
-                backgroundColor: getRandomHexColor(data.length)
-            }]
-        },
-        options: {
-            scales: {
-                // y axis eke dala thyena data
-                y: {
-                    beginAtZero: true // y axis eka 0 idela ptn gnna one
-                }
-            }
-        }
-    });
-
+    fillReportTable(tHeadReport, tBodyGrnReport, reportDataList, columns);
 }
 
 
 
 //function define for print Supplier Order record
-const printChart = (ob, rowIndex) => {
+const printTable = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     let newWindow = window.open();
 
-    const ctx = document.getElementById('myChart');
     const currentDateTime = new Date().toLocaleString();
     const printView = `
         <html>
@@ -100,10 +64,6 @@ const printChart = (ob, rowIndex) => {
                     max-width: 100px;
                     display: block;
                     margin: 0 auto 10px auto;
-                }
-                .col img {
-                    display: block;
-                    margin: 30px;
                 }
                 h1 {
                     font-size: 24px;
@@ -127,7 +87,6 @@ const printChart = (ob, rowIndex) => {
                     background-color: #fff;
                     padding: 8px;
                 }
-                }
                 .footer {
                     text-align: center;
                     margin-top: 50px;
@@ -143,12 +102,10 @@ const printChart = (ob, rowIndex) => {
                 <div class="date-time">Printed on: ${currentDateTime}</div>
             </div>
             <div class="row">
-                <div class="col-6">
-                    ${tablePaymentReport.outerHTML}
+                <div class="col-1"></div>
+                <div class="col">
+                    ${tableGrnReport.outerHTML}
                 </div>
-                <div class="col-5"> 
-                    <img src="${ctx.toDataURL()}"/>
-                </div>  
                 <div class="col-1"></div>
             </div>
             <div class="footer">

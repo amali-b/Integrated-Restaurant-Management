@@ -160,4 +160,110 @@ public class ReportDataController {
             return new String[0][0];
         }
     }
+
+    /* ####### GRN ####### */
+
+    // request mapping for load grns by given daterange [ URL
+    // -->/reportGrn/bystedtype?startdate=&enddate=&type=]
+    @GetMapping(value = "/reportGrn/bystedtype", params = { "startdate", "enddate",
+            "type" }, produces = "application/json")
+    public String[][] getGrnReportDate(@RequestParam("startdate") String startdate,
+            @RequestParam("enddate") String enddate, @RequestParam("type") String type) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+
+        if (userPrivilege.getPrivi_select()) {
+            if (type.equals("Monthly")) {
+                return reportDao.getGrnsByMonthly(startdate, enddate);
+            }
+            if (type.equals("Weekly")) {
+                return reportDao.getGrnsByWeekly(startdate, enddate);
+            }
+            return null;
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new String[0][0];
+        }
+    }
+
+    // request mapping for load grns by given daterange [ URL
+    // -->/reportGrn/bydesignationstatus?designation=&status]
+    @GetMapping(value = "/reportUser/bydesignationstatus", params = { "designation_id",
+            "employeestatus_id" }, produces = "application/json")
+    public String[][] getUserReport(@RequestParam("designation_id") Integer designationid,
+            @RequestParam("employeestatus_id") Integer statusid) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+
+        if (userPrivilege.getPrivi_select()) {
+            if (designationid != null) {
+                return reportDao.getUserByDesignation(designationid);
+            }
+            if (statusid != null) {
+                return reportDao.getUserByStatus(statusid);
+            }
+            return null;
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new String[0][0];
+        }
+    }
+
+    // request mapping for load grns by given daterange [ URL
+    // -->/reportGrn/bystedtype?startdate=&enddate=&type=]
+    @GetMapping(value = "/reportInventoryStock/bystedtype", params = { "startdate",
+            "enddate" }, produces = "application/json")
+    public String[][] getInventoryStockReport(@RequestParam("startdate") String startdate,
+            @RequestParam("enddate") String enddate) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+
+        if (userPrivilege.getPrivi_select()) {
+            return reportDao.getInventoryStockDate(startdate, enddate);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new String[0][0];
+        }
+    }
+
+    // request mapping for load grns by given daterange [ URL
+    // -->/reportSales/bystedtype?startdate=&enddate=&type=]
+    /*
+     * @GetMapping(value = "/reportSales/bystedtype", params = { "startdate",
+     * "enddate",
+     * "type" }, produces = "application/json")
+     * public String[][] getSalesSummaryReport(@RequestParam("startdate") String
+     * startdate,
+     * 
+     * @RequestParam("enddate") String enddate, @RequestParam("type") String type) {
+     * // check user authorization
+     * Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+     * // get privilege object
+     * Privilege userPrivilege =
+     * userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+     * 
+     * if (userPrivilege.getPrivi_select()) {
+     * if (type.equals("Monthly")) {
+     * return reportDao.getSalesSummaryByMonthly(startdate, enddate);
+     * }
+     * if (type.equals("Weekly")) {
+     * return reportDao.getSalesSummaryByWeekly(startdate, enddate);
+     * }
+     * if (type.equals("Daily")) {
+     * return reportDao.getSalesSummaryByDaily(startdate, enddate);
+     * }
+     * return null;
+     * } else {
+     * // privilege naththan empty array ekak return krnw
+     * return new String[0][0];
+     * }
+     * }
+     */
+
 }
