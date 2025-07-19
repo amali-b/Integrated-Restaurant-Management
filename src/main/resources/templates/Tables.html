@@ -43,9 +43,9 @@
                                         <label for="countSeat" class="form-label fw-bold">Seat Count
                                             <span class="text-danger">*</span></label>
                                         <input type="number"
-                                            onchange="txtValidator(this,'^([1][0]|[1-9]{0,1})$', 'tableDinein', 'seatcount')"
+                                            onkeyup="txtValidator(this,'^([1][0]|[1-9]{0,1})$', 'tableDinein', 'seatcount')"
                                             class="form-control" id="countSeat" placeholder="Enter Seat Count" required
-                                            min="1" max="10">
+                                            min="1" max="10" onkeydown="return false">
                                     </div>
                                     <!-- End Seat Count -->
                                 </div>
