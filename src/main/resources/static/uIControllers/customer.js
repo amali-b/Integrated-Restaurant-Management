@@ -20,7 +20,7 @@ const refreshForm = () => {
     const customerStatus = getServiceRequest("/customerStatus/alldata");
     fillDropdown(cusStatus, "Select Status", customerStatus, "status");
 
-    setDefault([cusStatus, titleCus, txtfirstName, txtlastName, txtNumber, txtEmail, txtAdres]);
+    setDefault([cusStatus, txtCustName, txtNumber, txtEmail, txtAdres]);
 
     // status eka form eka open weddima active wdyt select wenna
     //select value eka string wenna one nisa object eka string baweta convert krenw
@@ -41,9 +41,7 @@ const refreshCustomerTable = () => {
     //function -> object / array / boolean
     let columns = [
         { property: "reg_no", dataType: "string" },
-        { property: "title", dataType: "string" },
-        { property: "firstname", dataType: "string" },
-        { property: "lastname", dataType: "string" },
+        { property: "custname", dataType: "string" },
         { property: "contact_no", dataType: "string" },
         { property: "address", dataType: "string" },
         { property: "email", dataType: "string" },
@@ -77,9 +75,8 @@ const customerFormRefill = (ob, rowIndex) => {
     customer = JSON.parse(JSON.stringify(ob));
     oldcustomer = JSON.parse(JSON.stringify(ob));
 
-    titleCus.value = ob.title;
-    txtfirstName.value = ob.firstname;
-    txtlastName.value = ob.lastname;
+    txtCustName.value = ob.custname;
+    // txtlastName.value = ob.lastname;
     txtNumber.value = ob.contact_no;
     txtEmail.value = ob.email;
     cusStatus.value = JSON.stringify(ob.customerstatus_id);
@@ -102,18 +99,14 @@ const customerFormRefill = (ob, rowIndex) => {
 //define function to check errors
 const checkFormError = () => {
     let errors = "";
-    if (customer.title == null) {
-        titleCus.style.border = "2px solid red";
-        errors = errors + "Please Select title.! \n";
-    }
-    if (customer.firstname == null) {
-        txtfirstName.style.border = "2px solid red";
+    if (customer.custname == null) {
+        txtCustName.style.border = "2px solid red";
         errors = errors + "Please Enter valid First Name.! \n";
     }
-    if (customer.lastname == null) {
+    /* if (customer.lastname == null) {
         txtlastName.style.border = "2px solid red";
         errors = errors + "Please Enter valid Last Name.! \n";
-    }
+    } */
     if (customer.contact_no == null) {
         txtNumber.style.border = "2px solid red";
         errors = errors + "Please Enter valid Phone Number.! \n";
@@ -138,11 +131,8 @@ const checkFormUpdate = () => {
     let updates = "";
 
     if (customer != null && oldcustomer != null) {
-        if (customer.title != oldcustomer.title) {
-            updates = updates + " Title has updated.! \n";
-        }
-        if (customer.firstname != oldcustomer.firstname) {
-            updates = updates + "First name has updates from " + oldcustomer.firstname + " \n";
+        if (customer.custname != oldcustomer.custname) {
+            updates = updates + "First name has updates from " + oldcustomer.custname + " \n";
         }
         if (customer.contact_no != oldcustomer.contact_no) {
             updates = updates + "Phone Number has updates from " + oldcustomer.contact_no + " \n";
@@ -227,9 +217,8 @@ const buttonCustomerRegister = () => {
     let errors = checkFormError();
 
     title = "Are you sure to add Customer ";
-    obName = customer.title + " " + customer.firstname + " " + customer.lastname;
+    obName = customer.custname;
     text = "Phone Number : " + customer.contact_no
-        + ", Email : " + customer.email
         + ", Status : " + customer.customerstatus_id.status;
     let submitResponse = ['/customer/insert', "POST", customer];
     swalSubmit(errors, title, obName, text, submitResponse, modalCustomer);
@@ -285,8 +274,8 @@ const customerDelete = (ob, rowIndex) => {
     customer = ob;
 
     title = "Are you sure to Delete Customer : ";
-    obName = ob.title + " " + ob.firstname + " " + ob.lastname;
-    text = "Email : " + ob.email;
+    obName = ob.custname;
+    text = "Contact No. : " + ob.contact_no;
     let deleteResponse = ['/customer/delete', "DELETE", customer];
     message = "Customer has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalCustomer, message);
@@ -462,7 +451,7 @@ const customerPrint = (ob, rowIndex) => {
                 </tr>
                 <tr>
                     <th>Customer</th>
-                    <td>${ob.title + " " + ob.firstname + " " + ob.lastname}</td>
+                    <td>${ob.custname}</td>
                 </tr>
                 <tr>
                     <th>Mobile Number</th>
