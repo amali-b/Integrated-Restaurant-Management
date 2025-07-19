@@ -8,20 +8,46 @@ window.addEventListener("load", () => {
     fillDropdown(selectDesignation, "Select Designation", designations, "name");
     fillDropdown(selectStatus, "Select Status", employeeStatuses, "status");
 
-    // when change type generate reports
-    selectStatus.addEventListener("change", () => {
-        generateReport();
-    })
+    // get users by designation and status
+    let userlist = getServiceRequest("/reportUser/allusers");
 
-    selectDesignation.addEventListener("change", () => {
-        generateReport();
-    })
+    // define new array for datalist
+    let reportDataList = new Array();
+
+    // datalist eke ena data array eke each index ekin eka aran object welata dagnnewa
+    for (const index in userlist) {
+        // define new object
+        let object = new Object();
+        // hadagaththa object ekata datalist eken ena data array dagnnewa
+        object.employee_name = userlist[index][0]; //userlist eke ena eka array ekakin ena palaweni insex eka
+        object.user_name = userlist[index][1];
+        object.email = userlist[index][2];
+        object.designations = userlist[index][3];
+        object.status = userlist[index][4];
+
+        // push objects in to defined array --> (reportDataList)
+        // hdagaththta object tika push krenewa
+        reportDataList.push(object);
+    }
+
+    let columns = [
+        { property: "employee_name", dataType: "string" },
+        { property: "user_name", dataType: "string" },
+        { property: "email", dataType: "string" },
+        { property: "designations", dataType: "string" },
+        { property: "status", dataType: "string" }
+    ];
+
+    //call fill data into table
+    fillReportTable(tHeadUserReport, tBodyUserReport, reportDataList, columns);
 });
 
 // define fucntion to generate report
 const generateReport = () => {
     // generate Table
-    let datalist = getServiceRequest("/reportUser/bydesignationstatus?designation_id=" + selectDesignation.value + "&employeestatus_id=" + selectStatus.value);
+
+    // get users by designation and status
+    let datalist = getServiceRequest("/reportUser/bydesignationstatus?designation_id=" + JSON.parse(selectDesignation.value).id + "&employeestatus_id=" + JSON.parse(selectStatus.value).id);
     // let datalist = getServiceRequest("/reportUser/bydesignationstatus?designation=Manager&status=Working");
 
 
