@@ -292,9 +292,9 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable class="input-group-text form-label col-2 fw-bold">Gender :
+                                                <label class="input-group-text form-label col-2 fw-bold">Gender :
                                                     <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="form-check col-2">
                                                     <input type="radio" class="form-check-input" id="radioMale"
                                                         name="gender" required>
@@ -314,11 +314,11 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable for="civilStatus"
+                                                <label for="civilStatus"
                                                     class="input-group-text form-label col-3 fw-bold">
                                                     Civil
                                                     Status : <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="col">
                                                     <select id="civilStatus" class="form-select"
                                                         onchange="selectDynamicElementValidator(this, 'employee', 'civilstatus_id')">
@@ -342,10 +342,10 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable for="selectDesignation"
+                                                <label for="selectDesignation"
                                                     class="input-group-text form-label col-2 fw-bold">Designation :
                                                     <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="col">
                                                     <select id="selectDesignation" class="form-select"
                                                         onchange="selectDynamicElementValidator(this, 'employee', 'designation_id')">
@@ -368,10 +368,10 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable for="empStatus"
+                                                <label for="empStatus"
                                                     class="input-group-text form-label col-3 fw-bold">
                                                     Employee Status : <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="col">
                                                     <select id="empStatus" class="form-select"
                                                         onchange="selectDynamicElementValidator(this, 'employee', 'employeestatus_id')">
@@ -390,7 +390,7 @@
                                 <!-- Start address/note-->
                                 <div class="row mt-3">
                                     <!-- Start Address -->
-                                    <div class="col">
+                                    <div class="col-6">
                                         <!-- <div class="row form-floating">
                                     <textarea class="form-control" id="txtAdres" required placeholder="Enter Address"
                                         onchange="employee.address = this.value; this.style.border = 'solid 2px green'">
@@ -411,14 +411,14 @@
                                     <!-- End Address -->
 
                                     <!-- Start Note -->
-                                    <div class="col">
+                                    <!--  <div class="col">
                                         <div class="form-floating">
                                             <textarea id="txtNote" class="form-control" placeholder="Enter Notes"
                                                 onkeyup="employee.note = this.value; this.style.border = 'solid 2px green'"></textarea>
                                             <label for="txtNote" class="form-label fw-bold">Note : <span
                                                     class="text-danger"></span></label>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- End Note -->
                                 </div>
                                 <!-- End address/note-->
