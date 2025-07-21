@@ -18,8 +18,7 @@
                             <div class="container">
                                 <h4 class="modal-title" id="modalOrdersLabel">Order Form</h4>
                             </div>
-                            <button type="button" class="btn-close"
-                                onclick="buttonModalClose(); window.location.href='/order'"></button>
+                            <button type="button" class="btn-close" onclick="window.location.href='/order'"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row justify-content-md-center">
@@ -37,11 +36,9 @@
                                                                 applicable)</span></label>
                                                         <div class="col">
                                                             <select id="SelectCustomer" class="form-select"
-                                                                onchange="selectDynamicElementValidator(this, 'order', 'customer_id');">
+                                                                onchange="select2DynamicElementValidator(this, 'order', 'customer_id');">
                                                             </select>
                                                         </div>
-                                                        <div class="form-text text-end">Select Customer from
-                                                            Dropdown</div>
                                                     </div>
                                                     <!-- End Customer -->
 
@@ -53,14 +50,13 @@
                                                             <input type="text" id="txtCustName" class="form-control"
                                                                 placeholder="First Name"
                                                                 onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20})|([A-Z][a-z]{1,10}[ ][A-Z][a-z]{0,30})$', 'order', 'customername')">
-                                                            <div class="form-text text-end">Enter Customer Name
-                                                            </div>
+
                                                         </div>
                                                     </div>
                                                     <!-- End Customer Name -->
 
                                                     <!-- Start Customer Contact no -->
-                                                    <div class="col">
+                                                    <div class="col" id="divCustNo">
                                                         <label for="txtNumber" class="form-label fw-bold">Customer
                                                             Contact</label>
                                                         <div class="col">
@@ -68,8 +64,6 @@
                                                                 onkeyup="txtValidator(this,'^[0][7][01245678][0-9]{7}$', 'order', 'customercontact')"
                                                                 class="form-control" id="txtNumber"
                                                                 placeholder="Phone Number">
-                                                        </div>
-                                                        <div class="form-text text-end">Enter Customer Contact Number
                                                         </div>
                                                     </div>
                                                     <!-- End Customer Contact no -->
@@ -93,9 +87,9 @@
 
                                                     <!-- Start Order Table -->
                                                     <div class="col">
-                                                        <lable for="tableNO" class="form-label fw-bold">
+                                                        <label for="tableNO" class="form-label fw-bold">
                                                             Table <span class="text-danger">*</span>
-                                                        </lable>
+                                                        </label>
                                                         <div class="col">
                                                             <select id="tableNO" class="form-select"
                                                                 onchange="selectDynamicElementValidator(this, 'order', 'tables_id')">
@@ -103,16 +97,14 @@
                                                                 </option>
                                                             </select>
                                                         </div>
-                                                        <div class="form-text text-end">Select Table Number from
-                                                            Dropdown</div>
                                                     </div>
                                                     <!-- End Order Table -->
 
                                                     <!-- Start Order Status -->
                                                     <div class="col">
-                                                        <lable for="orderStatus" class="form-label fw-bold">
+                                                        <label for="orderStatus" class="form-label fw-bold">
                                                             Status <span class="text-danger">*</span>
-                                                        </lable>
+                                                        </label>
                                                         <div class="col">
                                                             <select id="orderStatus" class="form-select"
                                                                 onchange="selectDynamicElementValidator(this, 'order', 'orderstatus_id')">
@@ -120,8 +112,6 @@
                                                                 </option>
                                                             </select>
                                                         </div>
-                                                        <div class="form-text text-end">Select Status from
-                                                            Dropdown</div>
                                                     </div>
                                                     <!-- End Order Status -->
                                                 </div>

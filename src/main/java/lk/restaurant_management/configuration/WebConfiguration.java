@@ -93,8 +93,13 @@ public class WebConfiguration {
                     .requestMatchers("/vehicle/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/vehiclestatus/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
 
-                    .requestMatchers("/orderpayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
-                    .requestMatchers("/orderPaymentmethod/**").hasAnyAuthority("Admin", "Manager", "As-Manager")
+                    .requestMatchers("/orderpayment/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderpaymentDinein/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderpaymentTakeaway/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
+                    .requestMatchers("/orderPaymentmethod/**")
+                    .hasAnyAuthority("Admin", "Manager", "As-Manager", "Cashier")
                     .requestMatchers("/kitchen/**").hasAnyAuthority("Admin", "Manager", "As-Manager", "Chef")
 
                     // allow access to supplier flow only for admin, manger, cashier

@@ -30,7 +30,7 @@ const refreshForm = () => {
     order.orderHasMenuitemList = new Array();
 
     const customers = getServiceRequest("/customer/alldata");
-    fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
+    fillDropdown(SelectCustomer, "Select Customer Contact No.!", customers, "contact_no");
 
     const orderTypes = getServiceRequest("/order/Type/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
@@ -38,10 +38,11 @@ const refreshForm = () => {
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
 
-    const orderVehicles = getServiceRequest("/vehicle/alldata");
-    fillDropdown(deliveryVehicle, "Select Vehicle.!", orderVehicles, "name");
+    /*   const orderVehicles = getServiceRequest("/vehicle/alldata");
+      fillDropdown(deliveryVehicle, "Select Vehicle.!", orderVehicles, "name"); */
 
-    setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, deliveryVehicle, txtNetAmount, orderStatus, txtDeliveryChg]);
+    setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtNetAmount, orderStatus, txtDeliveryChg]);
+    $(SelectCustomer).next('.select2').find('.select2-selection').css('border', 'solid 1px #ced4da');
 
     // type eka form eka open weddima active wdyt select wenna
     selectOrderType.value = JSON.stringify(orderTypes[2]);//select value eka string wenna one nisa object eka string baweta convert krenw
@@ -179,7 +180,7 @@ const refreshInnerFormandTableSubmenu = () => {
     btnSmenuUpdate.classList.add("d-none");
     btnSmenuSubmit.classList.remove("d-none");
 
-    setDefault([SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
+    setDefault([selectCategory, SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
 
     //define function for refresh inner table
     let columns = [
@@ -545,7 +546,6 @@ const orderFormRefill = (ob, rowIndex) => {
     txtDeliveryChg.value = ob.deliverycharge;
     txtNetAmount.value = ob.netamount;
     orderStatus.value = JSON.stringify(ob.orderstatus_id);
-    deliveryVehicle.value = JSON.stringify(ob.vehicle_id);
 
     refreshInnerFormandTableSubmenu();
 }
@@ -606,9 +606,6 @@ const checkFormUpdate = () => {
         }
         if (order.netamount != oldorder.netamount) {
             updates = updates + "Net Amount has updated from " + oldorder.netamount + " \n";
-        }
-        if (order.vehicle_id.name != oldorder.vehicle_id.name) {
-            updates = updates + "Vehicle has updated from " + oldorder.vehicle_id.name + " \n";
         }
         if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
             updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";

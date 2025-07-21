@@ -1,5 +1,13 @@
 //define function for active tablebody row
-const activeTableRow = (tBodyId, rowIndex, color) => {
+const activeTableRow = (tBodyId, rowElement, color) => {
+
+    for (const element of tBodyId.children) {
+        element.removeAttribute("style");
+    }
+    rowElement.style.backgroundColor = color;
+}
+
+const activeTableRowNew = (tBodyId, rowIndex, color) => {
 
     for (const element of tBodyId.children) {
         element.removeAttribute("style");
@@ -332,6 +340,18 @@ const fillTableThree = (tBodyId, datalist, columnList, editFunction, buttonVisib
             }
             if (columnOb.dataType == "function") {
                 td.innerHTML = columnOb.property(dataOb);
+            } if (columnOb.dataType == "image-array") {
+                // img tag ekak create kregnna one
+                let img = document.createElement("img");
+                // class eke value add krenewa photo eke size ekata
+                img.style = "width:110px";
+                // data object eke property eka access krela nullda blnewa
+                if (dataOb[columnOb.property] != null) {
+                    // null naththan object eke image eka pass krnw
+                    img.src = atob(dataOb[columnOb.property]);
+                }
+                // td ekata image eka assign krnw
+                td.appendChild(img);
             }
             tr.appendChild(td);
         });
@@ -342,7 +362,7 @@ const fillTableThree = (tBodyId, datalist, columnList, editFunction, buttonVisib
             tr.onclick = () => {
                 window['editob'] = dataOb;
                 window['editrowno'] = index;
-                activeTableRow(tBodyId, index, "white");
+                activeTableRow(tBodyId, tr, "white");
                 divModifybtn.className = "d-block";
                 editFunction(dataOb, index);
             }
@@ -400,7 +420,7 @@ const fillTableFour = (infoTbody, datalist, columnList, editFunction, deleteFunc
             tr.onclick = () => {
                 window['editob'] = dataOb;
                 window['editrowno'] = index;
-                activeTableRow(infoTbody, index, "Cornsilk");
+                activeTableRow(infoTbody, tr, "Cornsilk");
                 divModifybtn.className = "d-block";
                 editFunction(dataOb, index);
             }

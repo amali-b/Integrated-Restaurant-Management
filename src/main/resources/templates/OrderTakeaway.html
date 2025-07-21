@@ -31,8 +31,7 @@
                             <div class="container">
                                 <h4 class="modal-title" id="modalOrdersLabel">Order Form</h4>
                             </div>
-                            <button type="button" class="btn-close"
-                                onclick="buttonModalClose(); window.location.href='/order'"></button>
+                            <button type="button" class="btn-close" onclick="window.location.href='/order'"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row justify-content-md-center">
@@ -53,8 +52,6 @@
                                                                 onchange="select2DynamicElementValidator(this, 'order', 'customer_id');">
                                                             </select>
                                                         </div>
-                                                        <div class="form-text text-end">Select Customer from
-                                                            Dropdown</div>
                                                     </div>
                                                     <!-- End Customer -->
 
@@ -66,8 +63,6 @@
                                                             <input type="text" id="txtCustName" class="form-control"
                                                                 placeholder="First Name"
                                                                 onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20})|([A-Z][a-z]{1,10}[ ][A-Z][a-z]{0,30})$', 'order', 'customername')">
-                                                            <div class="form-text text-end">Enter Customer Name
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- End Customer Name -->
@@ -82,48 +77,8 @@
                                                                 class="form-control" id="txtNumber"
                                                                 placeholder="Phone Number">
                                                         </div>
-                                                        <div class="form-text text-end">Enter Customer Contact Number
-                                                        </div>
                                                     </div>
                                                     <!-- End Customer Contact no -->
-                                                </div>
-
-                                                <div class="row mt-1">
-                                                    <!--Start Total Amount -->
-                                                    <div class="col">
-                                                        <label for="txtTotalAmount" class="form-label fw-bold">Total
-                                                            Amount <span class="text-danger">*</span></label>
-                                                        <div class="col">
-                                                            <input type="text" disabled
-                                                                onkeyup="priceValidator(this, 'order', 'totalprice')"
-                                                                class="form-control" id="txtTotalAmount"
-                                                                placeholder="Total Amount will display here" required>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Total Amount -->
-
-                                                    <!--Start Discount -->
-                                                    <div class="col">
-                                                        <label for="txtDiscount"
-                                                            class="form-label fw-bold">Discount<span
-                                                                class="text-danger"> (if available)</span></label>
-                                                        <div class="col">
-                                                            <input type="text" class="form-control" id="txtDiscount"
-                                                                placeholder="Discount will display here">
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Discount -->
-
-                                                    <!--Start Net Amount -->
-                                                    <div class="col">
-                                                        <label for="txtNetAmount" class="form-label fw-bold">Net
-                                                            Amount <span class="text-danger">*</span></label>
-                                                        <div class="col">
-                                                            <input type="text" class="form-control" id="txtNetAmount"
-                                                                placeholder="Net Amount will display here" required>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Net Amount -->
                                                 </div>
 
                                                 <div class="row mt-1">
@@ -141,11 +96,24 @@
                                                     </div>
                                                     <!-- End Order Type -->
 
+                                                    <!--Start Total Amount -->
+                                                    <div class="col">
+                                                        <label for="txtTotalAmount" class="form-label fw-bold">Total
+                                                            Amount <span class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <input type="text" disabled
+                                                                onkeyup="priceValidator(this, 'order', 'totalprice')"
+                                                                class="form-control" id="txtTotalAmount"
+                                                                placeholder="Total Amount will display here" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Total Amount -->
+
                                                     <!-- Start Order Status -->
                                                     <div class="col-4">
-                                                        <lable for="orderStatus" class="form-label fw-bold">
+                                                        <label for="orderStatus" class="form-label fw-bold">
                                                             Status <span class="text-danger">*</span>
-                                                        </lable>
+                                                        </label>
                                                         <div class="col">
                                                             <select id="orderStatus" class="form-select"
                                                                 onchange="selectDynamicElementValidator(this, 'order', 'orderstatus_id')">
@@ -153,10 +121,29 @@
                                                                 </option>
                                                             </select>
                                                         </div>
-                                                        <div class="form-text text-end">Select Status from
-                                                            Dropdown</div>
                                                     </div>
                                                     <!-- End Order Status -->
+
+                                                    <!--Start Discount
+                                                    <div class="col">
+                                                        <label for="txtDiscount"
+                                                            class="form-label fw-bold">Discount<span
+                                                                class="text-danger"> (if available)</span></label>
+                                                        <div class="col">
+                                                            <input type="text" class="form-control" id="txtDiscount"
+                                                                placeholder="Discount will display here">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label for="txtNetAmount" class="form-label fw-bold">Net
+                                                            Amount <span class="text-danger">*</span></label>
+                                                        <div class="col">
+                                                            <input type="text" class="form-control" id="txtNetAmount"
+                                                                placeholder="Net Amount will display here" required>
+                                                        </div>
+                                                    </div>
+                                                    End Net Amount -->
+
                                                 </div>
                                                 <!-- End Main form -->
 

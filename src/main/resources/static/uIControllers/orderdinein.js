@@ -20,12 +20,13 @@ const refreshForm = () => {
 
     SelectCustomer.disabled = "";
     txtTotalAmount.value = "";
-    txtTotalAmount.disabled = "disabled";
+    txtTotalAmount.disabled = true;
     txtServiceChg.value = "";
-    txtServiceChg.disabled = "disabled";
+    txtServiceChg.disabled = true;
     txtNetAmount.value = "";
-    txtNetAmount.disabled = "disabled";
-    selectOrderType.disabled = "disabled";
+    txtNetAmount.disabled = true;
+    selectOrderType.disabled = true;
+    orderStatus.disabled = true;
 
     //define new object
     order = new Object();
@@ -33,7 +34,7 @@ const refreshForm = () => {
     order.orderHasMenuitemList = new Array();
 
     const customers = getServiceRequest("/customer/alldata");
-    fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
+    fillDropdown(SelectCustomer, "Select Customer Contact No.!", customers, "contact_no");
 
     const orderTypes = getServiceRequest("/order/Type/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
@@ -46,6 +47,8 @@ const refreshForm = () => {
 
 
     setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtServiceChg, txtNetAmount, orderStatus, tableNO]);
+
+    $(SelectCustomer).next('.select2').find('.select2-selection').css('border', 'solid 1px #ced4da');
 
     // type eka form eka open weddima active wdyt select wenna
     selectOrderType.value = JSON.stringify(orderTypes[0]);//select value eka string wenna one nisa object eka string baweta convert krenw
@@ -63,11 +66,6 @@ const refreshForm = () => {
     refreshInnerFormandTableMenu();
 }
 
-// Trigger full recalculation if user edits total or service manually
-/* let txtQuantity = document.querySelector("#txtQuantity");
-txtQuantity.addEventListener("change", () => {
-    calculateTotal();
-}); */
 
 const calculateTotal = () => {
     let totalamount = 0.00;
@@ -191,7 +189,7 @@ const refreshInnerFormandTableSubmenu = () => {
     btnSmenuUpdate.classList.add("d-none");
     btnSmenuSubmit.classList.remove("d-none");
 
-    setDefault([SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
+    setDefault([selectCategory, SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
 
     //define function for refresh inner table
     let columns = [
@@ -556,6 +554,7 @@ const orderFormRefill = (ob, rowIndex) => {
 
     SelectCustomer.disabled = "disabled";
     SelectCustomer.value = JSON.stringify(order.customer_id);
+
     if (ob.customername == null) {
         txtCustName.value = "";
     } else {
@@ -566,6 +565,7 @@ const orderFormRefill = (ob, rowIndex) => {
     } else {
         txtNumber.value = ob.customercontact;
     }
+
     selectOrderType.value = JSON.stringify(ob.ordertype_id);
     txtTotalAmount.value = ob.totalprice;
     if (ob.servicecharge == null) {
@@ -720,6 +720,7 @@ const buttonOrderSubmit = () => {
         + ", Net Amount : " + order.netamount;
     let submitResponse = ['/order/insert', "POST", order];
     swalSubmit(errors, title, obName, text, submitResponse, modalOrders);
+    // onclick="window.location.href='/order'"
 }
 
 //define function for update button

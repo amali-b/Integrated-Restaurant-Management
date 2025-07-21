@@ -37,6 +37,7 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
         @Query(value = "SELECT sum(sp.paidamount) FROM resturant_management_project.supplierpayment as sp where date(sp.addeddatetime) between current_date()-interval 1 month and current_date();", nativeQuery = true)
         String[][] getSupplierPaymentsMonth();
 
+        // number of customers registered annualy
         @Query(value = "SELECT count(c.reg_no) FROM resturant_management_project.customer as c where date(c.added_datetime)between current_date()-interval 6 month and current_date();", nativeQuery = true)
         String[][] getCustomerRegistrationMonthly();
 
@@ -44,7 +45,8 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
         @Query(value = "SELECT monthname(o.addeddatetime), sum(o.netamount) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 6 month and current_date() group by monthname(o.addeddatetime);", nativeQuery = true)
         String[][] getOrderPaymentByPriviousSixMonth();
 
-        @Query(value = "SELECT s.name, sum(ohs.quantity) FROM resturant_management_project.order AS o JOIN resturant_management_project.order_has_submenu AS ohs ON o.id = ohs.order_id JOIN resturant_management_project.submenu AS s ON ohs.submenu_id = s.id WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 6 month AND CURRENT_DATE() GROUP BY s.name;", nativeQuery = true)
+        // top selling items weekly
+        @Query(value = "SELECT s.name, sum(ohs.quantity) FROM resturant_management_project.order AS o JOIN resturant_management_project.order_has_submenu AS ohs ON o.id = ohs.order_id JOIN resturant_management_project.submenu AS s ON ohs.submenu_id = s.id WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 7 day AND CURRENT_DATE() GROUP BY s.name;", nativeQuery = true)
         String[][] getTopSellingSubmenuMonthly();
 
         /* ###### GRN REPORT ######## */
@@ -59,6 +61,14 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
 
         /* ###### USER REPORT ######## */
 
+        // get users by designation and status
+        @Query(value = "SELECT e.fullname, u.username, u.email, d.name, es.status FROM resturant_management_project.user as u \n"
+                        + //
+                        "join resturant_management_project.employee as e on u.employee_id = e.id \n" + //
+                        "join resturant_management_project.designation as d on d.id = e.designation_id\n" + //
+                        "join resturant_management_project.employeestatus as es on es.id = e.employeestatus_id and designation_id=?1 and employeestatus_id=?2 ;", nativeQuery = true)
+        String[][] getUserByDesignationStatus(Integer designationid, Integer statusid);
+
         // get users by designation
         @Query(value = "SELECT e.fullname, u.username, u.email, d.name, es.status FROM resturant_management_project.user as u \n"
                         + //
@@ -67,15 +77,15 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
                         "join resturant_management_project.employeestatus as es on es.id = e.employeestatus_id and designation_id=?1;", nativeQuery = true)
         String[][] getUserByDesignation(Integer designationid);
 
-        // get users by employee status
+        // get all users
         @Query(value = "SELECT e.fullname, u.username, u.email, d.name, es.status FROM resturant_management_project.user as u \n"
                         + //
                         "join resturant_management_project.employee as e on u.employee_id = e.id \n" + //
                         "join resturant_management_project.designation as d on d.id = e.designation_id\n" + //
-                        "join resturant_management_project.employeestatus as es on es.id = e.employeestatus_id and employeestatus_id=?1;\n"
+                        "join resturant_management_project.employeestatus as es on es.id = e.employeestatus_id;\n"
                         + //
                         "", nativeQuery = true)
-        String[][] getUserByStatus(Integer statusid);
+        String[][] getUserReport();
 
         /* ###### INVENTORY STOCK REPORT ######## */
 

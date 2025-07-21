@@ -45,11 +45,11 @@ public class SupplierPayment {
     @NotNull
     private LocalDateTime addeddatetime;
 
-    private Integer transferid;
+    private String transferid;
 
     private LocalDateTime transferdatetime;
 
-    private Integer checknumber;
+    private String checknumber;
 
     private LocalDate checkdate;
 

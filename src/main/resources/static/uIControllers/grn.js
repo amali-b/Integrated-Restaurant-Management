@@ -29,7 +29,7 @@ const refreshForm = () => {
     grn = new Object();
     grn.grnHasIngredientList = new Array();
 
-    const supplierOrders = getServiceRequest("/supplierorder/alldata");
+    const supplierOrders = getServiceRequest("/supplierorder/bypendingstatus");
     fillDropdownTwo(selectPurchaseOrder, "Select Purchase Order.!", supplierOrders, "ordercode", "supplier_id.supplier_name")
     // fillDropdown(selectPurchaseOrder, "Select Purchase Order.!", supplierOrders, "ordercode");
 
@@ -137,10 +137,22 @@ const checkIngredientExt = () => {
 const filteringredientsbySupplierOrder = () => {
     let ingredients = getServiceRequest("/ingredient/listbysupplierOrder?supplierorderid=" + JSON.parse(selectPurchaseOrder.value).id);
     fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
+
+    // set defaults value and color
     SelectIngredints.disabled = false;
     SelectIngredints.style.border = "2px solid #ced4da";
     txtPrice.value = "";
     txtPrice.style.border = "2px solid #ced4da";
+    txtQuantity.value = "";
+    txtQuantity.style.border = "2px solid #ced4da";
+    txtLinePrice.value = "";
+    txtLinePrice.style.border = "2px solid #ced4da";
+    txtBatchnumber.value = "";
+    txtBatchnumber.style.border = "2px solid #ced4da";
+    dateExpire.value = "";
+    dateExpire.style.border = "2px solid #ced4da";
+    dateMade.value = "";
+    dateMade.style.border = "2px solid #ced4da";
 }
 
 //define function for refresh inner form
@@ -175,7 +187,7 @@ const refreshInnerFormandTable = () => {
 
 
     // set date range for manufacture date & expire date
-    formatDateRange(dateMade, dateExpire, 7, 14);
+    formatDateRange(dateMade, dateExpire, 7, 30);
     //formatDateRange = (minInputElement, maxInputElement, minrange, maxrange)
 
     setDefault([SelectIngredints, txtPrice, txtBatchnumber, dateExpire, dateMade, txtQuantity, txtLinePrice]);
@@ -461,6 +473,8 @@ const GrnFormRefill = (ob, rowIndex) => {
     oldgrn = JSON.parse(JSON.stringify(ob));
 
     selectPurchaseOrder.disabled = "disabled";
+    const supplierOrders = getServiceRequest("/supplierorder/bypendingstatus");
+    fillDropdownTwo(selectPurchaseOrder, "Select Purchase Order.!", supplierOrders, "ordercode", "supplier_id.supplier_name")
     selectPurchaseOrder.value = JSON.stringify(grn.supplierorder_id);
     txtSupplierInvoice.value = ob.supplierinvoiceno;
     dateReceived.value = ob.dateofreceived;

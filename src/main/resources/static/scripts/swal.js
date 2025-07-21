@@ -14,8 +14,8 @@ const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 //call post servise for insert data
-                submitResponse = getHTTPServiceRequest(submitResponse[0], submitResponse[1], submitResponse[2]);
-                if (submitResponse == "OK") {
+                let requestResponse = getHTTPServiceRequest(submitResponse[0], submitResponse[1], submitResponse[2]);
+                if (requestResponse == "OK") {
                     Swal.fire({
                         title: "Saved Successfully..!",
                         icon: "success",
@@ -27,7 +27,7 @@ const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
                 } else {
                     Swal.fire({
                         title: "Save not Completed..! Has following errors :",
-                        text: submitResponse,
+                        text: requestResponse,
                         icon: "info"
                     });
                 }

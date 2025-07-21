@@ -104,6 +104,8 @@ const refreshInnerFormandTable = () => {
 
     setDefault([SelectIngredint, txtQuantity]);
 
+    $(SelectIngredint).next('.select2').find('.select2-selection').css('border', 'solid 1px #ced4da');
+
     //define function for refresh inner table
     let columns = [
         { property: getIngredientName, dataType: "function" },
@@ -170,7 +172,7 @@ const buttonSubmenuIngredientSubmit = () => {
     if (submenuHasIngredient.quantity != null || submenuHasIngredient.quantity > 0) {
         Swal.fire({
             title: "Are you sure to Submit Following Details.?",
-            text: "Ingredient : " + JSON.stringify(submenuHasIngredient.ingredient_id)
+            text: "Ingredient : " + submenuHasIngredient.ingredient_id.ingredient_name
                 + ", Quantity : " + submenuHasIngredient.quantity,
             icon: "warning",
             showCancelButton: true,
@@ -440,7 +442,7 @@ const buttonProductSubmit = () => {
     title = "Are you sure to Submit Product ";
     obName = submenu.name + " .?";
     text = "Category : " + submenu.category_id.name
-        + ", Email : " + submenu.price
+        + ", Price : " + submenu.price
         + ", Status : " + submenu.submenustatus_id.name;
     let submitResponse = ['/submenu/insert', "POST", submenu];
     swalSubmit(errors, title, obName, text, submitResponse, modalSubmenu);

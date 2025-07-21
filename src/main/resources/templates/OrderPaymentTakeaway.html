@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Take-Away Order Payment Management </div>
+                </div>
+            </div>
+
+            <!--Add buttons for modal-->
+            <div class="row me-1">
+                <div class="d-flex justify-content-md-end">
+                    <button type="button" class="btn m-2" id="btnModal" data-bs-toggle="modal"
+                        data-bs-target="#modalOrderPayment" aria-controls="modalOrderPayment">
+                        <i class="fa-solid fa-plus"></i> New Order Payment </button>
+                </div>
+            </div>
+
+            <!-- Start Table -->
+            <div class="row table m-0">
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableOrderPayment">
+                        <thead>
+                            <tr id="tablehead">
+                                <th> # </th>
+                                <th> Customer ID </th>
+                                <th> Order Date </th>
+                                <th> Payment code </th>
+                                <th> Method </th>
+                                <th> Total Amount </th>
+                                <th> Paid Amount </th>
+                                <th> Balance Amount </th>
+                            </tr>
+                        </thead>
+                        <tbody class="tableBody" id="tBodyOrderPayment">
+                            <tr>
+                                <td> 1 </td>
+                                <td> #C2500145 </td>
+                                <td> 2025-07-03 </td>
+                                <td> #OP250001 </td>
+                                <td> Cash </td>
+                                <td> 1260.00 </td>
+                                <td> 2000.00 </td>
+                                <td> 740.00 </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End of Table -->
+
+            <!-- Start modal-->
+            <div class="modal" id="modalOrderPayment">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container">
+                                <h4 class="modal-title" id="modalOrderPaymentLabel">Order Payment Form</h4>
+                            </div>
+                            <button type="button" class="btn-close" onclick="buttonModalClose()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-md-center">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body crdbdy">
+                                            <!-- Start Form -->
+                                            <form id="formOrderPayment" onsubmit="return false">
+                                                <div class="row mt-1">
+                                                    <!-- Start form -->
+                                                    <div class="col">
+                                                        <!--Order / Payment Metho / Total Amount  -->
+                                                        <div class="row mt-2">
+                                                            <!--Start Order -->
+                                                            <div class="col">
+                                                                <label for="SelectOrderId"
+                                                                    class="form-label fw-bold">Order No. <span
+                                                                        class="text-danger">*</span></label>
+                                                                <select id="SelectOrderId" class="form-select" onchange="
+                                                                    orderPayment.paymentOrders = [];
+                                                                    orderPayment.paymentOrders.push(JSON.parse(SelectOrderId.value))
+                                                                    this.style.border = '2px solid green';">
+                                                                    <!-- /* selectDynamicElementValidator(this, 'orderPayment', 'order_id') */ -->
+                                                                    <option value="" selected disabled>
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <!-- End Order -->
+
+                                                            <!-- Start Payment Method -->
+                                                            <div class="col">
+                                                                <label for="selectPaymentMethod"
+                                                                    class="form-label fw-bold">Payment Method <span
+                                                                        class="text-danger">*</span></label>
+                                                                <select id="selectPaymentMethod" class="form-select"
+                                                                    onchange="selectDynamicElementValidator(this, 'orderPayment', 'orderpaymentmethod_id')">
+                                                                    <option value="" selected disabled>
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <!-- End Payment Method -->
+
+                                                            <!-- Start Total Amount -->
+                                                            <div class="col">
+                                                                <label for="txtTotalAmount"
+                                                                    class="form-label fw-bold">Total
+                                                                    Amount<span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control"
+                                                                    id="txtTotalAmount" placeholder="Enter Due Amount"
+                                                                    required
+                                                                    onkeyup="txtValidator(this, '^[1-9][0-9]{1,4}[.][0-9]{2}$','orderPayment', 'totalamount')">
+                                                            </div>
+                                                            <!-- End Total Amount -->
+                                                        </div>
+
+                                                        <!-- Paid Amount / Balance Amount -->
+                                                        <div class="row mt-2">
+                                                            <!--Start Paid Amount -->
+                                                            <div class="col-4">
+                                                                <label for="txtPaidAmount"
+                                                                    class="form-label fw-bold">Paid
+                                                                    Amount <span class="text-danger">*</span></label>
+                                                                <input type="text"
+                                                                    onkeyup="priceValidator(this,'orderPayment', 'paidamount'); calculateBalanceAmount();"
+                                                                    class="form-control" id="txtPaidAmount"
+                                                                    placeholder="Paid Amount will display here"
+                                                                    required>
+                                                            </div>
+                                                            <!-- End Paid Amount -->
+
+                                                            <!--Start Balance Amount -->
+                                                            <div class="col-4">
+                                                                <label for="txtBalanceAmount"
+                                                                    class="form-label fw-bold">Balance
+                                                                    Amount <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control"
+                                                                    id="txtBalanceAmount"
+                                                                    placeholder="Balance Amount will display here"
+                                                                    required>
+                                                            </div>
+                                                            <!-- End Balance Amount -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- End form -->
+                                                </div>
+
+                                                <!-- Make Buttons -->
+                                                <div class="row mt-4 d-flex">
+                                                    <div class="col-8 text-start">
+                                                        <button class="btn btn-danger btninput" type="button"
+                                                            id="btnclr" onclick="buttonOrderPaymentClear()">Clear
+                                                            <i class="fa-solid fa-arrows-rotate"></i></button>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        <button class="btn btn-success btninput" type="submit"
+                                                            onclick="buttonOrderPaymentSubmit()" id="btnsubmit">
+                                                            Submit
+                                                            <i class="fa-solid fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                                <!-- End Buttons -->
+
+                                                <!-- Make print/delete buttons-->
+                                                <div class="row mt-3 text-end">
+                                                    <div class="d-none me-1" id="divModifybtn">
+                                                        <button class="button me-2 fw-bold" id="btnprint" type="button"
+                                                            onclick="orderPaymentPrint(window['editob'], window['editrowno'])"><i
+                                                                class="fa-solid fa-print icon"></i><br>
+                                                            Print</button>
+                                                    </div>
+                                                </div>
+                                                <!-- End print/delete buttons-->
+                                            </form>
+                                            <!-- End form -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End modal-->
+        </div>
+    </div>
+
+    <script src="uIControllers/paymentTakeaway.js"></script>
+
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
+
+</html>

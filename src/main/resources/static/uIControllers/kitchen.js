@@ -2,7 +2,7 @@
 window.addEventListener("load", () => {
 
     //call refresh form function
-    refreshOrderTable();
+    refreshKitchenTable();
 });
 
 const fillKitchenTable = (tBodyId, datalist, columnList, inProgressFunction, readyFunction) => {
@@ -11,6 +11,7 @@ const fillKitchenTable = (tBodyId, datalist, columnList, inProgressFunction, rea
 
     datalist.forEach((dataOb, index) => {
         let tr = document.createElement("tr");
+        tr.setAttribute("data-order-id", dataOb.id); // Add unique identifier
 
         let tdIndex = document.createElement("td");
         tdIndex.innerText = parseInt((index) + 1);
@@ -31,24 +32,35 @@ const fillKitchenTable = (tBodyId, datalist, columnList, inProgressFunction, rea
 
         let tdButtons = document.createElement("td");
 
+        // Create In-Progress button
         let inProgressButton = document.createElement("button");
         inProgressButton.className = "btn btn-sm btn-outline-warning me-2"
-        inProgressButton.innerHTML = "<i class='fa-solid fa-fire-burner icon'></i><br> In-Progress";
-        // inProgressButton.innerText = "Edit";
+        // inProgressButton.innerHTML = "<i class='fa-solid fa-fire-burner icon'></i><br> In-Progress";
+        inProgressButton.innerText = "In-Progress";
+        // button welata id set krnewa each order ekata
+        inProgressButton.setAttribute("id", "inProgress-" + dataOb.id);
         tdButtons.appendChild(inProgressButton);
+        // onclick ekedi inProgressFunction wada krnw
         inProgressButton.onclick = () => {
-            // console.log("edit");
             inProgressFunction(dataOb, index);
         }
 
+        // Create Ready button (initially hidden)
         let readyButton = document.createElement("button");
-        readyButton.className = "btn btn-sm btn-outline-success me-2"
-        // readyButton.innerHTML = "<i class='fa-solid fa-bowl-rice'></i><br>Ready";
-        readyButton.innerText = "Redy to Serve";
+        readyButton.className = "btn btn-sm btn-outline-success me-2 d-none";
+        readyButton.innerText = "Ready to Serve";
+        readyButton.setAttribute("id", "ready-" + dataOb.id);
         tdButtons.appendChild(readyButton);
         readyButton.onclick = () => {
             // console.log("Print");
             readyFunction(dataOb, index);
+        }
+
+        // Check kitchen status to determine which button to show
+        if (dataOb.kitchenstatus_id && dataOb.kitchenstatus_id.id == 2) {
+            // If kitchen status is "In-Progress", show Ready button
+            inProgressButton.classList.add("d-none");
+            readyButton.classList.remove("d-none");
         }
 
         tr.appendChild(tdButtons);
@@ -58,10 +70,10 @@ const fillKitchenTable = (tBodyId, datalist, columnList, inProgressFunction, rea
 
 
 //create refresh table function
-const refreshOrderTable = () => {
+const refreshKitchenTable = () => {
     // let orders = getServiceRequest("/order/alldata");
     // get orders by status id where id = 1
-    let orderbyStatuses = getServiceRequest("/order/bystatus?orderstatus_id=" + 1);
+    let orderbyStatuses = getServiceRequest("/order/bystatusnewinprogres");
 
     //datatypes
     //string -> strting / date / number
@@ -80,27 +92,24 @@ const refreshOrderTable = () => {
 
 //define function for get  order status
 const getOrderStatus = (dataOb) => {
-    if (dataOb.orderstatus_id.status == "New") {
+    // "New"
+    if (dataOb.orderstatus_id.id == 1) {
         return "<button class='btn btn-sm btn-outline-info text-center'>" + dataOb.orderstatus_id.status + "</button>";
     }
-    if (dataOb.orderstatus_id.status == "In-Progress") {
+    // In-Progress
+    if (dataOb.orderstatus_id.id == 2) {
         return "<button class='btn btn-sm btn-outline-warning text-center'>" + dataOb.orderstatus_id.status + "</button>";
     }
-    if (dataOb.orderstatus_id.status == "Ready") {
+    // Ready
+    if (dataOb.orderstatus_id.id == 3) {
         return "<button class='btn btn-sm btn-outline-success text-center'>" + dataOb.orderstatus_id.status + "</button>";
-    }
-    if (dataOb.orderstatus_id.status == "Canceled") {
-        return "<button class='btn btn-sm btn-outline-warning text-center'>" + dataOb.orderstatus_id.status + "</button>";
-    }
-    if (dataOb.orderstatus_id.status == "Removed") {
-        return "<button class='btn btn-sm btn-outline-danger text-center'>" + dataOb.orderstatus_id.status + "</button>";
     }
     return dataOb.orderstatus_id.status;
 }
 
 //define function for get  order status
 const getKitchenStatus = (dataOb) => {
-    if (dataOb.kitchenstatus_id.id != null) {
+    if (dataOb.kitchenstatus_id != null) {
         // Pending
         if (dataOb.kitchenstatus_id.id == 1) {
             return "<button class='btn btn-sm btn-outline-warning text-center'>" + dataOb.kitchenstatus_id.status + "</button>";
@@ -112,9 +121,6 @@ const getKitchenStatus = (dataOb) => {
         // Ready
         if (dataOb.kitchenstatus_id.id == 3) {
             return "<button class='btn btn-sm btn-outline-success text-center'>" + dataOb.kitchenstatus_id.status + "</button>";
-        }
-        if (dataOb.kitchenstatus_id.id == 4) {
-            return "<button class='btn btn-sm btn-outline-danger text-center'>" + dataOb.kitchenstatus_id.status + "</button>";
         }
     } else {
         return "-";
@@ -133,13 +139,6 @@ const getOrderType = (dataOb) => {
         return "<p class='btn btn-sm btn-outline-secondary text-center'>" + dataOb.ordertype_id.type + "</p>";
     }
     return dataOb.ordertype_id.type;
-}
-
-
-//define function for get Ingredients list
-const buttonComplete = (dataOb) => {
-    dataOb.orderstatus_id.id = 4;
-    refreshOrderTable();
 }
 
 // define function for Inner form table
@@ -177,7 +176,6 @@ const fillInfoTable = (InnertBody, datalist, columnList) => {
 
 };
 
-
 const buttonInProgress = (dataOb, rowIndex) => {
     $('#modalKitchen').modal('show');
 
@@ -208,7 +206,8 @@ const buttonInProgress = (dataOb, rowIndex) => {
     // create ingredient list
     let ingredientList = [];
 
-    // Calculate total quantiy from submenu items
+    // Calculate total ingredient quantyties from submenu items
+    // submenulist eke thyena submenus ekin eka read krela submenu has ingredient eke each ingredient eka gane check krela samana ids thyenewada blnewa.. 
     for (const ositem of dataOb.orderHasSubmenuList) {
         // submenuHasIngredientList list eke item ekin eka search krela eke id eka orderHasSubmenuList eke ingredient eke id ekata samana wenewanm index eka return krenw
         for (const submenuIng of ositem.submenu_id.submenuHasIngredientList) {
@@ -247,7 +246,7 @@ const buttonInProgress = (dataOb, rowIndex) => {
 
     // Extract items from the orderHasMenuitem table
     for (const itemIng of ingredientList) {
-        const availableInventory = getServiceRequest("/inventory/byingredient/" + itemIng.ingredient_id.id);
+        const availableInventory = getServiceRequest("/inventory/byingredient?ingredient_id=" + itemIng.ingredient_id.id);
         let total_ava_qty = 0;
         for (const invItem of availableInventory) {
             total_ava_qty = parseFloat(total_ava_qty) + parseFloat(invItem.availablequantity);
@@ -264,23 +263,21 @@ const buttonInProgress = (dataOb, rowIndex) => {
 
     //call fill data into table
     fillInfoTable(tBodyInventory, ingredientList, columnIngredients);
-    for (const itemIng of ingredientList) {
-        if (itemIng.required_qty > itemIng.available_qty) {
+
+    let lowStore = false;
+    // Check stock levels and apply styling
+    for (const itemIng in ingredientList) {
+        if (parseFloat(ingredientList[itemIng].required_qty) > parseFloat(ingredientList[itemIng].available_qty)) {
             // Find the matching row and color it
-            let row = document.querySelector("tr[data-ingredient='" + itemIng.ingredient_id.ingredient_name + "']");
-            if (row) {
-                row.style.backgroundColor = "#f8d7da";
-                row.style.color = "#721c24";
-            }
-        } else if ((itemIng.available_qty - itemIng.required_qty) < 10) {
-            // Low stock warning
-            let row = document.querySelector("tr[data-ingredient='" + itemIng.ingredient_id.ingredient_name + "']");
-            if (row) {
-                row.classList.add("background-color", "#fff3cd");
-                row.classList.add("color", "#856404");
-            }
+            tBodyInventory.children[itemIng].style.backgroundColor = "#f8d7da";
+            tBodyInventory.children[itemIng].style.color = "#721c24";
+            lowStore = true;
         }
     }
+    if (lowStore) {
+        buttonConfirm.disabled = "disabled";
+    }
+    // backend ekata pass krena object eka
     order = dataOb;
     order.orderHasIngredientList = ingredientList;
     $('#tableInventory').DataTable();
@@ -298,6 +295,69 @@ const getInventoryName = (dataOb) => {
     return dataOb.ingredient_id.ingredient_name + "( " + dataOb.ingredient_id.measuring_unit + dataOb.ingredient_id.unittype_id.name + " )";
 }
 
+// Function to handle order confirmation
+const orderConfirm = () => {
+    // if all ingredients are available
+    Swal.fire({
+        title: "Are you sure you want to Confirm above Order.?",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Confirm!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //call put service
+            updateResponse = getHTTPServiceRequest('/kitchen/inprogressStatus', "PUT", order);
+
+            /*  if (updateResponse == "OK") { */
+            Swal.fire({
+                title: "Order Successful..!",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000
+            });
+            // Close modal
+            $('#modalKitchen').modal('hide');
+            // Refresh table to reflect changes
+            refreshKitchenTable();
+            // }
+        }
+    });
+
+}
+
+//define function for get Ingredients list
+const buttonComplete = (dataOb) => {
+    Swal.fire({
+        title: "Are you sure you want to Complete above Order.?",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "green",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //call put service
+            updateResponse = getHTTPServiceRequest('/kitchen/completedStatus', "PUT", dataOb);
+            if (updateResponse == "OK") {
+                Swal.fire({
+                    title: "Order Completed..!",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                // Close modal
+                $('#modalKitchen').modal('hide');
+                // Refresh table to reflect changes
+                refreshKitchenTable();
+            }
+        }
+    });
+}
+
 //define function for modal close and refresh form
 const buttonModalClose = () => {
     Swal.fire({
@@ -310,8 +370,7 @@ const buttonModalClose = () => {
     }).then((result) => {
         if (result.isConfirmed) {
             $('#modalKitchen').modal('hide');
-
-            refreshOrderTable();
+            refreshKitchenTable();
         }
     });
 }
@@ -342,21 +401,28 @@ const itemsPrint = (orderData, rowIndex) => {
         </div>
 
         <div class="items-section">
-            <h3> Order Items</h3>
-            <table class="items-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Item Name</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${generateItemRows(dataOb)}
-                </tbody>
-                </tbody>
-            </table>
-        </div>
+            <h3> Order Items</h3>`
+    '<table class="items-table"><thead>'
+        + '<tr>'
+        + '<th>#</th>'
+        + '<th>Item Name</th>'
+        + '<th>Quantity</th>'
+        + '</tr>'
+        + '</thead>'
+    '<tbody>' + tBodyKitchenSubmenus.outerHTML + '</tbody>'
+        + '</table>'
+
+    '<table class="items-table"><thead>'
+        + '<tr>'
+        + '<th>#</th>'
+        + '<th>Item Name</th>'
+        + '<th>Quantity</th>'
+        + '</tr>'
+        + '</thead>'
+    '<tbody>' + tBodyKitchenMenus.outerHTML + '</tbody>'
+        + '</table>'
+
+            `</div>
 
     <div class="footer">
         &copy; 2025 BIT Project. All rights reserved.
@@ -382,7 +448,7 @@ const itemsPrint = (orderData, rowIndex) => {
 
 //@param {Array} items - Array of order items
 //@returns {string} - HTML string for table rows
-const generateItemRows = (dataOb) => {
+/* const generateItemRows = (dataOb) => {
     // Extract items from the correct association names
     const submenuItems = dataOb.orderHasSubmenuList || [];
     const menuItems = dataOb.orderHasMenuitemList || [];
@@ -423,5 +489,5 @@ const generateItemRows = (dataOb) => {
             </tr >
     `;
     }).join('');
-};
+}; */
 

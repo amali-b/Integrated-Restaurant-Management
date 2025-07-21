@@ -21,6 +21,9 @@ import lk.restaurant_management.dao.OrderPaymentDao;
 import lk.restaurant_management.dao.OrderstatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Order;
+import lk.restaurant_management.entity.OrderHasIngredient;
+import lk.restaurant_management.entity.OrderHasMenuitem;
+import lk.restaurant_management.entity.OrderHasSubmenu;
 import lk.restaurant_management.entity.OrderPayment;
 import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.User;
@@ -39,13 +42,13 @@ public class OrderPaymentController {
     private UserPrivilegeController userPrivilegeController;
 
     // request mapping for load orderPayment UI
-    @RequestMapping(value = "/orderpayment")
+    @RequestMapping(value = "/orderpaymentDinein")
     public ModelAndView paymentUI() {
         // Authentication Object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // create ModelAndView instance
         ModelAndView orderPaymentView = new ModelAndView();
-        orderPaymentView.setViewName("OrderPayment.html");
+        orderPaymentView.setViewName("OrderPaymentDinein.html");
         // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
 
@@ -66,6 +69,34 @@ public class OrderPaymentController {
         return orderPaymentView;
     }
 
+    // request mapping for load orderPayment UI
+    @RequestMapping(value = "/orderpaymentTakeaway")
+    public ModelAndView TakeawayUI() {
+        // Authentication Object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // create ModelAndView instance
+        ModelAndView TakeawayPaymentView = new ModelAndView();
+        TakeawayPaymentView.setViewName("OrderPaymentTakeaway.html");
+        // user object ekak gennagnnewa
+        User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        TakeawayPaymentView.addObject("loggedusername", auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        TakeawayPaymentView.addObject("loggeduserphoto", user.getUserphoto());
+
+        // log una user ta employee id ekk thiyenewanm
+        if (user.getEmployee_id() != null) {
+            TakeawayPaymentView.addObject("loggedempname", user.getEmployee_id().getCallingname());
+        } else {
+            TakeawayPaymentView.addObject("loggedempname", "Admin");
+        }
+        TakeawayPaymentView.addObject("title", "BIT Project 2024 | Order Takeaway Payment Management");
+
+        return TakeawayPaymentView;
+    }
+
     // define mapping get all order status data -- URL [/orderpayment/alldata]
     // backend eke idan data fontend ekata return kranne json format eken nisa
     // (produces = "application/json")
@@ -74,7 +105,7 @@ public class OrderPaymentController {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Order Payment");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "OrderPayment");
         if (userPrivilege.getPrivi_select()) {
             return orderPaymentDao.findAll(Sort.by(Direction.DESC, "id"));
         } else {
@@ -84,12 +115,12 @@ public class OrderPaymentController {
     }
 
     // request post mapping for save record [URL --> /orderpayment/insert]
-    @PostMapping(value = "/orderpayment/insert", produces = "application/json")
+    @PostMapping(value = "/orderpayment/insert")
     public String insertPaymentRecord(@RequestBody OrderPayment orderPayment) {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Order Payment");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "OrderPayment");
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
 
@@ -105,10 +136,33 @@ public class OrderPaymentController {
                 orderPaymentDao.save(orderPayment);
 
                 // manage dependancies
-                // order object ekak oderdao hareha id eken aregena hdagnnw
-                Order order = orderDao.getReferenceById(orderPayment.getOrder_id().getId());
+                for (Order order : orderPayment.getPaymentOrders()) {
+                    // order object ekak oderdao hareha id eken aregena hdagnnw
+                    Order payorder = orderDao.getReferenceById(order.getId());
 
-                order.setOrderstatus_id(orderstatusDao.getReferenceById(4));
+                    payorder.setOrderstatus_id(orderstatusDao.getReferenceById(4));
+
+                    // save operator
+                    // orderHasSubmenuList list ekata loop ekak dala read krela
+                    for (OrderHasSubmenu ohs : payorder.getOrderHasSubmenuList()) {
+                        // onebyone (sohi) illegena purchase order eka set krnw
+                        ohs.setOrder_id(payorder);
+                    }
+
+                    // OrderHasMenuitemList list ekata loop ekak dala read krela
+                    for (OrderHasMenuitem ohm : payorder.getOrderHasMenuitemList()) {
+                        // onebyone (sohi) illegena purchase order eka set krnw
+                        ohm.setOrder_id(payorder);
+                    }
+
+                    // getOrderHasIngredientList list ekata loop ekak dala read krela
+                    for (OrderHasIngredient ohi : payorder.getOrderHasIngredientList()) {
+                        // onebyone (sohi) illegena purchase order eka set krnw
+                        ohi.setOrder_id(payorder);
+                    }
+
+                    orderDao.save(payorder);
+                }
 
                 return "OK";
 

@@ -16,11 +16,12 @@ const refreshForm = () => {
     //define new object
     orderPayment = new Object();
 
+    orderPayment.paymentOrders = new Array();
+
     btnsubmit.style.display = "inline"; // display submit button
     btnclr.style.display = "inline";
 
     // enable disabled input fields
-    SelectOrderId.disabled = false;
     selectPaymentMethod.disabled = false;
 
     // disable input fields when form refresh
@@ -28,28 +29,63 @@ const refreshForm = () => {
     txtBalanceAmount.disabled = true;
     txtTotalAmount.disabled = true;
 
-    // request Orders by status == ready
-    const orders = getServiceRequest("/order/bystatus?orderstatus_id=" + 3);
-    fillDropdown(SelectOrderId, "Select Order.!", orders, "ordercode");
+    const customers = getServiceRequest("/customer/alldata");
+    fillDropdownTwo(SelectCustomer, "Select Customer.!", customers, "reg_no", "custname");
+
+    /* const supplierOrders = getServiceRequest("/order/bystatus?orderstatus_id=" + 3);
+    fillDropdownTwo(SelectOrderId, "Select Customer Order.!", supplierOrders, "ordercode", "customer_id.custname") */
 
     // request payment method all data
     const orderPaymentMethods = getServiceRequest("/orderPaymentmethod/alldata");
     fillDropdown(selectPaymentMethod, "Select Method.!", orderPaymentMethods, "method");
 
     //set default color and reset input fields
-    setDefault([SelectOrderId, selectPaymentMethod, txtTotalAmount, txtPaidAmount, txtBalanceAmount]);
+    setDefault([SelectCustomer, selectPaymentMethod, txtTotalAmount, txtPaidAmount, txtBalanceAmount]);
 }
 
-// select grn field eke onchange ekedi trigger wenw
-SelectOrderId.addEventListener("change", () => {
-    let order = JSON.parse(SelectOrderId.value);
-    console.log("Order ID" + SelectOrderId.value);
+// define function for select all ingredients from selected category
+const selectAllOrders = () => {
+    // request Orders by status == ready
+    const orders = getServiceRequest("/order/bycustomer?customer_id=" + JSON.parse(SelectCustomer.value).id);
+    //  fillDropdown(SelectOrderId, "Select Order.!", orders, "ordercode");
+
+    // create empty array
+    orderPayment.paymentOrders = [];
+
+    // IngredientsBycategory eke ingredients one by one kyewela supplier.supplyIngredients array ekt push krenewa
+    for (const order of orders) {
+        orderPayment.paymentOrders.push(order);
+    }
+    // SelectedIngredints list eka refresh krenewa
+    fillDropdown(SelectOrderId, "", orderPayment.paymentOrders, "ordercode");
+
+    let totalamount = 0.00;
+    for (const order of orderPayment.paymentOrders) {
+        totalamount = parseFloat(totalamount) + parseFloat(order.netamount);
+    }
 
     // Parse amounts as numbers (not strings) and rounded to 2 decimal places
-    txtTotalAmount.value = parseFloat(order.netamount).toFixed(2);
+    txtTotalAmount.value = parseFloat(totalamount).toFixed(2);
+    orderPayment.totalamount = txtTotalAmount.value;
     txtTotalAmount.style.border = "2px solid green"; // Set border to green
     txtTotalAmount.disabled = true; // Disable the input field
-});
+
+}
+
+// define function for select method
+selectPaymentMethod.addEventListener("change", () => {
+    let method = JSON.parse(selectPaymentMethod.value);
+    console.log("mehtod" + selectPaymentMethod.value);
+
+    if (method.id == 1) {
+        txtPaidAmount.value = txtTotalAmount.value;
+        orderPayment.paidamount = txtPaidAmount.value;
+        txtPaidAmount.style.border = "2px solid green"; // Set border to green
+        txtPaidAmount.disabled = true; // Disable the input field
+
+        calculateBalanceAmount();
+    }
+})
 
 //create refresh table function
 const refreshOrderPaymentTable = () => {
@@ -59,8 +95,8 @@ const refreshOrderPaymentTable = () => {
     //string -> strting / date / number
     //function -> object / array / boolean
     let columns = [
-        { property: getOrderCode, dataType: "function" },
-        { property: "datetime", dataType: "string" },
+        { property: getCustID, dataType: "function" },
+        { property: getCustOrdersID, dataType: "function" },
         { property: "code", dataType: "string" },
         { property: getPaymentmethod, dataType: "function" },
         { property: "totalamount", dataType: "decimal" },
@@ -74,13 +110,28 @@ const refreshOrderPaymentTable = () => {
 }
 
 //define function for get Order name
-const getOrderCode = (dataOb) => {
-    return dataOb.order_id.odercode;
+const getCustID = (dataOb) => {
+    return dataOb.customer_id?.reg_no ?? "-";
+}
+
+//define function for get Order name
+const getCustOrdersID = (dataOb) => {
+    let orderCode = "";
+    dataOb.paymentOrders.forEach((payOrder, index) => {
+        //index ekath ekka length eka check krenewa
+        if (dataOb.paymentOrders.length - 1 == index) {
+            orderCode = orderCode + payOrder.ordercode;
+        } else {
+            //index eka length ekt samana naththan coma eka danna 
+            orderCode = orderCode + payOrder.ordercode + ", ";
+        }
+    });
+    return orderCode;
 }
 
 //define function for get Ingredients list
 const getPaymentmethod = (dataOb) => {
-    return dataOb.orderorderpaymentmethod_id.method;
+    return dataOb.orderpaymentmethod_id.method;
 }
 
 // define function for automatically calculate balance amount
@@ -96,6 +147,7 @@ const calculateBalanceAmount = () => {
 
     // set updated balanceamount in Orderpaymnet table
     orderPayment.balanceamount = balanceamount;
+    orderPayment.paidamount = (payamount).toFixed(2);
 };
 
 //define Form edit function
@@ -109,8 +161,8 @@ const orderPaymentFormRefill = (ob) => {
     oldorderPayment = JSON.parse(JSON.stringify(ob));
 
     // set values to input fields
-    SelectOrderId.disabled = true;
-    SelectOrderId.value = JSON.stringify(ob.order_id);
+    // SelectOrderId.disabled = true;
+    SelectCustomer.value = JSON.stringify(ob.customer_id);
     selectPaymentMethod.disabled = true;
     selectPaymentMethod.value = JSON.stringify(ob.orderpaymentmethod_id);
     txtTotalAmount.value = ob.totalamount;
@@ -121,10 +173,17 @@ const orderPaymentFormRefill = (ob) => {
 //define function to check errors
 const checkFormError = () => {
     let errors = "";
-    if (orderPayment.order_id == null) {
-        SelectOrderId.style.border = "2px solid red";
-        errors = errors + "Please Select Order First.! \n";
+    if (orderPayment.customer_id == null) {
+        SelectCustomer.style.border = "2px solid red";
+        errors = errors + "Please Select Customer ID.! \n";
     }
+    if (orderPayment.paymentOrders.length == 0) {
+        errors = errors + "Please Select Orders.! \n";
+    }
+    /*  if (orderPayment.order_id == null) {
+         SelectOrderId.style.border = "2px solid red";
+         errors = errors + "Please Select Order First.! \n";
+     } */
     if (orderPayment.orderpaymentmethod_id == null) {
         selectPaymentMethod.style.border = "2px solid red";
         errors = errors + "Please Select Payment Method.! \n";
@@ -140,8 +199,8 @@ const checkFormError = () => {
 const buttonOrderPaymentSubmit = () => {
     //check if there are any errors
     let errors = checkFormError();
-    title = "Are you sure to Submit following Order Payment for Order ID:";
-    obName = orderPayment.order_id.odercode;
+    title = "Are you sure to Submit following Order Payment for Customer :";
+    obName = orderPayment.customer_id.reg_no;
     text = ", Payment Method : " + orderPayment.orderpaymentmethod_id.method
         + ", Total Amount : " + orderPayment.totalamount
         + ", Paid Amount : " + orderPayment.paidamount
@@ -253,7 +312,7 @@ const orderPaymentPrint = (ob, rowIndex) => {
                 </tr>
                 <tr>
                     <th>Order Payment Date</th>
-                    <td>${ob.addeddatetime}</td>
+                    <td>${generateOrdersID(ob)}</td>
                 </tr>
                 <tr>
                     <th>User</th>
@@ -296,4 +355,19 @@ const orderPaymentPrint = (ob, rowIndex) => {
         newWindow.print();
         newWindow.close();
     }, 300);
+}
+
+//define function for get Order name
+const generateOrdersID = (ob) => {
+    let orderCode = "";
+    ob.paymentOrders.forEach((payOrder, index) => {
+        //index ekath ekka length eka check krenewa
+        if (ob.paymentOrders.length - 1 == index) {
+            orderCode = orderCode + payOrder.ordercode;
+        } else {
+            //index eka length ekt samana naththan coma eka danna 
+            orderCode = orderCode + payOrder.ordercode + ", ";
+        }
+    });
+    return orderCode;
 }

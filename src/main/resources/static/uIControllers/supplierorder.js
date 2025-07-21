@@ -22,6 +22,7 @@ const refreshForm = () => {
 
     const suppliers = getServiceRequest("/supplier/alldata");
     fillDropdown(SelectSupplier, "Select Supplier.!", suppliers, "supplier_name");
+    // fillDropdownTwo(SelectSupplier, "Select Supplier.!", suppliers, "supplier_name", "supplier_id.supplier_name")
 
     const supplierOrderStatuses = getServiceRequest("/supplyOrderStatus/alldata");
     fillDropdown(supplyorderStatus, "Select Status.!", supplierOrderStatuses, "status");
@@ -360,17 +361,19 @@ const supplierOrderFormRefill = (ob, rowIndex) => {
     oldsupplierorder = JSON.parse(JSON.stringify(ob));
 
     SelectSupplier.disabled = "disabled";
-    SelectSupplier.value = JSON.stringify(supplierorder.supplier_id);
+    SelectSupplier.value = JSON.stringify(ob.supplier_id);
     dateRequired.value = ob.daterequired;
     supplyorderStatus.value = JSON.stringify(ob.supplyorderstatus_id);
     supplyorderStatus.disabled = false;
+    txtTotalAmount.disabled = true;
 
     if (ob.supplyorderstatus_id.id == 1) {
         btndelete.style.display = "inline";
+        btnupdate.style.display = "inline";
     } else {
         btndelete.style.display = "none";
+        btnupdate.style.display = "none";
     }
-
     // innerform eke date tika fill kregnna one nisa
     refreshInnerFormandTable();
 }

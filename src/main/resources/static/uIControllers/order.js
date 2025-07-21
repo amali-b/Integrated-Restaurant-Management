@@ -680,17 +680,13 @@ const getOrderStatus = (dataOb) => {
     if (dataOb.orderstatus_id.id == 5) {
         return "<p class='btn btn-outline-danger text-center'>" + dataOb.orderstatus_id.status + "</p>";
     }
-    // Removed
-    if (dataOb.orderstatus_id.id == 6) {
-        return "<button class='btn btn-sm btn-outline-danger text-center'>" + dataOb.orderstatus_id.status + "</button>";
-    }
     return dataOb.orderstatus_id.status;
 }
 
 //define function for get  name
 const getCustomerName = (dataOb) => {
     if (dataOb.customer_id != null) {
-        return dataOb.customer_id.firstname;
+        return dataOb.customer_id.custname;
     } else {
         return dataOb.customername ? dataOb.customername : "";
     }
@@ -779,13 +775,14 @@ const orderFormRefill = (ob, rowIndex) => {
     tableNO.value = ob.tables_id != null ? JSON.stringify(ob.tables_id) : "";
     deliveryVehicle.value = ob.vehicle_id != null ? JSON.stringify(ob.vehicle_id) : "";
 
-    if (ob.orderstatus_id.status == "Removed") {
+    if (ob.orderstatus_id.id == 5) {
         btndelete.style.display = "none";
     } else {
         btndelete.style.display = "inline";
     }
 
     refreshInnerFormandTableSubmenu();
+    refreshInnerFormandTableMenu();
 }
 
 //define function to check errors

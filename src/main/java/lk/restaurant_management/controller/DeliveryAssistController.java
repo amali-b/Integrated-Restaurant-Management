@@ -64,7 +64,7 @@ public class DeliveryAssistController implements CommonController<DeliveryAssist
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Delivery Assist");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "DeliveryAssist");
         if (userPrivilege.getPrivi_select()) {
             return deliveryAssistDao.findAll(Sort.by(Direction.DESC, "id"));
         } else {

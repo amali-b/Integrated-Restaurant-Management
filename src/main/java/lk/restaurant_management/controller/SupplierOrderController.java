@@ -76,12 +76,32 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
 
         if (userPrivilege.getPrivi_select()) {
             // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
             // primary key eka use krl // id eka auto increment nisa return
             return supplierOrderDao.findAll(Sort.by(Direction.DESC, "id"));
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new ArrayList<>();
+        }
+    }
+
+    // define mapping get all supplierOrder data -- URL [/supplierorder/alldata]
+    // backend eke idan data fontend ekata return kranne json format eken nisa
+    // (produces = "application/json")
+    @GetMapping(value = "/supplierorder/bypendingstatus", produces = "application/json")
+    public List<SupplierOrder> getByPendingStatus() {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
+
+        if (userPrivilege.getPrivi_select()) {
+            // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
+            // primary key eka use krl // id eka auto increment nisa return
+            return supplierOrderDao.getSupplierorderByPendingStatus();
         } else {
             // privilege naththan empty array ekak return krnw
             return new ArrayList<>();
@@ -96,7 +116,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
 
         if (userPrivilege.getPrivi_insert()) {
             try {
@@ -135,7 +155,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
 
         if (userPrivilege.getPrivi_update()) {
             try {
@@ -172,7 +192,7 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Order");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
 
         if (userPrivilege.getPrivi_delete()) {
             // check data Exist

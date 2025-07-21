@@ -47,7 +47,7 @@
                                         <label for="txtQuantity" class="form-label fw-bold">Quantity<span
                                                 class="text-danger"> *</span></label>
                                         <input type="text"
-                                            onkeyup="txtValidator(this,'^[1-9][0-9]{0,4}[.]{0,1}[0-9]{0,3}$', 'garbageremove', 'quantity')"
+                                            onkeyup="txtValidator(this,'^[0-9][0-9]{0,4}[.]{0,1}[0-9]{0,3}$', 'garbageremove', 'quantity')"
                                             class="form-control" id="txtQuantity" placeholder="Enter Quantity" required>
                                     </div>
                                     <!-- End Quantity -->
@@ -61,7 +61,7 @@
                                         <div class="col">
                                             <textarea class="form-control" id="txtRemovedReason"
                                                 placeholder="Enter Removed Reason"
-                                                onkeyup="txtValidator(this,'^([A-Za-z0-9\/]{1,20}[.]?[\s]?)$','garbageremove','reason')"></textarea>
+                                                onkeyup="garbageremove.reason = this.value; this.style.border = 'solid 2px green'"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                                         <button class="btn btn-success" onclick="buttonGarbageremoveSubmit()"
                                             id="btnsubmit">
                                             Submit
-                                            <i class="fa-solid fa-user-plus"></i></button>
+                                            <i class="fa-solid fa-plus"></i></button>
                                     </div>
                                 </div>
                                 <!-- End Buttons -->

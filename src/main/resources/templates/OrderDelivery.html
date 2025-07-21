@@ -3,13 +3,6 @@
 
 <head th:replace="~{header :: headerFragment}"></head>
 
-<head>
-    <!-- link select 2 -->
-    <link rel="stylesheet" href="select2/select2-bootstrap-5-theme.min.css">
-    <link rel="stylesheet" href="select2/select2.min.css">
-    <script src="select2/select2.min.js"></script>
-</head>
-
 <body>
     <div class="wrapper">
         <!-- Navbar & Sidebar Start -->
@@ -25,8 +18,7 @@
                             <div class="container">
                                 <h4 class="modal-title" id="modalOrdersLabel">Order Form</h4>
                             </div>
-                            <button type="button" class="btn-close"
-                                onclick="buttonModalClose(); window.location.href='/order'"></button>
+                            <button type="button" class="btn-close" onclick="window.location.href='/order'"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row justify-content-md-center">
@@ -44,11 +36,9 @@
                                                                 applicable)</span></label>
                                                         <div class="col">
                                                             <select id="SelectCustomer" class="form-select"
-                                                                onchange="selectDynamicElementValidator(this, 'order', 'customer_id');">
+                                                                onchange="select2DynamicElementValidator(this, 'order', 'customer_id');">
                                                             </select>
                                                         </div>
-                                                        <div class="form-text text-end">Select Customer from
-                                                            Dropdown</div>
                                                     </div>
                                                     <!-- End Customer -->
 
@@ -60,8 +50,6 @@
                                                             <input type="text" id="txtCustName" class="form-control"
                                                                 placeholder="First Name"
                                                                 onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20})|([A-Z][a-z]{1,10}[ ][A-Z][a-z]{0,30})$', 'order', 'customername')">
-                                                            <div class="form-text text-end">Enter Customer Name
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- End Customer Name -->
@@ -76,15 +64,13 @@
                                                                 class="form-control" id="txtNumber"
                                                                 placeholder="Phone Number">
                                                         </div>
-                                                        <div class="form-text text-end">Enter Customer Contact Number
-                                                        </div>
                                                     </div>
                                                     <!-- End Customer Contact no -->
                                                 </div>
 
                                                 <div class="row mt-1">
                                                     <!-- Start Order Type-->
-                                                    <div class="col">
+                                                    <div class="col-4">
                                                         <label for="selectOrderType" class="form-label fw-bold">
                                                             Type <span class="text-danger">*</span></label>
                                                         <div class="col">
@@ -97,40 +83,6 @@
                                                     </div>
                                                     <!-- End Order Type -->
 
-                                                    <!-- Start Vehicle -->
-                                                    <div class="col">
-                                                        <lable for="deliveryVehicle" class="form-label fw-bold">
-                                                            Vehicle<span class="text-danger"> *</span></label>
-                                                        </lable>
-                                                        <div class="col">
-                                                            <select id="deliveryVehicle" class="form-select"
-                                                                onchange="selectDynamicElementValidator(this, 'order', 'vehicle_id')">
-                                                                <option value="" selected disabled>Select Vehicle
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Vehicle -->
-
-                                                    <!-- Start Order Status -->
-                                                    <div class="col">
-                                                        <lable for="orderStatus" class="form-label fw-bold">
-                                                            Status <span class="text-danger">*</span>
-                                                        </lable>
-                                                        <div class="col">
-                                                            <select id="orderStatus" class="form-select"
-                                                                onchange="selectDynamicElementValidator(this, 'order', 'orderstatus_id')">
-                                                                <option value="" selected disabled>Select Status
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-text text-end">Select Status from
-                                                            Dropdown</div>
-                                                    </div>
-                                                    <!-- End Order Status -->
-                                                </div>
-
-                                                <div class="row mt-1">
                                                     <!--Start Total Amount -->
                                                     <div class="col">
                                                         <label for="txtTotalAmount" class="form-label fw-bold">Total
@@ -156,8 +108,25 @@
                                                     </div>
                                                     <!-- End Delivery Charge -->
 
+                                                    <!-- Start Vehicle -->
+                                                    <!--  <div class="col">
+                                                        <lable for="deliveryVehicle" class="form-label fw-bold">
+                                                            Vehicle<span class="text-danger"> *</span></label>
+                                                        </lable>
+                                                        <div class="col">
+                                                            <select id="deliveryVehicle" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'order', 'vehicle_id')">
+                                                                <option value="" selected disabled>Select Vehicle
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div> -->
+                                                    <!-- End Vehicle -->
+                                                </div>
+
+                                                <div class="row mt-1">
                                                     <!--Start Net Amount -->
-                                                    <div class="col">
+                                                    <div class="col-4">
                                                         <label for="txtNetAmount" class="form-label fw-bold">Net
                                                             Amount <span class="text-danger">*</span></label>
                                                         <div class="col">
@@ -166,6 +135,21 @@
                                                         </div>
                                                     </div>
                                                     <!-- End Net Amount -->
+
+                                                    <!-- Start Order Status -->
+                                                    <div class="col-4">
+                                                        <label for="orderStatus" class="form-label fw-bold">
+                                                            Status <span class="text-danger">*</span>
+                                                        </label>
+                                                        <div class="col">
+                                                            <select id="orderStatus" class="form-select"
+                                                                onchange="selectDynamicElementValidator(this, 'order', 'orderstatus_id')">
+                                                                <option value="" selected disabled>Select Status
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End Order Status -->
                                                 </div>
                                                 <!-- End Main form -->
 

@@ -12,7 +12,7 @@
         <div class="main">
             <div class="row justify-content-center">
                 <div class="col text-center">
-                    <div id="pageTitle"> Order Payment Management </div>
+                    <div id="pageTitle">Dine-IN and Delivery Orders Payment Management </div>
                 </div>
             </div>
 
@@ -32,7 +32,7 @@
                         <thead>
                             <tr id="tablehead">
                                 <th> # </th>
-                                <th> Order ID </th>
+                                <th> Customer ID </th>
                                 <th> Order Date </th>
                                 <th> Payment code </th>
                                 <th> Method </th>
@@ -44,7 +44,7 @@
                         <tbody class="tableBody" id="tBodyOrderPayment">
                             <tr>
                                 <td> 1 </td>
-                                <td> #O2500011 </td>
+                                <td> #C2500145 </td>
                                 <td> 2025-07-03 </td>
                                 <td> #OP250001 </td>
                                 <td> Cash </td>
@@ -77,26 +77,37 @@
                                             <form id="formOrderPayment" onsubmit="return false">
                                                 <div class="row mt-1">
                                                     <!-- Start form -->
+                                                    <div class="col-4">
+                                                        <div class="row">
+                                                            <!--Start Customer -->
+                                                            <div class="col">
+                                                                <label for="SelectCustomer"
+                                                                    class="form-label fw-bold">Select
+                                                                    Customer<span class="text-danger">*</span></label>
+                                                                <div class="col">
+                                                                    <select id="SelectCustomer" class="form-select"
+                                                                        onchange="selectDynamicElementValidator(this, 'orderPayment', 'customer_id'); selectAllOrders();">
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col">
+                                                                <select class="form-select" id="SelectOrderId"
+                                                                    multiple></select>
+                                                                <div class="form-text fw-bold text-end"> Customer Orders
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Customer -->
+                                                    </div>
                                                     <div class="col">
                                                         <!--Order / Payment Metho / Total Amount  -->
                                                         <div class="row mt-2">
-                                                            <!--Start Order -->
-                                                            <div class="col">
-                                                                <label for="SelectOrderId"
-                                                                    class="form-lable fw-bold">Order No. <span
-                                                                        class="text-danger">*</span></label>
-                                                                <select id="SelectOrderId" class="form-select"
-                                                                    onchange="selectDynamicElementValidator(this, 'orderPayment', 'order_id')">
-                                                                    <option value="" selected disabled>
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <!-- End Order -->
-
                                                             <!-- Start Payment Method -->
                                                             <div class="col">
                                                                 <label for="selectPaymentMethod"
-                                                                    class="form-lable fw-bold">Payment Method <span
+                                                                    class="form-label fw-bold">Payment Method <span
                                                                         class="text-danger">*</span></label>
                                                                 <select id="selectPaymentMethod" class="form-select"
                                                                     onchange="selectDynamicElementValidator(this, 'orderPayment', 'orderpaymentmethod_id')">
@@ -109,7 +120,7 @@
                                                             <!-- Start Total Amount -->
                                                             <div class="col">
                                                                 <label for="txtTotalAmount"
-                                                                    class="form-lable fw-bold">Total
+                                                                    class="form-label fw-bold">Total
                                                                     Amount<span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control"
                                                                     id="txtTotalAmount" placeholder="Enter Due Amount"
@@ -122,9 +133,9 @@
                                                         <!-- Paid Amount / Balance Amount -->
                                                         <div class="row mt-2">
                                                             <!--Start Paid Amount -->
-                                                            <div class="col-4">
+                                                            <div class="col">
                                                                 <label for="txtPaidAmount"
-                                                                    class="form-lable fw-bold">Paid
+                                                                    class="form-label fw-bold">Paid
                                                                     Amount <span class="text-danger">*</span></label>
                                                                 <input type="text"
                                                                     onkeyup="priceValidator(this,'orderPayment', 'paidamount'); calculateBalanceAmount();"
@@ -135,9 +146,9 @@
                                                             <!-- End Paid Amount -->
 
                                                             <!--Start Balance Amount -->
-                                                            <div class="col-4">
+                                                            <div class="col">
                                                                 <label for="txtBalanceAmount"
-                                                                    class="form-lable fw-bold">Balance
+                                                                    class="form-label fw-bold">Balance
                                                                     Amount <span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control"
                                                                     id="txtBalanceAmount"
@@ -190,7 +201,7 @@
         </div>
     </div>
 
-    <script src="uIControllers/orderpayment.js"></script>
+    <script src="uIControllers/paymentDinein.js"></script>
 
     <div th:replace="~{footer :: footerFragment}"></div>
 </body>

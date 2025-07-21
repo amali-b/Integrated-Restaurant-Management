@@ -176,7 +176,7 @@ const ingredientFormRefill = (ob, rowIndex) => {
     txtPrice.value = ob.purchase_price;
     txtRop.value = ob.reoder_point;
     txtRoq.value = ob.reorder_quantity;
-
+    SelectStatus.disabled = false;
     if (ob.ingredientstatus_id.status == "Removed") {
         btndelete.style.display = "none";
     } else {

@@ -1,6 +1,8 @@
 package lk.restaurant_management.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -69,7 +71,7 @@ public class KitchenController {
         return KitchenView;
     }
 
-    @PutMapping(value = "/kitchen/order/updateStatus")
+    @PutMapping(value = "/kitchen/inprogressStatus")
     public String updateRecord(@RequestBody Order order) {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -82,55 +84,124 @@ public class KitchenController {
             try {
                 // order object ekak gennagnnewa orderdao layer eka hareha
                 Order extOrder = orderDao.getReferenceById(order.getId());
-
-                extOrder.setKitchenconfirmdatetime(LocalDateTime.now());
-                extOrder.setKitchenconfirmuser(loggedUser.getId());
-
-                if (extOrder.getKitchenstatus_id().getId() == 1) {
-                    extOrder.setKitchenstatus_id(kitchenStatusDao.getReferenceById(2));
-                    extOrder.setOrderstatus_id(orderstatusDao.getReferenceById(2));
+                if (extOrder == null) {
+                    return "sss";
                 }
 
-                if (extOrder.getKitchenstatus_id().getId() == 2) {
-                    extOrder.setKitchenstatus_id(kitchenStatusDao.getReferenceById(3));
-                    extOrder.setOrderstatus_id(orderstatusDao.getReferenceById(3));
+                order.setKitchenconfirmdatetime(LocalDateTime.now());
+                order.setKitchenconfirmuser(loggedUser.getId());
+
+                if (order.getKitchenstatus_id().getId().equals(1)) {
+                    order.setKitchenstatus_id(kitchenStatusDao.getReferenceById(2));
+                    order.setOrderstatus_id(orderstatusDao.getReferenceById(2));
                 }
 
                 // save operator
                 // orderHasSubmenuList list ekata loop ekak dala read krela
                 for (OrderHasSubmenu ohs : order.getOrderHasSubmenuList()) {
                     // onebyone (sohi) illegena purchase order eka set krnw
-                    ohs.setOrder_id(extOrder);
+                    ohs.setOrder_id(order);
                 }
 
                 // OrderHasMenuitemList list ekata loop ekak dala read krela
                 for (OrderHasMenuitem ohm : order.getOrderHasMenuitemList()) {
                     // onebyone (sohi) illegena purchase order eka set krnw
-                    ohm.setOrder_id(extOrder);
+                    ohm.setOrder_id(order);
                 }
 
                 // getOrderHasIngredientList list ekata loop ekak dala read krela
                 for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
                     // onebyone (sohi) illegena purchase order eka set krnw
-                    ohi.setOrder_id(extOrder);
+                    ohi.setOrder_id(order);
                 }
 
                 // do save
-                orderDao.save(extOrder);
+                orderDao.save(order);
 
-                // ### manage dependancies ###
-                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
-                    // get Existing inventory object from inventory dao layer
-                    Inventory extInventory = inventoryDao.getReferenceById(ohi.getIngredient_id().getId());
+                if (order.getKitchenstatus_id().getId().equals(2)) {
+                    // ### manage dependancies ###
+                    for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                        // get Existing inventory object from inventory dao layer
+                        List<Inventory> extInventory = inventoryDao.byAvailableIng(ohi.getIngredient_id().getId());
 
-                    // set available quantity to existing inventory object by substracting removed
-                    // quantity of garbage remove
-                    extInventory
-                            .setAvailablequantity(extInventory.getAvailablequantity().subtract(ohi.getRequired_qty()));
+                        // set available quantity to existing inventory object by substracting removed
+                        // quantity of garbage remove
+                        for (Inventory inty : extInventory) {
+                            // 10-5
+                            if (inty.getAvailablequantity().compareTo(ohi.getRequired_qty()) > -1) {
+                                inty.setAvailablequantity(inty.getAvailablequantity().subtract(ohi.getRequired_qty()));
+                                // save updated inventory object
+                                inventoryDao.save(inty);
+                                break;
+                            }
+                            if (inty.getAvailablequantity().compareTo(ohi.getRequired_qty()) == -1) {
+                                ohi.setRequired_qty(ohi.getRequired_qty().subtract(inty.getAvailablequantity()));
+                                inty.setAvailablequantity(BigDecimal.ZERO);
+                                // save updated inventory object
+                                inventoryDao.save(inty);
 
-                    // save updated inventory object
-                    inventoryDao.save(extInventory);
+                            }
+
+                        }
+
+                    }
                 }
+                return "OK";
+
+            } catch (Exception e) {
+                return "Update not Completed : " + e.getMessage();
+            }
+        } else {
+            return "Couldn't Complete Update : You don't have permission..!";
+        }
+    }
+
+    @PutMapping(value = "/kitchen/completedStatus")
+    public String updateCompltedRecord(@RequestBody Order order) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // user object ekak gennagnnewa
+        User loggedUser = userDao.getByUsername(auth.getName());
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Order");
+
+        if (userPrivilege.getPrivi_update()) {
+            try {
+                // order object ekak gennagnnewa orderdao layer eka hareha
+                Order extOrder = orderDao.getReferenceById(order.getId());
+                if (extOrder == null) {
+                    return "sss";
+                }
+
+                order.setKitchenconfirmdatetime(LocalDateTime.now());
+                order.setKitchenconfirmuser(loggedUser.getId());
+
+                if (order.getKitchenstatus_id().getId().equals(2)) {
+                    order.setKitchenstatus_id(kitchenStatusDao.getReferenceById(3));
+                    order.setOrderstatus_id(orderstatusDao.getReferenceById(3));
+                }
+
+                // save operator
+                // orderHasSubmenuList list ekata loop ekak dala read krela
+                for (OrderHasSubmenu ohs : order.getOrderHasSubmenuList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    ohs.setOrder_id(order);
+                }
+
+                // OrderHasMenuitemList list ekata loop ekak dala read krela
+                for (OrderHasMenuitem ohm : order.getOrderHasMenuitemList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    ohm.setOrder_id(order);
+                }
+
+                // getOrderHasIngredientList list ekata loop ekak dala read krela
+                for (OrderHasIngredient ohi : order.getOrderHasIngredientList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    ohi.setOrder_id(order);
+                }
+
+                // do save
+                orderDao.save(order);
 
                 return "OK";
 
@@ -141,4 +212,5 @@ public class KitchenController {
             return "Couldn't Complete Update : You don't have permission..!";
         }
     }
+
 }

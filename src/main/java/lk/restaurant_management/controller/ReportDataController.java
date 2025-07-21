@@ -188,8 +188,10 @@ public class ReportDataController {
         }
     }
 
-    // request mapping for load grns by given daterange [ URL
-    // -->/reportGrn/bydesignationstatus?designation=&status]
+    /* ##### USER REPORTS ##### */
+
+    // request mapping for load user by both designation and status [ URL
+    // -->/reportUser/bydesignationstatus?designation_id=&employeestatus_id=]
     @GetMapping(value = "/reportUser/bydesignationstatus", params = { "designation_id",
             "employeestatus_id" }, produces = "application/json")
     public String[][] getUserReport(@RequestParam("designation_id") Integer designationid,
@@ -200,13 +202,41 @@ public class ReportDataController {
         Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
 
         if (userPrivilege.getPrivi_select()) {
-            if (designationid != null) {
-                return reportDao.getUserByDesignation(designationid);
-            }
-            if (statusid != null) {
-                return reportDao.getUserByStatus(statusid);
-            }
-            return null;
+            return reportDao.getUserByDesignationStatus(designationid, statusid);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new String[0][0];
+        }
+    }
+
+    // request mapping for load grns by given daterange [ URL
+    // -->/reportGrn/bydesignationstatus?designation_id=]
+    @GetMapping(value = "/reportUser/bydesignation", params = { "designation_id" }, produces = "application/json")
+    public String[][] getUserReportByDesignation(@RequestParam("designation_id") Integer designationid) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+
+        if (userPrivilege.getPrivi_select()) {
+            return reportDao.getUserByDesignation(designationid);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new String[0][0];
+        }
+    }
+
+    // request mapping for load grns by given daterange [ URL
+    // -->/reportGrn/bydesignationstatus?designation=&status]
+    @GetMapping(value = "/reportUser/allusers", produces = "application/json")
+    public String[][] getUserReportByStatus() {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Report");
+
+        if (userPrivilege.getPrivi_select()) {
+            return reportDao.getUserReport();
         } else {
             // privilege naththan empty array ekak return krnw
             return new String[0][0];

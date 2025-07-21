@@ -49,50 +49,50 @@
                 <!-- START DASHBOARD VIEW -->
                 <div class="row d-flex justify-content-evenly mt-3 p-3">
                     <div class="col justify-content-md-center">
-                        <div class="card viewDashboard">
+                        <div class="dshbrdview1 card viewDashboard">
                             <div class="card-body ms-3 me-3" id="">
                                 <div class="row">
-                                    <p class="col card-text"> Weekly Sales</p>
+                                    <p class="col card-text"> Sales Summary </p>
                                     <span class="col-1 text-end"><i class="fa-solid fa-arrow-trend-up"></i></span>
                                 </div>
                                 <h4 class="card-title" id="txtSaleSummary">LKR 25000</h4>
-                                <!-- <p class="card-text"><small>Increased by 10%</small></p> -->
+                                <p class="card-text text-end"><small>Weekly</small></p>
                             </div>
                         </div>
                     </div>
                     <div class="col justify-content-md-center">
-                        <div class="card viewDashboard">
+                        <div class="dshbrdview2 card viewDashboard">
                             <div class="card-body ms-3 me-3">
                                 <div class="row">
                                     <p class="col card-text">Number of Orders</p>
                                     <span class="col-1 text-end"><i class="fa-solid fa-dolly"></i></span>
                                 </div>
                                 <h4 class="card-title" id="txtOrderSummary">2050</h4>
-                                <!-- <p class="card-text"><small>Increased by 10%</small></p> -->
+                                <p class="card-text text-end"><small>Weekly</small></p>
                             </div>
                         </div>
                     </div>
                     <div class="col justify-content-md-center">
-                        <div class="card viewDashboard">
+                        <div class="dshbrdview3 card viewDashboard">
                             <div class="card-body ms-3 me-3">
                                 <div class="row">
-                                    <p class="col card-text">Monthly Supplier Payment</p>
+                                    <p class="col card-text">Supplier Payment</p>
                                     <span class="col-1 text-end"><i class="fa-solid fa-money-bill-transfer"></i></span>
                                 </div>
                                 <h4 class="card-title" id="txtSupplierPayments">LKR 15000</h4>
-                                <!-- <p class="card-text"><small>Increased by 10%</small></p> -->
+                                <p class="card-text text-end"><small>Monthly</small></p>
                             </div>
                         </div>
                     </div>
                     <div class="col justify-content-md-center">
-                        <div class="card viewDashboard">
+                        <div class="dshbrdview4 card viewDashboard">
                             <div class="card-body ms-3 me-3">
                                 <div class="row">
                                     <p class="col card-text">New Customer Registrations</p>
                                     <span class="col-1 text-end"><i class="fa-solid fa-crown"></i></span>
                                 </div>
-                                <h4 class="card-title" id="txtCustomerRegister">10</h4>
-                                <!-- <p class="card-text"><small>Increased by 10%</small></p> -->
+                                <h4 class="card-title" id="txtCustomerRegister"></h4>
+                                <p class="card-text text-end"><small>Annual</small></p>
                             </div>
                         </div>
                     </div>
@@ -100,16 +100,16 @@
                 <!-- End Dashboard View -->
 
                 <!-- Start Chart View -->
-                <div class="row p-3">
+                <div class="row p-3 ">
                     <div class="col-6 justify-content-md-center">
-                        <div class="card viewDashboard">
+                        <div class="dshbrdview5 card viewDashboard">
                             <div class="card-body">
                                 <canvas id="lineChart"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="col-4 justify-content-md-center">
-                        <div class="card viewDashboard">
+                        <div class="dshbrdview6 card viewDashboard">
                             <div class="card-body">
                                 <canvas id="doughnutChart"></canvas>
                             </div>
@@ -128,7 +128,12 @@
                 for (const module of moduleList) {
                     $(`.${module.name}`).css("display", "none");
                 }
-                $(`.${viewDashboard}`).css("display", "none");
+                $(`.${dshbrdview1}`).css("display", "none");
+                $(`.${dshbrdview2}`).css("display", "none");
+                $(`.${dshbrdview3}`).css("display", "none");
+                $(`.${dshbrdview4}`).css("display", "none");
+                $(`.${dshbrdview5}`).css("display", "none");
+                $(`.${dshbrdview6}`).css("display", "none");
             })
         </script>
         <script src="uIControllers/dashboard.js"></script>

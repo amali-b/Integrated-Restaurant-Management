@@ -16,5 +16,4 @@ public interface OrderPaymentDao extends JpaRepository<OrderPayment, Integer> {
 
     @Query(value = "SELECT coalesce(concat('#OP', lpad(substring(max(op.code), 4)+1, 7, 0)), '#OP2500000') FROM resturant_management_project.orderpayment as op;", nativeQuery = true)
     String getByNextCode();
-
 }

@@ -19,13 +19,17 @@ const select2DynamicElementValidator = (element, object, property) => {
     const elementValue = element.value;
     const ob = window[object];
 
+    // This selects the visible Select2 box next to the hidden <select>
+    const $selection = $(element).next('.select2').find('.select2-selection');
+
     //value not empty
     if (elementValue != "") {
-        element.parentNode.children[2].children[0].children[0].style.border = "2px solid green";
+        // element.parentNode.children[2].children[0].children[0].style.border = "2px solid green";
+        $selection.css('border', '2px solid green');
         ob[property] = JSON.parse(elementValue);
     } else {
         // value is empty
-        element.parentNode.children[2].children[0].children[0].style.border = "2px solic red";
+        $selection.css('border', '2px solid red');
         ob[property] = null;
     }
 }
@@ -62,7 +66,7 @@ const txtValidator = (elementId, pattern, object, property) => {
 
 const priceValidator = (elementId, object, property) => {
     const elementValue = elementId.value;
-    const regPattern = new RegExp("^([1-9][0-9]{2,8})|([1-9][0-9]{1,8}[.][0-9]{2})$");
+    const regPattern = new RegExp("^([1-9][0-9]{1,8})|([1-9][0-9]{1,8}[.][0-9]{2})$");
     ob = window[object];
 
     if (elementValue != "") {

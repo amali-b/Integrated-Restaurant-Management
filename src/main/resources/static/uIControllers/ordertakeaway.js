@@ -21,9 +21,8 @@ const refreshForm = () => {
     SelectCustomer.disabled = "";
     txtTotalAmount.value = "";
     txtTotalAmount.disabled = "disabled";
-    txtDiscount.value = "";
-    txtNetAmount.value = "";
-    txtNetAmount.disabled = "disabled";
+    // txtNetAmount.value = "";
+    // txtNetAmount.disabled = "disabled";
     selectOrderType.disabled = "disabled";
 
     //define new object
@@ -32,7 +31,7 @@ const refreshForm = () => {
     order.orderHasMenuitemList = new Array();
 
     const customers = getServiceRequest("/customer/alldata");
-    fillDropdown(SelectCustomer, "Select Customer.!", customers, "contact_no");
+    fillDropdown(SelectCustomer, "Select Customer Contact No.!", customers, "contact_no");
 
     const orderTypes = getServiceRequest("/order/Type/alldata");
     fillDropdown(selectOrderType, "Select Type.!", orderTypes, "type");
@@ -40,7 +39,8 @@ const refreshForm = () => {
     const orderStatuses = getServiceRequest("/orderStatus/alldata");
     fillDropdown(orderStatus, "Select Status.!", orderStatuses, "status");
 
-    setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, txtDiscount, txtNetAmount, orderStatus]);
+    setDefault([SelectCustomer, txtCustName, txtNumber, selectOrderType, txtTotalAmount, orderStatus]);
+    $(SelectCustomer).next('.select2').find('.select2-selection').css('border', 'solid 1px #ced4da');
 
     // type eka form eka open weddima active wdyt select wenna
     selectOrderType.value = JSON.stringify(orderTypes[1]);//select value eka string wenna one nisa object eka string baweta convert krenw
@@ -73,25 +73,21 @@ const calculateTotal = () => {
 
     txtTotalAmount.value = parseFloat(totalamount).toFixed(2);
     order.totalamount = txtTotalAmount.value;
+    order.netamount = txtTotalAmount.value;
     txtTotalAmount.style.border = "2px solid green";
 
-    // reset discount
-    txtDiscount.value = "";
-    order.discount = 0;
-
-    /* ### Generate Net Amount ### */
-    if (txtTotalAmount.value != 0.00) {
-        let totalamount = parseFloat(txtTotalAmount.value);
-        let discount = parseFloat(txtDiscount.value) || 0;
-
-        // calculate net amount
-        let netamount = totalamount - discount;
-        // Update net amount input
-        txtNetAmount.value = parseFloat(netamount).toFixed(2);
-        // Store in order object
-        order.netamount = txtNetAmount.value;
-        txtNetAmount.style.border = "2px solid green";
-    }
+    /*    if (txtTotalAmount.value != 0.00) {
+           let totalamount = parseFloat(txtTotalAmount.value);
+           let discount = parseFloat(0);
+   
+           // calculate net amount
+           let netamount = totalamount - discount;
+           // Update net amount input
+           txtNetAmount.value = parseFloat(netamount).toFixed(2);
+           // Store in order object
+           order.netamount = txtNetAmount.value;
+           txtNetAmount.style.border = "2px solid green";
+       } */
 }
 
 /* ############################## SUBMENU INNER FORM FUNCTIONS ################################# */
@@ -180,7 +176,7 @@ const refreshInnerFormandTableSubmenu = () => {
     btnSmenuUpdate.classList.add("d-none");
     btnSmenuSubmit.classList.remove("d-none");
 
-    setDefault([SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
+    setDefault([selectCategory, SelectSubmenu, txtPrice, txtQuantity, txtLinePrice]);
 
     //define function for refresh inner table
     let columns = [
@@ -556,8 +552,8 @@ const orderFormRefill = (ob, rowIndex) => {
     }
     selectOrderType.value = JSON.stringify(ob.ordertype_id);
     txtTotalAmount.value = ob.totalprice;
-    txtSecviceChg.value = ob.discount ? ob.discount : "";
-    txtNetAmount.value = ob.netamount;
+    // txtSecviceChg.value = ob.discount ? ob.discount : "";
+    // txtNetAmount.value = ob.netamount;
     orderStatus.value = JSON.stringify(ob.orderstatus_id);
 
     refreshInnerFormandTableSubmenu();
@@ -606,15 +602,17 @@ const checkFormUpdate = () => {
         if (order.totalamount != oldorder.totalamount) {
             updates = updates + "Total Amount has updated from " + oldorder.totalamount + " \n";
         }
-        if (order.discount != oldorder.discount) {
+        if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
+            updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
+        }
+
+        /* if (order.discount != oldorder.discount) {
             updates = updates + "Discount Charge has updated from " + oldorder.discount + " \n";
         }
         if (order.netamount != oldorder.netamount) {
             updates = updates + "Net Amount has updated from " + oldorder.netamount + " \n";
-        }
-        if (order.orderstatus_id.status != oldorder.orderstatus_id.status) {
-            updates = updates + "Status has updated from " + oldorder.orderstatus_id.status + " \n";
-        }
+        } */
+
 
         /* ###### CHECK SUBMENU INNER FORM CHANGES ###### */
 
@@ -793,34 +791,4 @@ const buttonModalClose = () => {
             refreshForm();
         }
     });
-}
-
-//function define for print Order record
-const orderPrint = (ob, rowIndex) => {
-    console.log("Print", ob, rowIndex);
-    ob = order;
-    activeTableRow(tBodyOrders, rowIndex, "White");
-
-    let newWindow = window.open();
-    let printView = '<html>'
-        + '<head>'
-        + '<link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">'
-        + '<title>BIT Project Order | 2025 </title></head>'
-        + '<body><h1>Print Order Details</h1>'
-        + '<table class="table-bordered table-stripped border-1 w-25">'
-        + '<tr><th> Order :</th><td>' + ob.ordercode + '</td></tr>'
-        + '<tr><th> Total Amount :</th><td>' + ob.totalamount + '</td></tr>'
-        + '<tr><th> Discount :</th><td>' + ob.discount + '</td></tr>'
-        + '<tr><th> Net Amount :</th><td>' + ob.netamount + '</td></tr>'
-        + '<tr><th> Order type :</th><td>' + ob.ordertype_id.type + '</td></tr>'
-        + '<tr><th> Status :</th><td>' + ob.orderstatus_id.status + '</td></tr>'
-        + '</table>'
-        + '</body></html>'
-    newWindow.document.writeln(printView);
-
-    setTimeout(() => {
-        newWindow.stop();
-        newWindow.print();
-        newWindow.close();
-    }, 300);
 }

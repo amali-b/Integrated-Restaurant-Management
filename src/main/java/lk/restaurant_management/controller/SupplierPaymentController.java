@@ -18,12 +18,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.GrnDao;
 import lk.restaurant_management.dao.GrnstatusDao;
+import lk.restaurant_management.dao.SupplierOrderDao;
 import lk.restaurant_management.dao.SupplierPaymentDao;
+import lk.restaurant_management.dao.SupplyOrderStatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Grn;
 import lk.restaurant_management.entity.GrnHasIngredient;
 import lk.restaurant_management.entity.Privilege;
+import lk.restaurant_management.entity.SupplierOrder;
 import lk.restaurant_management.entity.SupplierPayment;
+import lk.restaurant_management.entity.SupplierorderHasIngredient;
 import lk.restaurant_management.entity.User;
 
 @RestController
@@ -36,6 +40,10 @@ public class SupplierPaymentController {
     private GrnstatusDao grnstatusDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private SupplierOrderDao supplierOrderDao;
+    @Autowired
+    private SupplyOrderStatusDao supplyOrderStatusDao;
     @Autowired
     private UserPrivilegeController userPrivilegeController;
 
@@ -75,7 +83,7 @@ public class SupplierPaymentController {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Payment");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierPayment");
         if (userPrivilege.getPrivi_select()) {
             return supplierPaymentDao.findAll(Sort.by(Direction.DESC, "id"));
         } else {
@@ -90,7 +98,7 @@ public class SupplierPaymentController {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Supplier Payment");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierPayment");
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
 
@@ -113,10 +121,13 @@ public class SupplierPaymentController {
                 // grn eke paidamount eka update krenewa payment amount eka add krela
                 grn.setPaidamount(grn.getPaidamount().add(supplierpayment.getPaidamount()));
 
-                if (grn.getNetamount() != grn.getPaidamount()) {
+                // netamount eka paidamount ekata wada lokuinm status eka partially complete kyl
+                // change wenw
+                if (grn.getNetamount().compareTo(grn.getPaidamount()) == 1) {
                     grn.setGrnstatus_id(grnstatusDao.getReferenceById(2));
                 }
-                if (grn.getNetamount() == grn.getPaidamount()) {
+                // netamount eka paidamount ekai samananm status eka complete kyl change wenw
+                if (grn.getNetamount().compareTo(grn.getPaidamount()) == 0) {
                     grn.setGrnstatus_id(grnstatusDao.getReferenceById(3));
                 }
 
@@ -128,6 +139,22 @@ public class SupplierPaymentController {
 
                 // grn object eka database ekata save krenewa ingredient list ekth ekkama
                 grnDao.save(grn);
+
+                // supplierOrder object ekak hdagnnewa supplierOrderDao layer eka hareha
+                // reference eken supplierorder id eka illagenawa
+                SupplierOrder supplierorder = supplierOrderDao.getReferenceById(grn.getSupplierorder_id().getId());
+
+                if (grn.getGrnstatus_id().getId() == 3) {
+                    supplierorder.setSupplyorderstatus_id(supplyOrderStatusDao.getReferenceById(3));
+                }
+
+                // getSupplierorderHasIngredientList list ekata loop ekak dala read krela
+                for (SupplierorderHasIngredient sohi : supplierorder.getSupplierorderHasIngredientList()) {
+                    // onebyone (sohi) illegena purchase order eka set krnw
+                    sohi.setSupplierorder_id(supplierorder);
+                }
+                // supplierOrder object eka database ekata save krenewa
+                supplierOrderDao.save(supplierorder);
 
                 return "\"OK\"";
 

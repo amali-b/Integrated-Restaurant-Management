@@ -243,14 +243,16 @@ public class IngredientController implements CommonController<Ingredient> {
                 ingredientDao.save(ingredient);
 
                 /* ### manage dependancies ### */
-                Inventory exInventory = inventoryDao.getReferenceById(ingredient.getId());
-
-                if (ingredient.getIngredientstatus_id().getId() == 2) {
-                    exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(2));
-                }
-                if (ingredient.getIngredientstatus_id().getId() == 1) {
-                    exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(1));
-                }
+                /*
+                 * Inventory exInventory = inventoryDao.getReferenceById(ingredient.getId());
+                 * 
+                 * if (ingredient.getIngredientstatus_id().getId() == 2) {
+                 * exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(2));
+                 * }
+                 * if (ingredient.getIngredientstatus_id().getId() == 1) {
+                 * exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(1));
+                 * }
+                 */
 
                 return "OK";
 

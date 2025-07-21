@@ -79,7 +79,7 @@ public class GarbageRemoveController {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Garbage Remove");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GarbageRemove");
 
         if (userPrivilege.getPrivi_select()) {
             /*
@@ -105,7 +105,7 @@ public class GarbageRemoveController {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Garbage Remove");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GarbageRemove");
 
         if (userPrivilege.getPrivi_insert()) {
             try {
