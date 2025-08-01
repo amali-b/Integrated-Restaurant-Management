@@ -45,10 +45,33 @@ public interface ReportDao extends JpaRepository<SupplierOrder, Integer> {
         @Query(value = "SELECT monthname(o.addeddatetime), sum(o.netamount) FROM resturant_management_project.order as o where date(o.addeddatetime) between current_date()-interval 6 month and current_date() group by monthname(o.addeddatetime);", nativeQuery = true)
         String[][] getOrderPaymentByPriviousSixMonth();
 
-        // top selling items weekly
-        @Query(value = "SELECT s.name, sum(ohs.quantity) FROM resturant_management_project.order AS o JOIN resturant_management_project.order_has_submenu AS ohs ON o.id = ohs.order_id JOIN resturant_management_project.submenu AS s ON ohs.submenu_id = s.id WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 7 day AND CURRENT_DATE() GROUP BY s.name;", nativeQuery = true)
+        // top selling items monthly
+        @Query(value = "SELECT submenu_name, SUM(quantity) AS total_quantity\n" + //
+                        "FROM ( SELECT s.name AS submenu_name, ohs.quantity FROM resturant_management_project.order AS o\n"
+                        + //
+                        "    INNER JOIN resturant_management_project.order_has_submenu AS ohs ON o.id = ohs.order_id\n"
+                        + //
+                        "    INNER JOIN resturant_management_project.submenu AS s ON ohs.submenu_id = s.id\n" + //
+                        "    WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 1 MONTH AND CURRENT_DATE()\n"
+                        + //
+                        "    UNION ALL\n" + //
+                        "    SELECT s.name AS submenu_name, ohmi.quantity FROM resturant_management_project.order AS o\n"
+                        + //
+                        "    INNER JOIN resturant_management_project.order_has_menuitems AS ohmi ON o.id = ohmi.order_id\n"
+                        + //
+                        "    INNER JOIN resturant_management_project.menuitems_has_submenu AS mhs ON ohmi.menuitems_id = mhs.menuitems_id\n"
+                        + //
+                        "    INNER JOIN resturant_management_project.submenu AS s ON mhs.submenu_id = s.id\n" + //
+                        "    WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 1 MONTH AND CURRENT_DATE()\n"
+                        + //
+                        ") AS combined_orders GROUP BY submenu_name;", nativeQuery = true)
         String[][] getTopSellingSubmenuMonthly();
-
+        /*
+         * @Query(value =
+         * "SELECT s.name, sum(ohs.quantity) FROM resturant_management_project.order AS o JOIN resturant_management_project.order_has_submenu AS ohs ON o.id = ohs.order_id JOIN resturant_management_project.submenu AS s ON ohs.submenu_id = s.id WHERE DATE(o.addeddatetime) BETWEEN CURRENT_DATE() - INTERVAL 1 month AND CURRENT_DATE() GROUP BY s.name;"
+         * , nativeQuery = true)
+         * String[][] getTopSellingSubmenuMonthly();
+         */
         /* ###### GRN REPORT ######## */
 
         // get items and netamount of received grns by monthly
