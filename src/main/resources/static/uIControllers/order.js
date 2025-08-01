@@ -275,7 +275,7 @@ const orderSubmenuFormRefill = (ob, index) => {
     selectCategory.value = JSON.stringify(ob.category_id);
 
     SelectSubmenu.disabled = true;
-    submenus = getServiceRequest("/submenu/bycategory?category_id=" + JSON.parse(selectCategory.value).id);
+    const submenus = getServiceRequest("/submenu/alldata");
     fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
     SelectSubmenu.value = JSON.stringify(ob.submenu_id);
 

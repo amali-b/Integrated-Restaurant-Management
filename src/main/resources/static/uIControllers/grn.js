@@ -473,7 +473,7 @@ const GrnFormRefill = (ob, rowIndex) => {
     oldgrn = JSON.parse(JSON.stringify(ob));
 
     selectPurchaseOrder.disabled = "disabled";
-    const supplierOrders = getServiceRequest("/supplierorder/bypendingstatus");
+    const supplierOrders = getServiceRequest("/supplierorder/alldata");
     fillDropdownTwo(selectPurchaseOrder, "Select Purchase Order.!", supplierOrders, "ordercode", "supplier_id.supplier_name")
     selectPurchaseOrder.value = JSON.stringify(ob.supplierorder_id);
     txtSupplierInvoice.value = ob.supplierinvoiceno;
