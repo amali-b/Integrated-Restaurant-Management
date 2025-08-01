@@ -153,7 +153,7 @@ const refreshInnerFormandTable = () => {
     }
 
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootSupplyOrderhasIngredient, supplierorder.supplierorderHasIngredientList, column, columns.length);
+    fillInnerTableFooter(tfootSupplyOrderhasIngredient, supplierorder.supplierorderHasIngredientList, column, columns.length);//columns.length -->colspan wennone column length eka
 }
 
 const getIngredientName = (ob) => {
