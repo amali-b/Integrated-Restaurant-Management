@@ -270,9 +270,15 @@ const orderSubmenuFormRefill = (ob, index) => {
     orderHasSubmenu = JSON.parse(JSON.stringify(ob));
     oldorderHasSubmenu = JSON.parse(JSON.stringify(ob));
 
-    selectCategory.value = JSON.stringify(submenu_id.category_id);
+    const categories = getServiceRequest("/submenucategory/alldata");
+    fillDropdown(selectCategory, "Select Category", categories, "name");
+    selectCategory.value = JSON.stringify(ob.category_id);
+
     SelectSubmenu.disabled = true;
+    submenus = getServiceRequest("/submenu/bycategory?category_id=" + JSON.parse(selectCategory.value).id);
+    fillDropdown(SelectSubmenu, "Select Submenu", submenus, "name");
     SelectSubmenu.value = JSON.stringify(ob.submenu_id);
+
     txtPrice.value = ob.price;
     txtQuantity.value = ob.quantity;
     txtLinePrice.value = parseFloat(ob.lineprice).toFixed(2);
@@ -314,7 +320,7 @@ const orderSubmenuDelete = (ob, index) => {
     });
 }
 
-/* const buttonorderSubemnuSubmit = () => {
+const buttonorderSubemnuSubmit = () => {
     console.log(orderHasSubmenu);
 
     Swal.fire({
@@ -328,6 +334,8 @@ const orderSubmenuDelete = (ob, index) => {
         confirmButtonText: "Yes, Submit!"
     }).then((result) => {
         if (result.isConfirmed) {
+            // main eke thyena list ekta inner object eka push krenewa
+            order.orderHasSubmenuList.push(orderHasSubmenu);
             Swal.fire({
                 title: "Saved Successfully..!",
                 icon: "success",
@@ -338,10 +346,7 @@ const orderSubmenuDelete = (ob, index) => {
         }
     });
 
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasSubmenuList.push(orderHasSubmenu);
-    refreshInnerFormandTableSubmenu();
-} */
+}
 
 const buttonorderSubemnuUpdate = () => {
     console.log(orderHasSubmenu);
@@ -356,6 +361,9 @@ const buttonorderSubemnuUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                order.orderHasSubmenuList[innerFormindex] = orderHasSubmenu;
+                refreshInnerFormandTableSubmenu();
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -374,9 +382,6 @@ const buttonorderSubemnuUpdate = () => {
         });
     }
 
-    // main eke thyena list ekta inner object eka push krenewa
-    order.orderHasSubmenuList[innerFormindex] = orderHasSubmenu;
-    refreshInnerFormandTableSubmenu();
 }
 
 /* ############################## MENU INNER FORM FUNCTIONS ################################# */
@@ -740,7 +745,6 @@ selectOrderTypeElement.addEventListener("change", () => {
 //define Form edit function
 const orderFormRefill = (ob, rowIndex) => {
     $('#modalOrders').modal('show');
-    btnupdate.style.display = "inline";
 
     order = JSON.parse(JSON.stringify(ob)); //pass wenne object nisa property value pair ekak enne.. object eken value eka allagnne json.stringify walin
     oldorder = JSON.parse(JSON.stringify(ob));
@@ -775,10 +779,16 @@ const orderFormRefill = (ob, rowIndex) => {
     tableNO.value = ob.tables_id != null ? JSON.stringify(ob.tables_id) : "";
     deliveryVehicle.value = ob.vehicle_id != null ? JSON.stringify(ob.vehicle_id) : "";
 
-    if (ob.orderstatus_id.id == 5) {
+    if (ob.orderstatus_id.id == 4 || 5) {
         btndelete.style.display = "none";
     } else {
         btndelete.style.display = "inline";
+    }
+
+    if (ob.orderstatus_id.id == 1) {
+        btnupdate.style.display = "inline";
+    } else {
+        btnupdate.style.display = "none";
     }
 
     refreshInnerFormandTableSubmenu();
