@@ -275,15 +275,13 @@ public class OrderController implements CommonController<Order> {
                 // do save
                 orderDao.save(order);
 
-                // UPDATED: Check if customer should be upgraded to Regular status (after 10
-                // orders)
+                // Check if customer should be upgraded to Regular status (after 5 orders)
                 Customer customer = customerDao.getReferenceById(order.getCustomer_id().getId());
                 Integer orderCount = orderDao.orderbyCount(customer.getId());
 
-                // Set customer status to "Regular" if they have made 10 orders
-                if (orderCount >= 10) {
-                    customer.setCustomerstatus_id(customerstatusDao.getReferenceById(3)); // Assuming 3 is "Regular"
-                                                                                          // status
+                // Set customer status to "Regular" if they have made 5 orders
+                if (orderCount >= 5) {
+                    customer.setCustomerstatus_id(customerstatusDao.getReferenceById(3)); // 3 is "Regular"
                     customerDao.save(customer);
                 }
 
