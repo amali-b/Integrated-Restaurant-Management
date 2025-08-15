@@ -1,3 +1,8 @@
+// when change type generate reports
+selectType.addEventListener("change", () => {
+    generateReport();
+})
+
 // define fucntion to generate report
 const generateReport = () => {
     // generate Table
@@ -16,16 +21,15 @@ const generateReport = () => {
         // define new object
         let object = new Object();
         // hadagaththa object ekata datalist eken ena data array dagnnewa
-        // Object.year = datalist[index][0]; //datalist eke ena eka array ekakin ena palaweni insex eka
-        object.month = datalist[index][1];
-        object.amount = datalist[index][2];
+        object.month = datalist[index][0];
+        object.amount = datalist[index][1];
 
         // push objects in to defined array --> (reportDataList)
         // hdagaththta object tika push krenewa
         reportDataList.push(object);
 
-        label.push(datalist[index][1]);
-        data.push(datalist[index][2]);
+        label.push(datalist[index][0]);
+        data.push(datalist[index][1]);
     }
 
     let columns = [
@@ -34,15 +38,16 @@ const generateReport = () => {
     ];
 
     //call fill data into table
-    fillReportTable(tBodyPaymentReport, reportDataList, columns);
+    fillReportTable(tHeadPaymentReport, tBodyPaymentReport, reportDataList, columns);
 
     // generate Chart
     const ctx = document.getElementById('myChart');
 
-    /* if (Chart.getChart("myChart") != undefined) {
+    if (Chart.getChart("myChart") != undefined) {
         Chart.getChart("myChart").destroy();
-        myChart.destroy();
-    } */
+
+
+    }
     new Chart(ctx, {
         // chart type eka mkkd
         type: 'bar',
@@ -65,6 +70,7 @@ const generateReport = () => {
             }
         }
     });
+
 }
 
 
@@ -95,6 +101,10 @@ const printChart = (ob, rowIndex) => {
                     display: block;
                     margin: 0 auto 10px auto;
                 }
+                .col img {
+                    display: block;
+                    margin: 30px;
+                }
                 h1 {
                     font-size: 24px;
                     margin-bottom: 5px;
@@ -117,6 +127,7 @@ const printChart = (ob, rowIndex) => {
                     background-color: #fff;
                     padding: 8px;
                 }
+                }
                 .footer {
                     text-align: center;
                     margin-top: 50px;
@@ -133,11 +144,12 @@ const printChart = (ob, rowIndex) => {
             </div>
             <div class="row">
                 <div class="col-6">
-                    "${tablePaymentReport.outerHTML}"
+                    ${tablePaymentReport.outerHTML}
                 </div>
-                <div class="col-6"> 
+                <div class="col-5"> 
                     <img src="${ctx.toDataURL()}"/>
-                </div>    
+                </div>  
+                <div class="col-1"></div>
             </div>
             <div class="footer">
                 &copy; 2025 BIT Project. All rights reserved.

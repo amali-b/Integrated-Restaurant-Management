@@ -1,5 +1,7 @@
 package lk.restaurant_management.entity;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -26,11 +28,12 @@ public class SubmenuHasIngredient {
     private Integer id;
 
     @NotNull
-    private String quantity;
+    private BigDecimal quantity;
 
     @ManyToOne // submenu_has_ingredient and submenu has many to one relationship
     @JoinColumn(name = "submenu_id", referencedColumnName = "id")
     @JsonIgnore // block supplierorder_id property from reading
+    // recursion wena eka naweththanna one nisa submenu eke id eka self ignore krnw
     private Submenu submenu_id;
 
     @ManyToOne // submenu_has_ingredient and ingredient has many to one relationship

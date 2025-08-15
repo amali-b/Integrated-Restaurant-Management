@@ -19,6 +19,7 @@ import lk.restaurant_management.entity.User;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class InventoryController {
@@ -42,7 +43,12 @@ public class InventoryController {
         inventoryView.addObject("loggedusername", auth.getName());
         inventoryView.addObject("title", "BIT Project 2024 | Inventory Management");
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        inventoryView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             inventoryView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -68,4 +74,20 @@ public class InventoryController {
         }
     }
 
+    // request mapping for load submenu by given category id [ URL -->
+    // /inventory/byingredient?ingredient_id=1 ]
+    @GetMapping(value = "/inventory/byingredient", params = { "ingredient_id" }, produces = "application/json")
+    public List<Inventory> getAvailableIng(@RequestParam("ingredient_id") Integer ingredientid) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Inventory");
+        if (userPrivilege.getPrivi_select()) {
+            return inventoryDao.byAvailableIng(ingredientid);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new ArrayList<>();
+        }
+    }
 }

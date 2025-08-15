@@ -37,7 +37,7 @@ public class GrnHasIngredient {
     private BigDecimal price;
 
     @NotNull
-    private String quantity;
+    private BigDecimal quantity;
 
     @NotNull
     private BigDecimal lineprice;
@@ -45,6 +45,7 @@ public class GrnHasIngredient {
     @ManyToOne
     @JoinColumn(name = "grn_id", referencedColumnName = "id")
     @JsonIgnore // block menuitems_id property from reading
+    // recursion wena eka naweththanna one nisa methana self id ignore krnw
     private Grn grn_id;
 
     @ManyToOne

@@ -1,50 +1,47 @@
-/* const ctx = document.getElementById('myChart');
+// when change type generate reports
+selectType.addEventListener("change", () => {
+    generateReport();
+})
 
-new Chart(ctx, {
-    // chart type eka mkkd
-    type: 'bar',
-    // x axis eke dala thyena data
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3], //lable array ekata samana wenna one
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            // y axis eke dala thyena data
-            y: {
-                beginAtZero: true // y axis eka 0 idela ptn gnna one
-            }
-        }
+// define fucntion to generate report
+const generateReport = () => {
+    // generate Table
+    let datalist = getServiceRequest("/reportGrn/bystedtype?startdate=" + dateStartDate.value + "&enddate=" + dateEndDate.value + "&type=" + selectType.value);
+    // let datalist = getServiceRequest("/reportPayment/bystedtype?startdate=2025-03-01&enddate=2025-06-30&type=Monthly");
+
+    // define new array for datalist
+    let reportDataList = new Array();
+
+    // datalist eke ena data array eke each index ekin eka aran object welata dagnnewa
+    for (const index in datalist) {
+        // define new object
+        let object = new Object();
+        // hadagaththa object ekata datalist eken ena data array dagnnewa
+        object.month_or_week = datalist[index][0]; //datalist eke ena eka array ekakin ena palaweni insex eka
+        object.received_date = datalist[index][1];
+        object.quantity = datalist[index][2];
+        object.amount = datalist[index][3];
+
+        // push objects in to defined array --> (reportDataList)
+        // hdagaththta object tika push krenewa
+        reportDataList.push(object);
     }
-}); */
 
-const customer = document.getElementById('myChart');
+    let columns = [
+        { property: "month_or_week", dataType: "string" },
+        { property: "received_date", dataType: "string" },
+        { property: "quantity", dataType: "string" },
+        { property: "amount", dataType: "decimal" }
+    ];
 
-new Chart(customer, {
-    // chart type eka mkkd
-    type: 'pie',
-    // x axis eke dala thyena data
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3], //lable array ekata samana wenna one
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    }
-});
+    //call fill data into table
+    fillReportTable(tHeadReport, tBodyGrnReport, reportDataList, columns);
+}
+
+
 
 //function define for print Supplier Order record
-const printChart = (ob, rowIndex) => {
+const printTable = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     let newWindow = window.open();
 
@@ -52,7 +49,7 @@ const printChart = (ob, rowIndex) => {
     const printView = `
         <html>
         <head>
-            <title>Customer Report Management | BIT 2025</title>
+            <title>Payment Report Management | BIT 2025</title>
             <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
             <style>
                 body {
@@ -101,11 +98,15 @@ const printChart = (ob, rowIndex) => {
         <body>
             <div class="header">
                 <img src="images/bando1.png" alt="Logo">
-                <h1>Customer Performance Report</h1>
+                <h1>Payment Report</h1>
                 <div class="date-time">Printed on: ${currentDateTime}</div>
             </div>
-            <div>
-                <img src="${customer.toDataURL()}"/>
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col">
+                    ${tableGrnReport.outerHTML}
+                </div>
+                <div class="col-1"></div>
             </div>
             <div class="footer">
                 &copy; 2025 BIT Project. All rights reserved.

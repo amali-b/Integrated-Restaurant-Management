@@ -1,13 +1,7 @@
 // define common swal submit function 
 const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
     //check errors
-    if (errors) {
-        Swal.fire({
-            title: "Failed to Submit.! Has following errors :",
-            text: errors,
-            icon: "error"
-        });
-    } else {
+    if (errors == "") {
         Swal.fire({
             //if there are no errors get confirmation
             title: title + obName + ".?",
@@ -20,8 +14,8 @@ const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 //call post servise for insert data
-                submitResponse = submitResponse;
-                if (submitResponse == "OK") {
+                let requestResponse = getHTTPServiceRequest(submitResponse[0], submitResponse[1], submitResponse[2]);
+                if (requestResponse == "OK") {
                     Swal.fire({
                         title: "Saved Successfully..!",
                         icon: "success",
@@ -33,18 +27,32 @@ const swalSubmit = (errors, title, obName, text, submitResponse, modalId) => {
                 } else {
                     Swal.fire({
                         title: "Save not Completed..! Has following errors :",
-                        text: submitResponse,
+                        text: requestResponse,
                         icon: "info"
                     });
                 }
             }
         });
+    } else {
+        Swal.fire({
+            title: "Failed to Submit.! Has following errors :",
+            text: errors,
+            icon: "error"
+        });
     }
+
 }
 
 // define common swal update function 
 const swalUpdate = (updates, title, text, updateResponse, modalId) => {
-    if (updates) {
+    if (updates == "") {
+        Swal.fire({
+            title: "Nothing Changed..!",
+            icon: "info",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    } else {
         Swal.fire({
             title: title,
             text: text,
@@ -56,7 +64,7 @@ const swalUpdate = (updates, title, text, updateResponse, modalId) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 //call put service
-                updateResponse = updateResponse;
+                updateResponse = getHTTPServiceRequest(updateResponse[0], updateResponse[1], updateResponse[2]);
                 if (updateResponse == "OK") {
                     Swal.fire({
                         title: "Successfully Updated..!",
@@ -75,13 +83,6 @@ const swalUpdate = (updates, title, text, updateResponse, modalId) => {
                 }
             }
         });
-    } else {
-        Swal.fire({
-            title: "Nothing Changed..!",
-            icon: "info",
-            showConfirmButton: false,
-            timer: 1500
-        });
     }
 }
 
@@ -98,7 +99,7 @@ const swalDelete = (title, obName, text, deleteResponse, modalId, message) => {
     }).then((result) => {
         if (result.isConfirmed) {
             //call delete servise for delete supplier
-            deleteResponse = deleteResponse;
+            deleteResponse = getHTTPServiceRequest(deleteResponse[0], deleteResponse[1], deleteResponse[2]);
             if (deleteResponse == "OK") {
                 Swal.fire({
                     title: "Deleted Successfully.!",

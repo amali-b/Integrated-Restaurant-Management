@@ -79,7 +79,7 @@
                                                 <div class="row mt-2">
                                                     <!-- Start Name -->
                                                     <div class="col">
-                                                        <label for="nameSupplier" class="form-lable fw-bold">Supplier
+                                                        <label for="nameSupplier" class="form-label fw-bold">Supplier
                                                             Name
                                                             <span class="text-danger">*</span></label>
                                                         <div class="input-group">
@@ -98,7 +98,7 @@
 
                                                     <!-- Start Contact no -->
                                                     <div class="col">
-                                                        <label for="txtNumber" class="form-lable fw-bold">Mobile Number
+                                                        <label for="txtNumber" class="form-label fw-bold">Mobile Number
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -116,7 +116,7 @@
 
                                                     <!-- Start Email -->
                                                     <div class="col">
-                                                        <label for="txtEmail" class="form-lable fw-bold">Email <span
+                                                        <label for="txtEmail" class="form-label fw-bold">Email <span
                                                                 class="text-danger">*</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -137,7 +137,7 @@
                                                 <div class="row mt-3">
                                                     <!-- Start Address -->
                                                     <div class="col">
-                                                        <label for="txtAdres" class="form-lable fw-bold">Address <span
+                                                        <label for="txtAdres" class="form-label fw-bold">Address <span
                                                                 class="text-danger">*</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -155,7 +155,7 @@
 
                                                     <!-- Start Bank name  -->
                                                     <div class="col">
-                                                        <label for="txtBankname" class="form-lable fw-bold">Bank Name
+                                                        <label for="txtBankname" class="form-label fw-bold">Bank Name
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -174,7 +174,7 @@
 
                                                     <!-- Start Branch name  -->
                                                     <div class="col">
-                                                        <label for="txtBranch" class="form-lable fw-bold">Branch Name
+                                                        <label for="txtBranch" class="form-label fw-bold">Branch Name
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -194,7 +194,7 @@
                                                 <div class="row mt-3">
                                                     <!-- Start Account Number -->
                                                     <div class="col">
-                                                        <label for="accNo" class="form-lable fw-bold">Account Number
+                                                        <label for="accNo" class="form-label fw-bold">Account Number
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -213,7 +213,7 @@
 
                                                     <!-- Start Account Holder -->
                                                     <div class="col">
-                                                        <label for="accHolder" class="form-lable fw-bold">Holder Name
+                                                        <label for="accHolder" class="form-label fw-bold">Holder Name
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -232,7 +232,7 @@
 
                                                     <!-- Start Supplier Status -->
                                                     <div class="col">
-                                                        <lable for="supStatus" class="form-lable fw-bold"> Status
+                                                        <lable for="supStatus" class="form-label fw-bold"> Status
                                                             <span class="text-danger"> *</span>
                                                         </lable>
                                                         <div class="col">
@@ -263,7 +263,7 @@
                                                 <div class="row mt-3">
                                                     <div class="col-2"></div>
                                                     <div class="col-3">
-                                                        <label for="SelectBycategory" class="form-lable fw-bold">Select
+                                                        <label for="SelectBycategory" class="form-label fw-bold">Select
                                                             Ingredients
                                                             <span class="text-danger">*</span></label>
                                                         <select class="form-select" id="SelectBycategory"
@@ -279,34 +279,16 @@
                                                         <button type="button" onclick="removeAllIngredient()"
                                                             class="btn mt-1 btn-secondary" style="width:60px;">
                                                             << </button><br>
-                                                                <button type="button" onclick="removeOneIngredient()"
-                                                                    class="btn mt-1 btn-secondary" style="width:60px;">
-                                                                    < </button><br>
                                                     </div>
                                                     <div class="col-3">
                                                         <label for="SelectedIngredints"
-                                                            class="form-lable fw-bold">Selected Ingredients List</label>
+                                                            class="form-label fw-bold">Selected Ingredients List</label>
                                                         <select class="form-select" id="SelectedIngredints"
                                                             multiple></select>
                                                     </div>
                                                     <div class="col-2"></div>
                                                 </div>
                                                 <!-- End Material List -->
-
-                                                <!-- Note -->
-                                                <div class="row mt-3">
-                                                    <!-- Start Note -->
-                                                    <div class="col">
-                                                        <label for="txtNote" class="form-lable fw-bold">Notes : <span
-                                                                class="text-danger"></span></label>
-                                                        <div class="col">
-                                                            <textarea id="txtNote" class="form-control"
-                                                                placeholder="Enter Notes"
-                                                                onkeyup="supplier.note = this.value; this.style.border = 'solid 2px green'"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Note -->
-                                                </div>
 
                                                 <!-- Make Buttons -->
                                                 <div class="row mt-4 d-flex">
@@ -358,8 +340,8 @@
     </div>
 
     <script src="uIControllers/supplier.js"></script>
-</body>
 
-<body th:replace="~{footer :: footerFragment}"></body>
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
 
 </html>

@@ -46,7 +46,12 @@ public class MenuItemController implements CommonController<MenuItem> {
         menuitemsView.setViewName("Menuitems.html");
         menuitemsView.addObject("loggedusername", auth.getName());
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        menuitemsView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             menuitemsView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -65,7 +70,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // check user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
 
         if (userPrivilege.getPrivi_select()) {
             // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
@@ -85,7 +90,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
         if (userPrivilege.getPrivi_insert()) {
             MenuItem extMenuItem = menuItemDao.getByMenuName(menuitem.getName());
             // extMenuItem null ndda da blenewa
@@ -111,10 +116,11 @@ public class MenuItemController implements CommonController<MenuItem> {
                 // do save operation
                 menuItemDao.save(menuitem);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }
@@ -128,7 +134,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
 
         // check data Exist
         if (menuitem.getId() == null) {
@@ -154,10 +160,11 @@ public class MenuItemController implements CommonController<MenuItem> {
                 // do save operation
                 menuItemDao.save(menuitem);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Update : You don't have permission..!";
         }
@@ -171,7 +178,7 @@ public class MenuItemController implements CommonController<MenuItem> {
         // user object ekak gennagnnewa
         User loggedUser = userDao.getByUsername(auth.getName());
         // get privilege object
-        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "MenuItem");
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Menu");
 
         if (userPrivilege.getPrivi_delete()) {
             // check data Exist
@@ -199,10 +206,11 @@ public class MenuItemController implements CommonController<MenuItem> {
                 // do save operation
                 menuItemDao.save(extMenu);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Delete : You don't have permission..!";
         }

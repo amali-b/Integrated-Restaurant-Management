@@ -9,6 +9,27 @@ window.addEventListener("load", () => {
 
 });
 
+// function for display clear button when hover on img
+document.addEventListener("DOMContentLoaded", () => {
+    const clearBtn = document.getElementById('clearBtn');
+    const container = document.getElementById('imgContainer');
+
+    // Show button on hover
+    container.addEventListener('mouseenter', () => {
+        clearBtn.style.display = 'inline';
+    });
+    // hide button when mouse leave
+    container.addEventListener('mouseleave', () => {
+        clearBtn.style.display = 'none';
+    });
+    // Clear image on button click
+    clearBtn.onclick = () => {
+        imgEmployee.value = "";
+        imgPreview.src = "images/userimage.png";
+        window[object][property] = null;
+    };
+});
+
 //define function for form refresh
 const refreshEmpForm = () => {
     formEmp.reset();
@@ -19,6 +40,9 @@ const refreshEmpForm = () => {
 
     //define object
     employee = new Object();
+
+    imgEmployee.value = "";
+    imgPreview.src = "images/userimage.png";
 
     /* const designations = [
         //id = property , name = value, values hama thanama 100% samana wenna one
@@ -52,9 +76,18 @@ const refreshEmpForm = () => {
     // status eka form eka open weddima active wdyt select wenna
     //select value eka string wenna one nisa object eka string baweta convert krenw
     empStatus.value = JSON.stringify(employeeStatuses[0]);
-    // customerStatus list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
+    // employeeStatus list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     employee.employeestatus_id = employeeStatuses[0];
     empStatus.style.border = "2px solid green";
+
+    // hide krnwa ona nathi status
+    // DOM walin manipulate krnwa //remove 3 and 4 option
+    if (empStatus.options[3]) {
+        empStatus.options[3].classList.add("d-none");
+    }
+    if (empStatus.options[4]) {
+        empStatus.options[4].classList.add("d-none");
+    }
 }
 
 //define function for refresh table data
@@ -165,6 +198,7 @@ const employeeFormRefill = (ob, rowIndex) => {
     txtEmail.value = ob.email;
     txtNumber.value = ob.mobile_no;
     dateDOB.value = ob.dob;
+    dateDOB.disabled = true;
 
     if (ob.gender == "Male") {
         radioMale.checked = "checked";
@@ -175,6 +209,19 @@ const employeeFormRefill = (ob, rowIndex) => {
     civilStatus.value = JSON.stringify(ob.civilstatus_id);
     selectDesignation.value = JSON.stringify(ob.designation_id);
     empStatus.value = JSON.stringify(ob.employeestatus_id);
+
+    if (ob.employeestatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
+
+    // reset photo
+    if (ob.employeeimage != null) {
+        imgPreview.src = atob(ob.employeeimage);
+    } else {
+        imgPreview.src = "images/userimage.png";
+    }
 
     if (ob.note == undefined) {
         txtNote.value = "";
@@ -234,7 +281,7 @@ const employeeDelete = (ob, rowIndex) => {
     obName = ob.fullname;
     text = "Email : " + ob.email
         + ", Supplier Status : " + ob.employeestatus_id.status;
-    let deleteResponse = getHTTPServiceRequest('/employee/delete', "DELETE", employee);
+    let deleteResponse = ['/employee/delete', "DELETE", employee];
     message = "Employee has Deleted.";
     swalDelete(title, obName, text, deleteResponse, collapsEmpForm, message);
 
@@ -362,7 +409,7 @@ const buttonEmployeeSubmit = () => {
         + ", NIC : " + employee.nic
         + ", Designatiom : " + employee.designation_id.name
         + ", Status : " + employee.employeestatus_id.status;
-    let submitResponse = getHTTPServiceRequest('/employee/insert', "POST", employee);
+    let submitResponse = ['/employee/insert', "POST", employee];
     swalSubmit(errors, title, obName, text, submitResponse, collapsEmpForm);
 
     /* if (errors == "") {
@@ -478,6 +525,9 @@ const checkFormUpdate = () => {
         if (employee.employeestatus_id.status != oldemployee.employeestatus_id.status) {
             updates = updates + "Employee Status has Updated from " + oldemployee.employeestatus_id.status + "--> " + employee.employeestatus_id.status + " \n";
         }
+        if (employee.employeeimage != oldemployee.employeeimage) {
+            updates = updates + "Employee Photo has Updated! \n";
+        }
     }
     return updates;
 }
@@ -495,7 +545,7 @@ const buttonEmployeeUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/employee/update', "PUT", employee);
+        let updateResponse = ['/employee/update', "PUT", employee];
         swalUpdate(updates, title, text, updateResponse, collapsEmpForm);
 
         /* if (updates == "") {
@@ -629,33 +679,73 @@ txtfullName.addEventListener("keyup", () => {
 //define function for validate NIC
 txtNic.addEventListener("keyup", () => {
     const nicValue = txtNic.value;
-    const regPattern = new RegExp("^(((([6][4-9])|([7-9][0-9]))[0-9]{7}[VvXx])|((([1][9][6-9][0-9])|([2][0][0][0-6]))[0-9]{8}))$");
+    const regPattern = new RegExp("^(((([6][4-9])|([7-9][0-9]))[0-9]{7}[VvXx])|((([1][9][6-9][0-9])|([2][0][0][1-6]))[0-9]{8}))$");
 
     if (regPattern.test(nicValue)) {
         //valid nic
         employee.nic = nicValue;
         txtNic.style.border = "2px solid green";
 
-        //generate gender
-        let nicPart = "";
+        //generate gender and DOB
+        let birthyear, birthdate;
+
+        //646299500V
         if (nicValue.length == 10) {
+            birthyear = "19" + nicValue.substring(0, 2);// index (0 & 1) ==> 6 & 4
             //2 ha 5 athara value tika gnnewa (2, 3, 4)
-            nicPart = nicValue.substring(2, 5);
+            birthdate = nicValue.substring(2, 5);
+            //200152103499
         } else {
+            birthyear = nicValue.substring(0, 4)
             //4 ha 7 athara value tika (4, 5, 6)
-            nicPart = nicValue.substring(4, 7);
+            birthdate = nicValue.substring(4, 7);
         }
+        console.log("Birthday" + birthyear, birthdate);
+
         //nic string value ekak substring ekak kalama return kranneth stringmai, greater than check kranna substring walin bari nisa int value welata maru kregnnawa ParseInt use krela
-        if (parseInt(nicPart) > 500) {
+        if (parseInt(birthdate) > 500) {
             radioFemale.checked = true;
             employee.gender = "Female";
+            // get birthdate
+            birthdate = parseInt(birthdate) - 500;
+
         } else {
             radioMale.checked = true;
             employee.gender = "Male";
         }
+
+        let birthdateOb = new Date(birthyear + "-01-01"); //jan 1 wenidain ptn gnne new date ekk hdagnnewa
+        birthdateOb.setDate(parseInt(birthdate));
+        // adika auruddakda kyl check krenewa
+        /* adika auruddaknm year/4 != 0 saha (Jan+Feb) days == 61 nisa */
+        if (parseFloat(birthyear) % 4 != 0 && parseInt(birthdate) > 60) {
+            birthdateOb.setDate(birthdateOb.getDate() - 1);
+        }
+
+        // month enne array ekakin month[0-11] nisa 1k ekathu krenewa
+        let month = birthdateOb.getMonth() + 1;
+        let date = birthdateOb.getDate();
+        /* 1-9 */
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (date < 10) {
+            date = "0" + date;
+        }
+
+        // get birthday
+        dateDOB.value = birthyear + "-" + month + "-" + date;
+        employee.dob = dateDOB.value;
+        dateDOB.style.border = "solid green 2px";
+
+        // get age
+        /* let currentYear = new Date().getFullYear();
+            age = currentYear - birthyear; 
+        */
     } else {
         //invalid value
         employee.nic = null;
+        employee.dob = null;
         employee.gender = null;
         txtNic.style.border = "solid red 2px";
     }

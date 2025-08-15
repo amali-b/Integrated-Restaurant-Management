@@ -75,6 +75,8 @@ public class Employee {
     @Length(min = 10, max = 12)
     private String nic;
 
+    private byte[] employeeimage;
+
     private String note;
 
     @NotNull

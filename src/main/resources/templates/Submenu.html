@@ -30,11 +30,6 @@
                             <!-- <a aria-current="page" class="btn nav-link" href="/submenu" role="button">All</a> -->
                         </li>
                         <li class="nav-item btnCategories">
-                            <!-- <a aria-current="page" class="nav-link" href="#">Meal Deals</a> -->
-                            <button class="btn nav-link category-btn" type="button">Meal
-                                Deals</button>
-                        </li>
-                        <li class="nav-item btnCategories">
                             <button class="btn nav-link category-btn" type="button" data-id="1">Rice</button>
                             <!-- <a aria-current="page" class="btn nav-link"
                                 href="/submenu/bycategory?category_id=1">Rice</a> -->
@@ -57,6 +52,9 @@
                         </li>
                         <li class="nav-item btnCategories">
                             <button class="btn nav-link category-btn" type="button" data-id="7">Coffee</button>
+                        </li>
+                        <li class="nav-item btnCategories">
+                            <button class="btn nav-link category-btn" type="button" data-id="8">Drinks</button>
                         </li>
                     </ul>
                 </div>
@@ -121,13 +119,29 @@
                                             <!-- Start Form -->
                                             <form id="formSubmenu" onsubmit="return false">
                                                 <!--  product image -->
-                                                <!-- Start image -->
-                                                <div class="row justify-content-md-center">
-                                                    <div class="col-3">
-                                                        <input type="file" class="form-control" id="imgProduct">
+                                                <!-- Start product Photo -->
+                                                <div class="row justify-content-center mt-2">
+                                                    <div class="col-auto">
+                                                        <!-- hidden input -->
+                                                        <input type="file" id="imgProduct" accept="image/*"
+                                                            style="display: none;"
+                                                            onchange="fileValidator(this, 'submenu', 'submenuimage', document.getElementById('imgPreview'), document.getElementById('clearBtn'), document.getElementById('imgContainer'))">
+                                                        <div class="position-relative d-inline-block" id="imgContainer">
+                                                            <!-- Clickable image -->
+                                                            <img src="images/chickenburger.jpg" id="imgPreview"
+                                                                alt="Upload here" class="img-thumbnail"
+                                                                style="cursor: pointer; max-width: 130px;"
+                                                                onclick="document.getElementById('imgProduct').click();">
+                                                            <!-- clear button -->
+                                                            <button type=" button" id="clearBtn"
+                                                                class="btn btn-sm btn-danger position-absolute bottom-0 start-50 m-1"
+                                                                style="display: none;">
+                                                                Clear <i class="fa-solid fa-xmark"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <!-- End image -->
+                                                <!-- End product Photo -->
 
                                                 <div class="row mt-2">
                                                     <!-- Main Form -->
@@ -135,7 +149,7 @@
                                                         <!-- Product name & category -->
                                                         <div class="row mt-1">
                                                             <!-- Start Submenus Category-->
-                                                            <label for="selectCategory" class="form-lable fw-bold">
+                                                            <label for="selectCategory" class="form-label fw-bold">
                                                                 Category <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <select id="selectCategory" class="form-select"
@@ -153,13 +167,13 @@
 
                                                         <!-- Start Product Name-->
                                                         <div class="row mt-1">
-                                                            <label for="txtProductname" class="form-lable fw-bold">
+                                                            <label for="txtProductname" class="form-label fw-bold">
                                                                 Product Name <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <input type="text" id="txtProductname"
                                                                     class="form-control"
                                                                     placeholder="Enter Product Name"
-                                                                    onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20}( [A-Z][a-z]{1,30})?)( [LM])?$', 'submenu', 'name')">
+                                                                    onkeyup="txtValidator(this,'^([A-Z][a-z]{1,20}( [A-Z][a-z]{1,30}){0,2})( [LM])?$', 'submenu', 'name')">
                                                             </div>
                                                         </div>
                                                         <!-- End Product Name-->
@@ -167,11 +181,11 @@
                                                         <!-- Price & status -->
                                                         <div class="row mt-1">
                                                             <!-- Start Price -->
-                                                            <label for="txtPrice" class="form-lable fw-bold">Price
+                                                            <label for="txtPrice" class="form-label fw-bold">Price
                                                                 <span class="text-danger">*</span></label>
                                                             <div class="col">
                                                                 <input type="text"
-                                                                    onkeyup="txtValidator(txtPrice,'^[1-9][0-9]{1,5}[.][0-9]{2}$', 'submenu', 'price')"
+                                                                    onkeyup="priceValidator(txtPrice, 'submenu', 'price')"
                                                                     class="form-control" id="txtPrice"
                                                                     placeholder="Enter Product Price" required>
                                                             </div>
@@ -180,7 +194,7 @@
 
                                                         <!-- Start product Status -->
                                                         <div class="row mt-1">
-                                                            <lable for="productStatus" class="form-lable fw-bold">Status
+                                                            <lable for="productStatus" class="form-label fw-bold">Status
                                                                 <span class="text-danger">*</span>
                                                             </lable>
                                                             <div class="col">
@@ -209,14 +223,14 @@
                                                                                 <!-- Start Ingredient -->
                                                                                 <div class="col">
                                                                                     <label for="SelectIngredint"
-                                                                                        class="form-lable fw-bold">Select
+                                                                                        class="form-label fw-bold">Select
                                                                                         Ingredients
                                                                                         <span
                                                                                             class="text-danger">*</span></label>
                                                                                     <div class="col">
                                                                                         <select class="form-select"
                                                                                             id="SelectIngredint"
-                                                                                            onchange="selectDynamicElementValidator(this, 'submenuHasIngredient', 'ingredient_id'); checkIngredientExt();">
+                                                                                            onchange="select2DynamicElementValidator(this, 'submenuHasIngredient', 'ingredient_id'); checkIngredientExt();">
                                                                                             <option value="" selected
                                                                                                 disabled>
                                                                                                 Select
@@ -233,15 +247,14 @@
                                                                                 <!-- Start Quantity -->
                                                                                 <div class="col">
                                                                                     <label for="txtQuantity"
-                                                                                        class="form-lable fw-bold">Quantity
+                                                                                        class="form-label fw-bold">Quantity
                                                                                         <span
                                                                                             class="text-danger">*</span></label>
                                                                                     <input type="text"
-                                                                                        onkeyup="txtValidator(txtQuantity,'^[1-9][0-9]{0,4}|([1-9][0-9]{0,4}[.][0-9]{0,3})$', 'submenuHasIngredient', 'quantity')"
+                                                                                        onkeyup="txtValidator(txtQuantity,'^([0-9]{0,4}[.][0-9]{0,3})|([1-9][0-9]{0,4}([.]?[0-9]{0,3})?)$', 'submenuHasIngredient', 'quantity')"
                                                                                         class="form-control"
                                                                                         id="txtQuantity"
-                                                                                        placeholder="Enter Quantity"
-                                                                                        required>
+                                                                                        placeholder="Enter Quantity">
                                                                                     <div class="form-text text-end">
                                                                                         (ex: 500g = KG-0.5)
 
@@ -272,9 +285,9 @@
                                                                                         class="btn btn-outline-success"
                                                                                         id="btnInnerSubmit"
                                                                                         type="button"
-                                                                                        onclick="buttonSubmenuIngredientSubmit()"><i
-                                                                                            class="fa-solid fa-plus"></i><br>Add
-                                                                                    </button>
+                                                                                        onclick="buttonSubmenuIngredientSubmit()">Add
+                                                                                        <i
+                                                                                            class="fa-solid fa-plus"></i></button>
                                                                                 </div>
                                                                             </div>
                                                                             <!-- End Buttons -->
@@ -370,8 +383,8 @@
         </div>
     </div>
     <script src="uIControllers/submenu.js"></script>
-</body>
 
-<body th:replace="~{footer :: footerFragment}"></body>
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
 
 </html>

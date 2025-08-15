@@ -1,8 +1,8 @@
 package lk.restaurant_management.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 // import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,12 +33,15 @@ public class Inventory {
     private BigDecimal totalquantity;
 
     @NotNull
-    private LocalDateTime expiredate;
+    private LocalDate expiredate;
 
-    private LocalDateTime manufacturedate;
+    private LocalDate manufacturedate;
 
     @NotNull
-    private Integer batchnumber;
+    private String batchnumber;
+
+    @NotNull
+    private BigDecimal removedquantity;
 
     @ManyToOne
     @JoinColumn(name = "inventorystatus_id", referencedColumnName = "id")

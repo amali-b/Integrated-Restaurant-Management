@@ -35,11 +35,15 @@
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" id="btnuser" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <span th:text="${loggeduserphoto}"></span>
+                        <!-- img eka access kale header eka athule script tag eka athule javascript use krela -->
+                        <img src="images/userimage.png" id="imgLoggedUser" class="rounded-circle"
+                            style="max-width: 30px; max-height: 30px;">
+
+                        <!--##  UI ehekata attribute ekak set kraddi eka thymeleafe & javascript walin access krannath puluwn ##-->
                         <span th:text="${loggedusername}">Profile</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/user">Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="/editUser">Edit Profile</a></li>
                         <li><a class="dropdown-item" href="/logout">Log Out</a></li>
                     </ul>
                 </div>
@@ -58,14 +62,6 @@
             </a>
         </li>
 
-        <!-- Customer 
-        <li class="sidebar-item">
-            <a href="/customer" class="sidebar-link">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>Customer</span>
-            </a>
-        </li>-->
-
         <!-- Customer -->
         <li class="sidebar-item">
             <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#customer"
@@ -81,24 +77,13 @@
                     <a href="/order" class="sidebar-link">Orders</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/orderpayment" class="sidebar-link">Order Payments</a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Submenu & Menu -->
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#items"
-                aria-expanded="false" aria-controls="items">
-                <i class="fa-solid fa-utensils"></i>
-                <span>Order Items</span>
-            </a>
-            <ul id="items" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
-                    <a href="/submenu" class="sidebar-link">Submenu</a>
+                    <a href="/kitchen" class="sidebar-link">Kitchen</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/menuitems" class="sidebar-link">Menu Items</a>
+                    <a href="/orderpaymentDinein" class="sidebar-link">Dine-in/Delivery Payment</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/orderpaymentTakeaway" class="sidebar-link">TakeAway Payment</a>
                 </li>
             </ul>
         </li>
@@ -111,34 +96,81 @@
                 <span>Supplier</span>
             </a>
             <ul id="supplier" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
+                <li class="Supplier sidebar-item">
                     <a href="/supplier" class="sidebar-link">Supplier</a>
                 </li>
-                <li class="sidebar-item">
+                <li class="Supplier Order sidebar-item">
                     <a href="/supplierorder" class="sidebar-link">Order</a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="/supplierpayment" class="sidebar-link">Payment</a>
-                </li>
-                <li class="sidebar-item">
+                <li class="GRN sidebar-item">
                     <a href="/grn" class="sidebar-link">GRN</a>
+                </li>
+                <li class="Supplier Payment sidebar-item">
+                    <a href="/supplierpayment" class="sidebar-link">Payment</a>
                 </li>
             </ul>
         </li>
-        <!-- Ingredients -->
+
+        <!-- Submenu & Menu -->
         <li class="sidebar-item">
-            <a href="/ingredient" class="sidebar-link">
-                <i class="fa-solid fa-carrot"></i>
-                <span>Ingredients</span>
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#items"
+                aria-expanded="false" aria-controls="items">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Items</span>
             </a>
+            <ul id="items" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="Submenu sidebar-item">
+                    <a href="/submenu" class="sidebar-link">Submenu</a>
+                </li>
+                <li class="Menu sidebar-item">
+                    <a href="/menuitems" class="sidebar-link">Menu Items</a>
+                </li>
+                <li class="Ingredient sidebar-item">
+                    <a href="/ingredient" class="sidebar-link">Ingredients</a>
+                </li>
+            </ul>
         </li>
+
         <!-- Inventory -->
-        <li class="sidebar-item">
+        <li class="Inventory sidebar-item">
             <a href="/inventory" class="sidebar-link">
                 <i class="fa-solid fa-store"></i>
                 <span>Inventory</span>
             </a>
         </li>
+
+        <!-- Garbage Remove -->
+        <li class="Garbage Remove sidebar-item">
+            <a href="/garbageremove" class="sidebar-link">
+                <i class="fa-solid fa-recycle"></i>
+                <span>Garbage Remove</span>
+            </a>
+        </li>
+
+        <!-- Table -->
+        <li class="Tables sidebar-item">
+            <a href="/tables" class="sidebar-link">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span>Table</span>
+            </a>
+        </li>
+
+        <!-- Table & Vehicle -->
+        <!-- <li class="sidebar-item">
+            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#extra"
+                aria-expanded="false" aria-controls="extra">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span>Table</span>
+            </a>
+            <ul id="extra" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="/tables" class="sidebar-link">Table</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/vehicle" class="sidebar-link">Vehicle</a>
+                </li>
+            </ul>
+        </li> -->
 
         <!-- Administration -->
         <li class="sidebar-item">
@@ -148,20 +180,20 @@
                 <span>Administration</span>
             </a>
             <ul id="admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
+                <li class="Employee sidebar-item">
                     <a href="/employee" class="sidebar-link">Employee</a>
                 </li>
-                <li class="sidebar-item">
+                <li class="Privilege sidebar-item">
                     <a href="/privilege" class="sidebar-link">Privilege</a>
                 </li>
-                <li class="sidebar-item">
+                <li class="User sidebar-item">
                     <a href="/user" class="sidebar-link">User</a>
                 </li>
             </ul>
         </li>
 
         <!-- Authentication -->
-        <li class="sidebar-item">
+        <!-- <li class="sidebar-item">
             <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
                 aria-expanded="false" aria-controls="auth">
                 <i class="fa-solid fa-file-shield"></i>
@@ -169,30 +201,33 @@
             </a>
             <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item">
-                    <a href="/login" class="sidebar-link">User Profile</a>
+                    <a href="/editUser" class="sidebar-link">Edit Profile</a>
                 </li>
             </ul>
-        </li>
+        </li> -->
 
         <!-- Reports -->
         <li class="sidebar-item">
             <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#reports"
                 aria-expanded="false" aria-controls="reports">
-                <i class="fa-solid fa-file-shield"></i>
+                <i class="fa-solid fa-file-lines"></i>
                 <span>Reports</span>
             </a>
             <ul id="reports" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
-                    <a href="/reportPayment" class="sidebar-link">Payment Report</a>
+                <li class="Report sidebar-item">
+                    <a href="/reportPayment" class="sidebar-link">Supplier Payment Report</a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="/reportSales" class="sidebar-link">Sales Report</a>
+                <li class="Report sidebar-item">
+                    <a href="/reportGrn" class="sidebar-link">GRN Report</a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="/reportPurchase" class="sidebar-link">Purchase Report</a>
+                <li class="Report sidebar-item">
+                    <a href="/inventoryStock" class="sidebar-link">Inventory Stock Report</a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="/reportCustomer" class="sidebar-link">Customer Report</a>
+                <!--  <li class="sidebar-item">
+                    <a href="/orderSummary" class="sidebar-link">Sales Summary Report</a>
+                </li> -->
+                <li class="Report sidebar-item">
+                    <a href="/userReport" class="sidebar-link">User Report</a>
                 </li>
             </ul>
         </li>
@@ -222,12 +257,12 @@
             </ul>
         </li> -->
 
-        <li class="sidebar-item">
+        <!-- <li class="sidebar-item">
             <a href="#" class="sidebar-link">
                 <i class="fa fa-gears"></i>
                 <span>Setting</span>
             </a>
-        </li>
+        </li> -->
     </ul>
 
     <!-- Footer / Logout -->

@@ -30,13 +30,11 @@ public class Customer {
     @Length(min = 8, max = 8, message = "Lenght must be 8..!")
     private String reg_no;
 
-    @NotNull
     private String title;
 
     @NotNull
-    private String firstname;
+    private String custname;
 
-    @NotNull
     private String lastname;
 
     @NotNull
@@ -45,7 +43,6 @@ public class Customer {
 
     private String address;
 
-    @NotNull
     private String email;
 
     private String note;

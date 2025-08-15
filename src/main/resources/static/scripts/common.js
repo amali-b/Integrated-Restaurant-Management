@@ -1,5 +1,13 @@
 //define function for active tablebody row
-const activeTableRow = (tBodyId, rowIndex, color) => {
+const activeTableRow = (tBodyId, rowElement, color) => {
+
+    for (const element of tBodyId.children) {
+        element.removeAttribute("style");
+    }
+    rowElement.style.backgroundColor = color;
+}
+
+const activeTableRowNew = (tBodyId, rowIndex, color) => {
 
     for (const element of tBodyId.children) {
         element.removeAttribute("style");
@@ -96,9 +104,38 @@ const fillDropdownTwo = (parentId, message, datalist, property1, property2) => {
 } */
 
 //call fill data into table
-fillReportTable = (tBodyId, datalist, columnList) => {
+fillReportTable = (tHeadId, tBodyId, datalist, columnList) => {
+    tHeadId.innerHTML = "";
     tBodyId.innerHTML = "";
 
+    // Handle empty data
+    if (!datalist || datalist.length == 0) {
+        tBodyId.innerHTML = '<div class="no-data">No data available</div>';
+    }
+
+    // Get unique keys from data
+    let headers = Object.keys(datalist[0]);
+
+    // Create header row
+    let headertr = document.createElement('tr');
+    headertr.id = "tablehead";
+
+    // create index header
+    let thIndex = document.createElement("th");
+    thIndex.innerText = "#";
+    thIndex.className = "text-center";
+    headertr.appendChild(thIndex);
+
+    headers.forEach(header => {
+        let th = document.createElement('th');
+
+        th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
+        headertr.appendChild(th);
+
+        tHeadId.appendChild(headertr);
+    });
+
+    // create table body
     datalist.forEach((dataOb, index) => {
         let tr = document.createElement("tr");
 
@@ -303,6 +340,18 @@ const fillTableThree = (tBodyId, datalist, columnList, editFunction, buttonVisib
             }
             if (columnOb.dataType == "function") {
                 td.innerHTML = columnOb.property(dataOb);
+            } if (columnOb.dataType == "image-array") {
+                // img tag ekak create kregnna one
+                let img = document.createElement("img");
+                // class eke value add krenewa photo eke size ekata
+                img.style = "width:110px";
+                // data object eke property eka access krela nullda blnewa
+                if (dataOb[columnOb.property] != null) {
+                    // null naththan object eke image eka pass krnw
+                    img.src = atob(dataOb[columnOb.property]);
+                }
+                // td ekata image eka assign krnw
+                td.appendChild(img);
             }
             tr.appendChild(td);
         });
@@ -313,8 +362,9 @@ const fillTableThree = (tBodyId, datalist, columnList, editFunction, buttonVisib
             tr.onclick = () => {
                 window['editob'] = dataOb;
                 window['editrowno'] = index;
-                activeTableRow(tBodyId, index, "Cornsilk");
+                activeTableRow(tBodyId, tr, "white");
                 divModifybtn.className = "d-block";
+                editFunction(dataOb, index);
             }
             //editFunction(dataOb, index);  //table row eka click kraddi open wenne nathi wenna one nisa
         }
@@ -348,6 +398,19 @@ const fillTableFour = (infoTbody, datalist, columnList, editFunction, deleteFunc
             if (columnOb.dataType == "function") {
                 td.innerHTML = columnOb.property(dataOb);
             }
+            if (columnOb.dataType == "image-array") {
+                // img tag ekak create kregnna one
+                let img = document.createElement("img");
+                // class eke value add krenewa photo eke size ekata
+                img.style = "width:110px";
+                // data object eke property eka access krela nullda blnewa
+                if (dataOb[columnOb.property] != null) {
+                    // null naththan object eke image eka pass krnw
+                    img.src = atob(dataOb[columnOb.property]);
+                }
+                // td ekata image eka assign krnw
+                td.appendChild(img);
+            }
             tr.appendChild(td);
         });
 
@@ -357,7 +420,7 @@ const fillTableFour = (infoTbody, datalist, columnList, editFunction, deleteFunc
             tr.onclick = () => {
                 window['editob'] = dataOb;
                 window['editrowno'] = index;
-                activeTableRow(infoTbody, index, "Cornsilk");
+                activeTableRow(infoTbody, tr, "Cornsilk");
                 divModifybtn.className = "d-block";
                 editFunction(dataOb, index);
             }
@@ -405,7 +468,7 @@ const getHTTPServiceRequest = (url, method, dataOb) => {
         type: method,//The HTTP method to use for the request (GET, POST, PUT, DELETE, etc.)
         data: JSON.stringify(dataOb), //{key1: 'value1',key2: 'value2'} //Data to be sent to the server
         async: false, //wait for response
-        contentType: "application/json", //Json is storing and transporting format ekak 
+        contentType: "application/json", //Json is storing --> transporting format ekak 
         success: function (response) {
             //Code to execute if the request succeeds
             console.log('Success: ', response);
@@ -421,7 +484,7 @@ const getHTTPServiceRequest = (url, method, dataOb) => {
 }
 
 //define function for format date in table
-const formatDate = (dateString, format = "long") => {
+/* const formatDate = (dateString, format = "long") => {
     if (!dateString) return "";
 
     const date = new Date(dateString);
@@ -433,9 +496,8 @@ const formatDate = (dateString, format = "long") => {
     } else if (format === "mmm-d-yyyy") {
         return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
     }
-
     return date.toISOString().split("T")[0]; //split("T") gives ["2025-10-02", "00:00:00"] take the [0] part → "2025-10-02"
-};
+}; */
 
 // define function for Inner form table
 //modify column eke dropdown ehekat button danewa
@@ -517,7 +579,7 @@ const fillInnerTable = (InnertBody, datalist, columnList, editFunction, deleteFu
 
 };
 
-const fillInnerTableFooter = (footerID, datalist, columnList) => {
+const fillInnerTableFooter = (footerID, datalist, columnList, rows) => {
     footerID.innerHTML = ""; //clear existing data
 
     // Initialize totals for each decimal column
@@ -543,7 +605,7 @@ const fillInnerTableFooter = (footerID, datalist, columnList) => {
     // Create a footer row to show totals
     const tdLabel = document.createElement("td");
     tdLabel.className = "text-start fw-bold";
-    tdLabel.setAttribute("colspan", "4");
+    tdLabel.setAttribute("colspan", rows);
     tdLabel.innerText = "Total Amount";
     tr.appendChild(tdLabel);
 
@@ -592,4 +654,33 @@ const fillDropdownOrder = (parentId, message, datalist1, datalist2, property) =>
         parentId.appendChild(option)
     });
 }
+
+const formatDateRange = (minInputElement, maxInputElement, minrange, maxrange) => {
+    const formatDate = (date) => {
+        let year = date.getFullYear();
+        let month = String(date.getMonth() + 1).padStart(2, '0');// [0-11]
+        let day = String(date.getDate()).padStart(2, '0');// [1-31]
+        return year + "-" + month + "-" + day;
+    };
+
+    //current date object ekak hdagnnw 
+    let currentDate = new Date();
+
+    // Set min input range --> currentDate - 7 to currentDate
+    const minStart = new Date(currentDate);
+    minStart.setDate(currentDate.getDate() - minrange);
+    const minEnd = new Date(currentDate);
+
+    minInputElement.min = formatDate(minStart);
+    minInputElement.max = formatDate(minEnd);
+
+    // Set max input range --> currentDate to currentDate + 14
+    const maxStart = new Date(currentDate);
+    const maxEnd = new Date(currentDate);
+    maxEnd.setDate(currentDate.getDate() + maxrange);
+
+    maxInputElement.min = formatDate(maxStart);
+    maxInputElement.max = formatDate(maxEnd);
+}
+
 

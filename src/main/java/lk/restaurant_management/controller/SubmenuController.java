@@ -49,7 +49,15 @@ public class SubmenuController implements CommonController<Submenu> {
         SubmenuView.addObject("loggedusername", auth.getName());
         SubmenuView.addObject("title", "BIT Project 2024 | Submenu Management");
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        SubmenuView.addObject("loggedusername", auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        SubmenuView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             SubmenuView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -168,6 +176,7 @@ public class SubmenuController implements CommonController<Submenu> {
                 submenuDao.save(submenu);
 
                 return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
@@ -208,6 +217,7 @@ public class SubmenuController implements CommonController<Submenu> {
                 submenuDao.save(extSubmenu);
 
                 return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }

@@ -21,8 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.restaurant_management.dao.IngredientDao;
 import lk.restaurant_management.dao.IngredientStatusDao;
+import lk.restaurant_management.dao.InventoryDao;
+import lk.restaurant_management.dao.InventoryStatusDao;
 import lk.restaurant_management.dao.UserDao;
 import lk.restaurant_management.entity.Ingredient;
+import lk.restaurant_management.entity.Inventory;
 import lk.restaurant_management.entity.Privilege;
 import lk.restaurant_management.entity.User;
 
@@ -40,6 +43,12 @@ public class IngredientController implements CommonController<Ingredient> {
     private IngredientStatusDao ingredientStatusDao;
 
     @Autowired
+    private InventoryDao inventoryDao;
+
+    @Autowired
+    private InventoryStatusDao inventoryStatusDao;;
+
+    @Autowired
     private UserPrivilegeController userPrivilegeController;
 
     @Override
@@ -52,7 +61,12 @@ public class IngredientController implements CommonController<Ingredient> {
         ingredientView.setViewName("Ingredient.html");
         ingredientView.addObject("loggedusername", auth.getName());
 
+        // create user object
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        ingredientView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             ingredientView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -128,6 +142,24 @@ public class IngredientController implements CommonController<Ingredient> {
 
         if (userPrivilege.getPrivi_select()) {
             return ingredientDao.getListBySupplier(supplierid);
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new ArrayList<>();
+        }
+    }
+
+    // request mapping for get ingredient object --
+    // URL[/ingredient/listbysupplierOrder?supplierorderid= 1]
+    @GetMapping(value = "/ingredient/listbysupplierOrder", params = {
+            "supplierorderid" }, produces = "application/json")
+    public List<Ingredient> getIngredientListBySupplierOrder(@RequestParam("supplierorderid") Integer supplierorderid) {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Ingredient");
+
+        if (userPrivilege.getPrivi_select()) {
+            return ingredientDao.getListBySupplierOrder(supplierorderid);
         } else {
             // privilege naththan empty array ekak return krnw
             return new ArrayList<>();
@@ -210,9 +242,20 @@ public class IngredientController implements CommonController<Ingredient> {
                 // do save operation
                 ingredientDao.save(ingredient);
 
-                // manage dependancies
+                /* ### manage dependancies ### */
+                /*
+                 * Inventory exInventory = inventoryDao.getReferenceById(ingredient.getId());
+                 * 
+                 * if (ingredient.getIngredientstatus_id().getId() == 2) {
+                 * exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(2));
+                 * }
+                 * if (ingredient.getIngredientstatus_id().getId() == 1) {
+                 * exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(1));
+                 * }
+                 */
 
                 return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
@@ -231,21 +274,25 @@ public class IngredientController implements CommonController<Ingredient> {
         Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Ingredient");
 
         // check data Exist
-        if (ingredient.getId() == null) {
+        Ingredient extIng = ingredientDao.getReferenceById(ingredient.getId());
+        if (extIng == null) {
             return "Delete not Completed : Ingredient Not Exist.!";
         }
         // check privilege exist
         if (userPrivilege.getPrivi_delete()) {
             try {
                 // set auto generate value
-                ingredient.setDeletedatetime(LocalDateTime.now());
-                ingredient.setDeleteuser(userDao.getByUsername(auth.getName()).getId());
-                ingredient.setIngredientstatus_id(ingredientStatusDao.getReferenceById(3));
+                extIng.setDeletedatetime(LocalDateTime.now());
+                extIng.setDeleteuser(userDao.getByUsername(auth.getName()).getId());
+                extIng.setIngredientstatus_id(ingredientStatusDao.getReferenceById(3));
 
                 // process Delete request
-                ingredientDao.save(ingredient);
+                ingredientDao.save(extIng);
 
-                // manage dependancies
+                /* ### manage dependancies ### */
+                Inventory exInventory = inventoryDao.getReferenceById(ingredient.getId());
+
+                exInventory.setInventorystatus_id(inventoryStatusDao.getReferenceById(3));
 
                 return "OK";
 

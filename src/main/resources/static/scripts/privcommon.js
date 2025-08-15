@@ -57,7 +57,7 @@ const fillTableFour = (infoTbody, datalist, columnList, editFunction, deleteFunc
             tr.onclick = () => {
                 window['editob'] = dataOb;
                 window['editrowno'] = index;
-                activeTableRow(infoTbody, index, "White");
+                activeTableRow(infoTbody, tr, "White");
                 divModifybtn.className = "d-block";
                 editFunction(dataOb, index);
             }

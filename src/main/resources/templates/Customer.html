@@ -34,9 +34,7 @@
                             <tr id="tablehead">
                                 <th> # </th>
                                 <th> Customer Reg. No </th>
-                                <th> Title </th>
-                                <th> First Name </th>
-                                <th> Last Name </th>
+                                <th> Customer Name </th>
                                 <th> Mobile NO. </th>
                                 <th> Address </th>
                                 <th> Email </th>
@@ -47,9 +45,7 @@
                             <tr>
                                 <!--  <td> 1 </td>
                                 <td> 20250001 </td>
-                                <td> Miss </td>
                                 <td> Amali </td>
-                                <td> Abeysekera </td>
                                 <td> 0715944275 </td>
                                 <td> Polhena, kelaniya </td>
                                 <td> amali@gmail.com </td>
@@ -79,11 +75,11 @@
                                         <div class="card-body crdbdy">
                                             <!-- Start Form -->
                                             <form id="formCustomer" onsubmit="return false">
-                                                <!-- title/name -->
+                                                <!-- name /contact no/email-->
                                                 <div class="row mt-2">
                                                     <!-- Start Title -->
-                                                    <div class="col-2">
-                                                        <label for="titleCus" class="form-lable fw-bold"> Title <span
+                                                    <!-- <div class="col-2">
+                                                        <label for="titleCus" class="form-label fw-bold"> Title <span
                                                                 class="text-danger">*</span></label>
                                                         <div class="col">
                                                             <select id="titleCus" class="form-select"
@@ -97,43 +93,27 @@
                                                                 <option>Ms.</option>
                                                             </select>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!-- End Title -->
 
                                                     <!-- Start First Name -->
                                                     <div class="col">
-                                                        <label for="txtfirstName" class="form-lable fw-bold">First Name
+                                                        <label for="txtCustName" class="form-label fw-bold">Customer
+                                                            Name
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="col">
-                                                            <input type="text" id="txtfirstName" class="form-control"
-                                                                placeholder="First Name" required
-                                                                onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'customer', 'firstname')">
-                                                            <div class="form-text">Enter your first name (Ex: Amali)
+                                                            <input type="text" id="txtCustName" class="form-control"
+                                                                placeholder="Customer Name" required
+                                                                onkeyup="txtValidator(this,'^([A-Z]{1,6}[a-z]{1,20})|([A-Z][a-z]{1,10}[ ][A-Z][a-z]{0,30})$', 'customer', 'custname')">
+                                                            <div class="form-text">Enter Customer name (Ex: Amali)
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <!-- End First Name -->
 
-                                                    <!-- Start Last Name -->
-                                                    <div class="col">
-                                                        <label for="txtlastName" class="form-lable fw-bold">Last Name
-                                                            <span class="text-danger"> *</span></label>
-                                                        <div class="col">
-                                                            <input type="text" id="txtlastName" class="form-control"
-                                                                placeholder="Last Name" required
-                                                                onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'customer', 'lastname')">
-                                                            <div class="form-text">Enter your last name (Ex: Abeysekera)
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Last Name -->
-                                                </div>
-
-                                                <!-- contact no/email -->
-                                                <div class="row mt-3">
                                                     <!-- Start Contact no -->
                                                     <div class="col">
-                                                        <label for="txtNumber" class="form-lable fw-bold">Mobile Number
+                                                        <label for="txtNumber" class="form-label fw-bold">Mobile Number
                                                             <span class="text-danger"> *</span></label>
                                                         <div class="input-group">
                                                             <div class="col">
@@ -150,13 +130,26 @@
                                                     </div>
                                                     <!-- End Contact no -->
 
+                                                    <!-- Start Last Name -->
+                                                    <!-- <div class="col">
+                                                        <label for="txtlastName" class="form-label fw-bold">Last
+                                                            Name</label>
+                                                        <div class="col">
+                                                            <input type="text" id="txtlastName" class="form-control"
+                                                                placeholder="Last Name"
+                                                                onkeyup="txtValidator(this,'^[A-Z][a-z]{1,20}$', 'customer', 'lastname')">
+                                                            <div class="form-text">Enter your last name (Ex: Abeysekera)
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                    <!-- End Last Name -->
+
                                                     <!-- Start Email -->
                                                     <div class="col">
-                                                        <label for="txtEmail" class="form-lable fw-bold">Email <span
-                                                                class="text-danger">*</span></label>
+                                                        <label for="txtEmail" class="form-label fw-bold">Email</label>
                                                         <div class="col">
                                                             <input type="email" class="form-control col" id="txtEmail"
-                                                                placeholder="Enter Email " required
+                                                                placeholder="Enter Email"
                                                                 onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'customer', 'email')">
                                                             <div class="form-text">Enter valid Email (Ex:
                                                                 abcdf@gmail.com)
@@ -164,13 +157,14 @@
                                                         </div>
                                                     </div>
                                                     <!-- End Email -->
+
                                                 </div>
 
                                                 <!-- added Address/status -->
                                                 <div class="row mt-3">
                                                     <!-- Start Address -->
-                                                    <div class="col">
-                                                        <label for="txtAdres" class="form-lable fw-bold">Address <span
+                                                    <div class="col-4">
+                                                        <label for="txtAdres" class="form-label fw-bold">Address <span
                                                                 class="text-danger">*</span></label>
                                                         <div class="col">
                                                             <input type="text" id="txtAdres" class="form-control"
@@ -183,10 +177,10 @@
                                                     <!-- End Address -->
 
                                                     <!-- Start Customer Status -->
-                                                    <div class="col">
-                                                        <lable for="cusStatus" class="form-lable fw-bold">Customer
+                                                    <div class="col-4 d-none">
+                                                        <label for="cusStatus" class="form-label fw-bold">Customer
                                                             Status <span class="text-danger">*</span>
-                                                        </lable>
+                                                        </label>
                                                         <div class="col">
                                                             <select id="cusStatus" class="form-select"
                                                                 onchange="selectDynamicElementValidator(this, 'customer', 'customerstatus_id')">
@@ -196,21 +190,6 @@
                                                         </div>
                                                     </div>
                                                     <!-- End Customer Status -->
-                                                </div>
-
-                                                <!-- Note -->
-                                                <div class="row mt-3">
-                                                    <!-- Start Note -->
-                                                    <div class="col">
-                                                        <label for="txtNote" class="form-lable fw-bold">Notes : <span
-                                                                class="text-danger"></span></label>
-                                                        <div class="col">
-                                                            <textarea id="txtNote" class="form-control"
-                                                                placeholder="Enter Notes"
-                                                                onkeyup="customer.note = this.value; this.style.border = 'solid 2px green'"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Note -->
                                                 </div>
 
                                                 <!-- Make Buttons -->
@@ -260,8 +239,8 @@
         </div>
     </div>
     <script src="uIControllers/customer.js"></script>
-</body>
 
-<body th:replace="~{footer :: footerFragment}"></body>
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
 
 </html>

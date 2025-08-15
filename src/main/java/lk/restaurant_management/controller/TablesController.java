@@ -40,9 +40,16 @@ public class TablesController implements CommonController<Tables> {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView tableView = new ModelAndView();
         tableView.setViewName("Tables.html");
+
+        // user object ekak gennagnnewa
+        User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
         tableView.addObject("loggedusername", auth.getName());
 
-        User user = userDao.getByUsername(auth.getName());
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        tableView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             tableView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -80,10 +87,12 @@ public class TablesController implements CommonController<Tables> {
             try {
                 // do save
                 tablesDao.save(tables);
+
+                return "OK";
+
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }
@@ -100,10 +109,12 @@ public class TablesController implements CommonController<Tables> {
             try {
                 // do save
                 tablesDao.save(tables);
+
+                return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Update : You don't have permission..!";
         }
@@ -124,10 +135,12 @@ public class TablesController implements CommonController<Tables> {
             try {
                 // do save
                 tablesDao.save(extTable);
+
+                return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Delete : You don't have permission..!";
         }

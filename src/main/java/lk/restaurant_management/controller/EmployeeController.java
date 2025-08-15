@@ -50,19 +50,29 @@ public class EmployeeController {
     // request mapping for load employee UI
     @RequestMapping(value = "/employee")
     public ModelAndView loadEmployeeUI() {
+        // Authentication Object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // create ModelAndView instance
         ModelAndView employeeView = new ModelAndView();
         employeeView.setViewName("Employee.html");
+        // create user object
+        User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
         employeeView.addObject("loggedusername", auth.getName());
 
-        User user = userDao.getByUsername(auth.getName());
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        employeeView.addObject("loggeduserphoto", user.getUserphoto());
+
+        // Html title eka wdyt pennannewa
+        employeeView.addObject("title", "BIT Project 2024 | Manage Employee ");
+
+        // log una user ta employee id ekk thiyenewanm
         if (user.getEmployee_id() != null) {
             employeeView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
             employeeView.addObject("loggedempname", "Admin");
         }
-
-        employeeView.addObject("title", "BIT Project 2024 | Manage Employee ");
         return employeeView;
     }
 
@@ -77,9 +87,11 @@ public class EmployeeController {
         Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "Employee");
 
         if (userPrivilege.getPrivi_select()) {
-            // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
-            // primary key eka use krl // id eka auto increment nisa return
-            // employeeDao.findAll(auth.getName());
+            /*
+             * last record eka udinma thyagnna one nisa sort krenewa property eka lesa
+             * primary key eka use krl
+             */
+            // id eka auto increment nisa return employeeDao.findAll();
             return employeeDao.findAll(Sort.by(Direction.DESC, "id"));
         } else {
             // privilege naththan empty array ekak return krnw
@@ -95,8 +107,8 @@ public class EmployeeController {
 
     // request post mapping for save employee record [URL --> /employee/insert]
     @PostMapping(value = "/employee/insert")
-    // ui(post) eken body(@Requestbody) eke ena json object eka java object ekak
-    // bawata convert krenewa
+    // ui eke idela (post) eken body(@Requestbody) eke ena, json object eka --> java
+    // object ekak bawata convert krenewa
     public String insertEmployee(@RequestBody Employee employee) {
         // check loged user authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -142,6 +154,9 @@ public class EmployeeController {
                     objectUser.setAddeddatetime(LocalDateTime.now());
                     objectUser.setPassword(bCryptPasswordEncoder.encode(employee.getNic()));
                     objectUser.setEmployee_id(employeeDao.getByNIC(employee.getNic()));
+                    if (employee.getEmployeeimage() != null) {
+                        objectUser.setUserphoto(employee.getEmployeeimage());
+                    }
 
                     // set user roles by hashset
                     Set<Role> roles = new HashSet<>();
@@ -209,8 +224,34 @@ public class EmployeeController {
 
                 // manage dependancies
                 // employeeta adala user acc ekk thiyenwd blanna one
-                // employee status eka maru welada blanna one
-                // user acc eka inactvie wela update wenna one
+                if (employee.getDesignation_id().getUseraccount()) {
+                    User extUser = userDao.getByUsername(employee.getEmp_uid());
+                    // user account ekk thiyenewanm
+                    if (extUser != null) {
+                        // employee status eka maru welada blanna one
+                        if (employee.getEmployeestatus_id().getId() == 3
+                                || employee.getEmployeestatus_id().getId() == 4) {
+                            // user acc eka inactvie wela update wenna one
+                            extUser.setStatus(false);
+                        }
+                        // employee photo eka change welada blanna one
+                        if (employee.getEmployeeimage() != null) {
+                            // Directly replace the old image with the new one
+                            extUser.setUserphoto(employee.getEmployeeimage());
+                        }
+                        // set user roles by hashset
+                        Set<Role> roles = new HashSet<>();
+                        // role object ekak hadenewa role entity eke id eken aran
+                        Role role = roleDao.getReferenceById(employee.getDesignation_id().getRoleid());
+                        // role object eka roles list ekata genath danewa
+                        roles.add(role);
+                        // set admin user role for admin user object
+                        extUser.setRoles(roles);
+
+                        // save user
+                        userDao.save(extUser);
+                    }
+                }
 
                 return "OK";
             } catch (Exception e) {
@@ -257,6 +298,20 @@ public class EmployeeController {
                  */
 
                 // manage dependancies
+                // employeeta adala user acc ekk thiyenwd blanna one
+                if (extEmployeeById.getDesignation_id().getUseraccount()) {
+                    User extUser = userDao.getByUsername(extEmployeeById.getEmp_uid());
+                    // user account ekk thiyenewanm
+                    if (extUser != null) {
+                        // employee status eka maru welada blanna one
+                        if (extEmployeeById.getEmployeestatus_id().getId() == 4) {
+                            // user acc eka inactvie wela update wenna one
+                            extUser.setStatus(false);
+                        }
+                        // save user
+                        userDao.save(extUser);
+                    }
+                }
 
                 return "OK";
 

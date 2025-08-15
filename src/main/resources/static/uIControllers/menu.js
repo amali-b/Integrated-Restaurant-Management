@@ -18,19 +18,17 @@ const refreshForm = () => {
     menuitem = new Object();
     menuitem.menuHasSubmenusList = new Array();
 
-    const seasonaldiscounts = getServiceRequest("/seasonaldiscount/alldata");
-    fillDropdown(selectDiscount, "Select Discount.!", seasonaldiscounts, "discountedoption");
-
     const menuStatuses = getServiceRequest("/menuStatus/alldata");
     fillDropdown(menuStatus, "Select Status.!", menuStatuses, "status");
 
-    setDefault([txtMenuname, txtPrice, selectDiscount, menuStatus]);
+    setDefault([txtMenuname, txtPrice, menuStatus]);
 
     // status eka form eka open weddima active wdyt select wenna
     menuStatus.value = JSON.stringify(menuStatuses[0]);//select value eka string wenna one nisa object eka string baweta convert krenw
     // menuStatuses list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     menuitem.menustatus_id = menuStatuses[0];
     menuStatus.style.border = "2px solid green";
+    menuStatus.disabled = true;
 
     refreshInnerFormandTable();
 }
@@ -146,6 +144,8 @@ const buttonmenuSubmenuSubmit = () => {
         confirmButtonText: "Yes, Submit!"
     }).then((result) => {
         if (result.isConfirmed) {
+            // main eke thyena list ekta inner object eka push krenewa
+            menuitem.menuHasSubmenusList.push(menuHasSubmenu);
             Swal.fire({
                 title: "Saved Successfully..!",
                 icon: "success",
@@ -156,9 +156,6 @@ const buttonmenuSubmenuSubmit = () => {
         }
     });
 
-    // main eke thyena list ekta inner object eka push krenewa
-    menuitem.menuHasSubmenusList.push(menuHasSubmenu);
-    refreshInnerFormandTable();
 }
 
 const buttonmenuSubmenuUpdate = () => {
@@ -175,6 +172,8 @@ const buttonmenuSubmenuUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                menuitem.menuHasSubmenusList[innerFormindex] = menuHasSubmenu;
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -192,10 +191,6 @@ const buttonmenuSubmenuUpdate = () => {
             timer: 1500
         });
     }
-
-    // main eke thyena list ekta inner object eka push krenewa
-    menuitem.menuHasSubmenusList[innerFormindex] = menuHasSubmenu;
-    refreshInnerFormandTable();
 }
 
 /* ############################## MAIN FORM FUNCTIONS ################################# */
@@ -213,22 +208,12 @@ const refreshMenuTable = () => {
         { property: "name", dataType: "string" },
         { property: getSubmenus, dataType: "function" },
         { property: "price", dataType: "decimal" },
-        { property: getDiscount, dataType: "function" },
         { property: getMenuStatus, dataType: "function" }
     ];
 
     //call fill data into table
     fillTableFour(tBodyMenu, menuItems, columns, menuFormRefill, true);
     $('#tableMenu').DataTable();
-}
-
-// define function for get Discount option
-const getDiscount = (dataOb) => {
-    if (dataOb.seasonaldiscount_id != null) {
-        return dataOb.seasonaldiscount_id.discountedoption;
-    } else {
-        return "-";
-    }
 }
 
 //define function for get Menu status
@@ -270,9 +255,14 @@ const menuFormRefill = (ob, rowIndex) => {
     oldmenuitem = JSON.parse(JSON.stringify(ob));
 
     txtMenuname.value = ob.name;
-    selectDiscount.value = JSON.stringify(ob.seasonaldiscount_id);
     txtPrice.value = ob.price;
     menuStatus.value = JSON.stringify(ob.menustatus_id);
+
+    if (ob.menustatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
 
     refreshInnerFormandTable();
 }
@@ -284,10 +274,6 @@ const checkFormError = () => {
         txtMenuname.style.border = "2px solid red";
         errors = errors + "Please Select Menu Item Name.! \n";
     }
-    /* if (menuitem.seasonaldiscount_id == null) {
-        selectDiscount.style.border = "2px solid red";
-        errors = errors + "Please Select Discount.! \n";
-    } */
     if (menuitem.price == null) {
         txtPrice.style.border = "2px solid red";
         errors = errors + "Please Enter Price.! \n";
@@ -310,14 +296,42 @@ const checkFormUpdate = () => {
         if (menuitem.name != oldmenuitem.name) {
             updates = updates + "Menu Name has updated from " + oldmenuitem.name + " \n";
         }
-        if (menuitem.seasonaldiscount_id.discountedoption != oldmenuitem.seasonaldiscount_id.discountedoption) {
-            updates = updates + "Discount Option has updated from " + oldmenuitem.seasonaldiscount_id.discountedoption + " \n";
-        }
         if (menuitem.price != oldmenuitem.price) {
             updates = updates + "Price has updated from " + oldmenuitem.price + " \n";
         }
         if (menuitem.menustatus_id.status != oldmenuitem.menustatus_id.status) {
             updates = updates + "Status has updated from " + oldmenuitem.menustatus_id.status + " \n";
+        }
+
+        // list wela length eka wenas welanm update ekk wela
+        if (menuitem.menuHasSubmenusList.length != oldmenuitem.menuHasSubmenusList.length) {
+            updates = updates + "Submenus has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldmitem of oldmenuitem.menuHasSubmenusList) {
+                for (const newmitem of menuitem.menuHasSubmenusList) {
+                    // old & new item wela id samanainm
+                    if (oldmitem.submenu_id.id == newmitem.submenu_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != menuitem.menuHasSubmenusList) {
+                updates = updates + "Submenus has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldmitem of oldmenuitem.menuHasSubmenusList) {
+                    for (const newmitem of menuitem.menuHasSubmenusList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldmitem.submenu_id.id == newmitem.submenu_id.id && oldmitem.quantity != newmitem.quantity) {
+                            updates = updates + "Submenus Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     return updates;
@@ -330,7 +344,7 @@ const buttonmenuItemSubmit = () => {
     title = "Are you sure to Submit following Menu Item.?";
     obName = menuitem.name;
     text = "Price : " + menuitem.price;
-    let submitResponse = getHTTPServiceRequest('/menuitem/insert', "POST", menuitem);
+    let submitResponse = ['/menuitem/insert', "POST", menuitem];
     swalSubmit(errors, title, obName, text, submitResponse, modalMenu);
 }
 
@@ -345,7 +359,7 @@ const buttonmenuItemUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/menuitem/update', "PUT", menuitem);
+        let updateResponse = ['/menuitem/update', "PUT", menuitem];
         swalUpdate(updates, title, text, updateResponse, modalMenu);
     } else {
         Swal.fire({
@@ -362,7 +376,7 @@ const menuItemDelete = (ob, rowIndex) => {
     title = "Are you sure to Delete Selected Menu Item";
     obName = menuitem.name;
     text = "Price : " + menuitem.price;
-    let deleteResponse = getHTTPServiceRequest('/menuitem/delete', "DELETE", menuitem);
+    let deleteResponse = ['/menuitem/delete', "DELETE", menuitem];
     message = "Menu Item has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalMenu, message);
 }
@@ -380,6 +394,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalMenu').modal('hide');
+            refreshMenuTable();
         }
     });
 }
@@ -431,7 +446,6 @@ const menuItemPrint = (ob, rowIndex) => {
         + '<tr><th> Menu Name :</th><td>' + ob.name + '</td></tr>'
         + '<tr><th> Pricce :</th><td>' + ob.price + '</td></tr>'
         + '<tr><th> Submenus :</th><td>' + ob.submenu_id.name + '</td></tr>'
-        + '<tr><th> Discount :</th><td>' + ob.seasonaldiscount_id.discountedoption + '</td></tr>'
         + '<tr><th> Status :</th><td>' + ob.menustatus_id.status + '</td></tr>'
         + '</table>'
         + '</body></html>'

@@ -48,10 +48,10 @@ public class IngredientCatagoryController {
             try {
                 // save operator
                 ingredientCategoryDao.save(ingredientcategory);
+                return "OK";
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }

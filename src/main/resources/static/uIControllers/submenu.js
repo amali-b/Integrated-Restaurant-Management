@@ -6,6 +6,34 @@ window.addEventListener("load", () => {
 
     //call refresh Table
     refreshSubmenutable();
+
+    $('#SelectIngredint').select2({
+        theme: "bootstrap-5",
+        width: 'resolve',
+        style: "width:273px",
+        dropdownParent: $('#modalSubmenu')
+    });
+});
+
+// function for display clear button when hover on img
+document.addEventListener("DOMContentLoaded", () => {
+    const clearBtn = document.getElementById('clearBtn');
+    const container = document.getElementById('imgContainer');
+
+    // Show button on hover
+    container.addEventListener('mouseenter', () => {
+        clearBtn.style.display = 'inline';
+    });
+    // hide button when mouse leave
+    container.addEventListener('mouseleave', () => {
+        clearBtn.style.display = 'none';
+    });
+    // Clear image on button click
+    clearBtn.onclick = () => {
+        imgProduct.value = "";
+        imgPreview.src = "images/chickenburger.jpg";
+        window[object][property] = null;
+    };
 });
 
 //define refresh form function
@@ -16,6 +44,9 @@ const refreshSubmenuForm = () => {
 
     submenu = new Object();//define submenu Object
     submenu.submenuHasIngredientList = new Array(); //define ingredient array
+
+    imgProduct.value = "";
+    imgPreview.src = "images/chickenburger.jpg";
 
     const Submenucategories = getServiceRequest("/submenucategory/alldata");
     fillDropdown(selectCategory, "Select Menu Item Category.!", Submenucategories, "name");
@@ -36,6 +67,7 @@ const refreshSubmenuForm = () => {
     // Submenustatuses list eken aregnna nisa aniwaryen object ekata value eka set kala yuthui
     submenu.submenustatus_id = Submenustatuses[0];
     productStatus.style.border = "2px solid green";
+    productStatus.disabled = true;
 
     refreshInnerFormandTable();
 }
@@ -68,7 +100,11 @@ const refreshInnerFormandTable = () => {
     let ingredients = getServiceRequest("/ingredient/alldata");
     fillDropdownTwo(SelectIngredint, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
 
+    txtQuantity.value = "";
+
     setDefault([SelectIngredint, txtQuantity]);
+
+    $(SelectIngredint).next('.select2').find('.select2-selection').css('border', 'solid 1px #ced4da');
 
     //define function for refresh inner table
     let columns = [
@@ -133,61 +169,45 @@ const submenuIngredientDelete = (ob, index) => {
 
 const buttonSubmenuIngredientSubmit = () => {
     console.log(submenuHasIngredient);
-
-    Swal.fire({
-        title: "Are you sure to Submit Following Details.?",
-        text: "Ingredient : " + submenuHasIngredient.ingredient_id.ingredient_name
-            + ", Quantity : " + submenuHasIngredient.quantity,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "green",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Submit!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: "Saved Successfully..!",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1800
-            });
-            refreshInnerFormandTable();
-        }
-    });
-
-    // main eke thyena list ekta inner object eka push krenewa
-    submenu.submenuHasIngredientList.push(submenuHasIngredient);
-    refreshInnerFormandTable();
-}
-
-const checkInnerFormUpdate = () => {
-    let innerupdates = "";
-    if (submenuHasIngredient != null && oldsubmenuHasIngredient != null) {
-        if (submenuHasIngredient.ingredient_id != oldsubmenuHasIngredient.ingredient_id) {
-            innerupdates = innerupdates + "Ingredient has Updated from " + oldsubmenuHasIngredient.ingredient_id + "--> " + submenuHasIngredient.ingredient_id + " \n";
-        }
-        if (submenuHasIngredient.quantity != oldsubmenuHasIngredient.quantity) {
-            innerupdates = innerupdates + "Quantity has updated from " + oldsubmenuHasIngredient.quantity + "--> " + submenuHasIngredient.quantity + " \n";
-        }
+    if (submenuHasIngredient.quantity != null || submenuHasIngredient.quantity > 0) {
+        Swal.fire({
+            title: "Are you sure to Submit Following Details.?",
+            text: "Ingredient : " + submenuHasIngredient.ingredient_id.ingredient_name
+                + ", Quantity : " + submenuHasIngredient.quantity,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "green",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Submit!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                submenu.submenuHasIngredientList.push(submenuHasIngredient);
+                Swal.fire({
+                    title: "Saved Successfully..!",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1800
+                });
+                refreshInnerFormandTable();
+            }
+        });
+    } else {
+        Swal.fire({
+            title: "Failed to Submit.!",
+            text: "Enter valid Quantity.!",
+            icon: "error"
+        });
     }
-    return innerupdates;
 }
 
 const buttonSubmenuIngredientUpdate = () => {
     console.log(submenuHasIngredient);
-    //check updates
-    let updates = checkInnerFormUpdate();
-    if (updates == "") {
-        Swal.fire({
-            title: "Nothing Changed..!",
-            icon: "info",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    } else {
+    if (submenuHasIngredient.quantity != oldsubmenuHasIngredient.quantity || submenuHasIngredient.ingredient_id.ingredient_name != oldsubmenuHasIngredient.ingredient_id.ingredient_name) {
         Swal.fire({
             title: "Are you sure you want to update following changes.?",
-            text: updates,
+            text: "Ingredient has updated from " + oldsubmenuHasIngredient.ingredient_id.ingredient_name
+                + "Quantity has updated from " + oldsubmenuHasIngredient.quantity,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "green",
@@ -195,6 +215,8 @@ const buttonSubmenuIngredientUpdate = () => {
             confirmButtonText: "Yes, Update!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                submenu.submenuHasIngredientList[innerFormindex] = submenuHasIngredient;
                 Swal.fire({
                     title: "Successfully Updated..!",
                     icon: "success",
@@ -204,10 +226,14 @@ const buttonSubmenuIngredientUpdate = () => {
                 refreshInnerFormandTable();
             }
         });
+    } else {
+        Swal.fire({
+            title: "Nothing Changed..!",
+            icon: "info",
+            showConfirmButton: false,
+            timer: 1500
+        });
     }
-    // main eke thyena list ekta inner object eka push krenewa
-    submenu.submenuHasIngredientList[innerFormindex] = submenuHasIngredient;
-    refreshInnerFormandTable();
 }
 
 /* ############################## MAIN FORM FUNCTIONS ################################# */
@@ -241,7 +267,7 @@ const refreshSubmenutable = () => {
     let submenus = getServiceRequest("/submenu/alldata");
 
     let columns = [
-        { property: "submenuimage", dataType: "string" },
+        { property: "submenuimage", dataType: "image-array" },
         { property: "name", dataType: "string" },
         { property: "submenu_code", dataType: "string" },
         { property: getSubmenuCategory, dataType: "function" },
@@ -283,11 +309,23 @@ const submenuFormRefill = (ob, rowIndex) => {
     submenu = JSON.parse(JSON.stringify(ob));
     oldsubmenu = JSON.parse(JSON.stringify(ob));
 
-    // imgProduct.value = ob.submenuimage;
+    // reset photo
+    if (ob.submenuimage != null) {
+        imgPreview.src = atob(ob.submenuimage);
+    } else {
+        imgPreview.src = "images/chickenburger.jpg";
+    }
     selectCategory.value = JSON.stringify(ob.category_id);
     txtProductname.value = ob.name;
     txtPrice.value = ob.price;
     productStatus.value = JSON.stringify(ob.submenustatus_id);
+    productStatus.disabled = false;
+
+    if (ob.submenustatus_id.status == "Removed") {
+        btndelete.style.display = "none";
+    } else {
+        btndelete.style.display = "inline";
+    }
 
     refreshInnerFormandTable();
 }
@@ -326,7 +364,7 @@ const checkFormUpdate = () => {
     let updates = "";
     if (submenu != null && oldsubmenu != null) {
         if (submenu.submenuimage != oldsubmenu.submenuimage) {
-            updates = updates + "Product Photo has Updated from " + oldsubmenu.submenuimage + "--> " + submenu.submenuimage + " \n";
+            updates = updates + "Product Photo has Updated \n";
         }
         if (submenu.category_id.name != oldsubmenu.category_id.name) {
             updates = updates + "Category has Updated from " + oldsubmenu.category_id.name + "--> " + submenu.category_id.name + " \n";
@@ -340,8 +378,36 @@ const checkFormUpdate = () => {
         if (submenu.submenustatus_id.name != oldsubmenu.submenustatus_id.name) {
             updates = updates + "Status has Updated from " + oldsubmenu.submenustatus_id.name + "--> " + submenu.submenustatus_id.name + " \n";
         }
+
+        // list wela length eka wenas welanm update ekk wela
         if (submenu.submenuHasIngredientList.length != oldsubmenu.submenuHasIngredientList.length) {
             updates = updates + "Submenu Ingredients has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldsitem of oldsubmenu.submenuHasIngredientList) {
+                for (const newsitem of submenu.submenuHasIngredientList) {
+                    // old & new item wela id samanainm
+                    if (oldsitem.ingredient_id.id == newsitem.ingredient_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != submenu.submenuHasIngredientList) {
+                updates = updates + "Supplier Ingredients has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldsitem of oldsubmenu.submenuHasIngredientList) {
+                    for (const newsitem of submenu.submenuHasIngredientList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldsitem.ingredient_id.id == newsitem.ingredient_id.id && oldsitem.quantity != newsitem.quantity) {
+                            updates = updates + "Supplier Ingredient Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     return updates;
@@ -358,7 +424,7 @@ const buttonProductUpdate = () => {
         let updates = checkFormUpdate();
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/submenu/update', "PUT", submenu);
+        let updateResponse = ['/submenu/update', "PUT", submenu];
         swalUpdate(updates, title, text, updateResponse, modalSubmenu);
     } else {
         Swal.fire({
@@ -376,9 +442,9 @@ const buttonProductSubmit = () => {
     title = "Are you sure to Submit Product ";
     obName = submenu.name + " .?";
     text = "Category : " + submenu.category_id.name
-        + ", Email : " + submenu.price
+        + ", Price : " + submenu.price
         + ", Status : " + submenu.submenustatus_id.name;
-    let submitResponse = getHTTPServiceRequest('/submenu/insert', "POST", submenu);
+    let submitResponse = ['/submenu/insert', "POST", submenu];
     swalSubmit(errors, title, obName, text, submitResponse, modalSubmenu);
 }
 
@@ -389,7 +455,7 @@ const productDelete = (ob, rowIndex) => {
     obName = ob.name + " .?";
     text = "Category : " + ob.category_id.name
         + ", Price : " + ob.price;
-    let deleteResponse = getHTTPServiceRequest('/submenu/delete', "DELETE", submenu);
+    let deleteResponse = ['/submenu/delete', "DELETE", submenu];
     message = "Product has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalSubmenu, message);
 }
@@ -439,12 +505,13 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshSubmenuForm();
             $('#modalSubmenu').modal('hide');
+            refreshSubmenutable();
         }
     });
 }
 
 //function define for print Supplier Order record
-const productPrint = (ob, rowIndex) => {
+/* const productPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodySubmenu, rowIndex, "White");
 
@@ -541,4 +608,119 @@ const productPrint = (ob, rowIndex) => {
         newWindow.close();
     }, 300);
 };
+ */
 
+//function define for print Order record
+const productPrint = (ob, rowIndex) => {
+    console.log("Printing order:", ob, rowIndex);
+
+    // table eke row eka click kalama color eka change wenw
+    activeTableRow(tBodySubmenu, rowIndex, "White");
+
+    // Print eke content eka generate krena function eka cll krenewa
+    const printContent = generateSupplyOrderPrintHTML(ob);
+
+    // Create and configure the print window
+    const printWindow = window.open();
+
+    // Write content and handle printing
+    printWindow.document.writeln(printContent);
+    printWindow.document.close();
+
+    // Wait for content to load, then print
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    };
+};
+
+// Print eke content eka generate krena function eka define krenewa
+// @param {Object} order - order object eke thama all order details thyenne
+const generateSupplyOrderPrintHTML = (ob) => {
+    ob = submenu;
+    const currentDateTime = new Date().toLocaleString();
+
+    //  @returns {string} - print window eke display wenna one html eka return krnw
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- link bs5 -->
+        <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+        <!-- link css -->
+        <link rel="stylesheet" href="css/print.css">
+
+        <title> Submenu Management - BIT 2025</title>
+    </head>
+    <body>
+        <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Submenu Details</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th>${ob.name}</th>
+                </tr>
+                <tr>
+                    <td>${ob.submenuimage}</td>
+                    <td>${ob.category_id.name}</td>
+                    <td>${ob.price}</td>
+                    <td>${ob.submenustatus_id.name}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="items-section">
+            <h3> Order Ingredients </h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ingredient Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${generateItemRows(ob)}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your business! </p>
+            &copy; 2025 BIT Project. All rights reserved.
+            <p>Generated on ${currentDateTime}</p>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
+//@param {Array} items - Array of order items
+//@returns {string} - HTML string for table rows
+const generateItemRows = (submenu) => {
+    // Extract items from the correct association names
+    const items = submenu.submenuHasIngredient || [];
+
+    return items.map((item, index) => {
+        // Handle different possible database structures
+        const itemName = item.ingredient_id?.ingredient_name || "";
+
+        const quantity = item.quantity;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${itemName}</td>
+                <td>${quantity}</td>
+            </tr>
+        `;
+    }).join('');
+};

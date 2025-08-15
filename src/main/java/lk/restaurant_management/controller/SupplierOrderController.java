@@ -48,7 +48,15 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
         supplierOrderView.setViewName("SupplierOrder.html");
         supplierOrderView.addObject("loggedusername", auth.getName());
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        supplierOrderView.addObject("loggeduserphoto", user.getUserphoto());
+
+        // log wela inna user ge username eka set krenewa
+        supplierOrderView.addObject("loggedusername", auth.getName());
+
         if (user.getEmployee_id() != null) {
             supplierOrderView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {
@@ -74,6 +82,26 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
             // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
             // primary key eka use krl // id eka auto increment nisa return
             return supplierOrderDao.findAll(Sort.by(Direction.DESC, "id"));
+        } else {
+            // privilege naththan empty array ekak return krnw
+            return new ArrayList<>();
+        }
+    }
+
+    // define mapping get all supplierOrder data -- URL [/supplierorder/alldata]
+    // backend eke idan data fontend ekata return kranne json format eken nisa
+    // (produces = "application/json")
+    @GetMapping(value = "/supplierorder/bypendingstatus", produces = "application/json")
+    public List<SupplierOrder> getByPendingStatus() {
+        // check user authorization
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SupplierOrder");
+
+        if (userPrivilege.getPrivi_select()) {
+            // last record eka udinma thyagnna one nisa sort krenewa property eka lesa
+            // primary key eka use krl // id eka auto increment nisa return
+            return supplierOrderDao.getSupplierorderByPendingStatus();
         } else {
             // privilege naththan empty array ekak return krnw
             return new ArrayList<>();
@@ -109,10 +137,11 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
                 // do save
                 supplierOrderDao.save(supplierOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Save not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Save : You don't have permission..!";
         }
@@ -145,10 +174,11 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
                 // do save operation
                 supplierOrderDao.save(supplierOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Update not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Update : You don't have permission..!";
         }
@@ -184,10 +214,11 @@ public class SupplierOrderController implements CommonController<SupplierOrder> 
                 // do save operation
                 supplierOrderDao.save(extSupOrder);
 
+                return "OK";
+
             } catch (Exception e) {
                 return "Delete not Completed : " + e.getMessage();
             }
-            return "OK";
         } else {
             return "Couldn't Complete Delete : You don't have permission..!";
         }

@@ -67,7 +67,7 @@ const refreshUserForm = () => {
     txtUserPwd.disabled = false;
     txtrePwd.disabled = false;
 
-    setDefault([empName, txtUid, txtUserPwd, txtrePwd, txtEmail, empStatus, txtNote]);
+    setDefault([empName, txtUid, txtUserPwd, txtrePwd, txtEmail, empStatus]);
 
 }
 //create refresh function
@@ -82,6 +82,7 @@ const refreshUserTable = () => {
     let users = getServiceRequest("/user/alldata");
 
     let propertyList = [
+        { property: "userphoto", dataType: "image-array" },
         { property: getEmpName, dataType: "function" },
         { property: "username", dataType: "string" },
         { property: "email", dataType: "string" },
@@ -151,12 +152,6 @@ const userFormRefill = (ob, index) => {
     } else {
         empStatus.checked = "";
         labelUserStatus.innerText = "User Account is In-Active ";
-    }
-
-    if (ob.note = null || ob.note != undefined) {
-        txtNote.value = ob.note;
-    } else {
-        txtNote.value = "";
     }
 
     const roles = getServiceRequest("/role/withoutadmin");
@@ -239,9 +234,6 @@ const checkFormUpdate = () => {
         }
         if (user.status != olduser.status) {
             updates = updates + "Status has changed.!\n";
-        }
-        if (user.note != olduser.note) {
-            updates = updates + "Note has changed.!\n";
         }
         if (user.roles.length != olduser.roles.length) {
             updates = updates + "Role has changed.!\n";
@@ -480,6 +472,7 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshUserForm();
             $('#modalUser').modal('hide');
+            refreshUserTable();
         }
     });
 }

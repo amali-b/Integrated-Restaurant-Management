@@ -42,6 +42,8 @@ public class Order {
 
     private BigDecimal servicecharge;
 
+    private BigDecimal deliverycharge;
+
     @NotNull
     private BigDecimal netamount;
 
@@ -58,6 +60,9 @@ public class Order {
     private LocalDateTime updatedatetime;
 
     private LocalDateTime deletedatetime;
+
+    private LocalDateTime kitchenconfirmdatetime;
+    private Integer kitchenconfirmuser;
 
     @ManyToOne
     @JoinColumn(name = "ordertype_id", referencedColumnName = "id")
@@ -76,14 +81,34 @@ public class Order {
     private Tables tables_id;
 
     @ManyToOne(optional = true)
+    @JoinColumn(name = "deliveryassist_id", referencedColumnName = "id")
+    private DeliveryAssist deliveryassist_id;
+
+    @ManyToOne(optional = true)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer_id;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "kitchenstatus_id", referencedColumnName = "id")
+    private KitchenStatus kitchenstatus_id;
+
+    /*
+     * Order object eheka order_has_submenu or order_has_menuitems ekak
+     * orderHasSubmenuList list eken or orderHasMenuitemList eken
+     * remove kaloth or submenu or menu ekak remove kloth eka database ekenuth
+     * delete kranna orphanRemoval = true danewa
+     */
+
     // Order and order_has_submenu has one to many relationship
+    // orphanRemoval update delete kranna ba inner eke
     @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderHasSubmenu> orderHasSubmenuList;
 
     // Order and order_has_menuitems has one to many relationship
     @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderHasMenuitem> orderHasMenuitemList;
+
+    // Order and order_has_menuitems has one to many relationship
+    @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderHasIngredient> orderHasIngredientList;
 }

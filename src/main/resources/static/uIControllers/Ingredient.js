@@ -10,7 +10,7 @@ window.addEventListener("load", () => {
 
 // define function for ingredient category form
 const refreshIngCategoryForm = () => {
-    formIngCategory.reset();
+    // formCategory.reset();
 
     ingredientcategory = new Object();
 
@@ -32,6 +32,11 @@ const buttonCategorySubmit = () => {
             if (result.isConfirmed) {
                 let submitResponse = getHTTPServiceRequest('/ingredientcategory/insert', "POST", ingredientcategory);
                 if (submitResponse == "OK") {
+                    let ingredientcategories = getServiceRequest("/ingredientcategory/alldata");
+                    fillDropdown(SelectCategory, "Select Ingredient Category.!", ingredientcategories, "name");
+                    SelectCategory.value = JSON.stringify(ingredientcategories[0]);
+                    SelectCategory.style.border = "2px solid green";
+                    ingredient.ingredientcategory_id = JSON.parse(SelectCategory.value);
                     Swal.fire({
                         title: "Saved Successfully..!",
                         icon: "success",
@@ -39,11 +44,6 @@ const buttonCategorySubmit = () => {
                         timer: 1800
                     });
                     refreshIngCategoryForm();
-                    let ingredientcategories = getServiceRequest("/ingredientcategory/alldata");
-                    fillDropdown(SelectCategory, "Select Ingredient Category.!", ingredientcategories, "name");
-                    SelectCategory.value = JSON.stringify(ingredientcategories[0]);
-                    SelectCategory.style.border = "2px solid green";
-                    ingredient.ingredientcategory_id = JSON.parse(SelectCategory.value);
                 } else {
                     Swal.fire({
                         title: "Save not Completed..! Has following errors :",
@@ -80,7 +80,7 @@ const refreshIngredientForm = () => {
     const unittypes = getServiceRequest("/unitType/alldata");
     fillDropdown(SelectUnitType, "Select Unit Type.!", unittypes, "name");
 
-    setDefault([SelectCategory, txtIngredientname, dateMade, dateExpire, unitSize, txtPrice, txtRop, txtRoq, SelectStatus, SelectUnitType, txtNote]);
+    setDefault([SelectCategory, txtIngredientname, unitSize, txtPrice, txtRop, txtRoq, SelectStatus, SelectUnitType]);
 
     //select element eke value eka string value ekak wenna one nisa object eka string baweta convert krenw
     SelectStatus.value = JSON.stringify(ingredientstatuses[0]);
@@ -88,6 +88,7 @@ const refreshIngredientForm = () => {
     ingredient.ingredientstatus_id = JSON.parse(SelectStatus.value);
     //select element eke border color eka change kranna one
     SelectStatus.style.border = "2px solid green";
+    SelectStatus.disabled = true;
 }
 
 /* 
@@ -175,11 +176,11 @@ const ingredientFormRefill = (ob, rowIndex) => {
     txtPrice.value = ob.purchase_price;
     txtRop.value = ob.reoder_point;
     txtRoq.value = ob.reorder_quantity;
-
-    if (ob.note == undefined) {
-        txtNote.value = "";
+    SelectStatus.disabled = false;
+    if (ob.ingredientstatus_id.status == "Removed") {
+        btndelete.style.display = "none";
     } else {
-        txtNote.value = ob.note;
+        btndelete.style.display = "inline";
     }
 }
 
@@ -265,47 +266,9 @@ const buttonItemUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/ingredient/update', "PUT", ingredient);
+        let updateResponse = ['/ingredient/update', "PUT", ingredient];
         swalUpdate(updates, title, text, updateResponse, modalIngredient);
 
-        /* if (updates == "") {
-            Swal.fire({
-                title: "Nothing Updated.!",
-                icon: "info",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        } else {
-            Swal.fire({
-                title: "Are you sure you want to update following changes.?",
-                text: updates,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "green",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, Update!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    //call put service
-                    let updateResponse = getHTTPServiceRequest('/ingredient/update', "PUT", ingredient);
-                    if (updateResponse == "OK") {
-                        Swal.fire({
-                            title: "Successfully Updated.!!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        window.location.reload();
-                    } else {
-                        Swal.fire({
-                            title: "Failed to Update.! Has following errors : ",
-                            text: updateResponse,
-                            icon: "info"
-                        });
-                    }
-                }
-            });
-        } */
     } else {
         Swal.fire({
             title: "Failed to Update.! Has following errors : ",
@@ -323,7 +286,7 @@ const buttonItemSubmit = () => {
     obName = ingredient.ingredient_name;
     text = "Unit Size : " + ingredient.measuring_unit + ingredient.unittype_id.name
         + ", Purchase Price : " + ingredient.purchase_price;
-    let submitResponse = getHTTPServiceRequest('/ingredient/insert', "POST", ingredient);
+    let submitResponse = ['/ingredient/insert', "POST", ingredient];
     swalSubmit(errors, title, obName, text, submitResponse, modalIngredient);
 }
 
@@ -333,49 +296,9 @@ const itemDelete = (ob, rowIndex) => {
     title = "Are you sure to Delete followong Ingredient.?";
     obName = "";
     text = ob.ingredient_name;
-    let deleteResponse = getHTTPServiceRequest('/ingredient/delete', "DELETE", ingredient);
-    message = "Menu Item has Deleted.";
+    let deleteResponse = ['/ingredient/delete', "DELETE", ingredient];
+    message = "Ingredient has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalIngredient, message);
-
-    /* Swal.fire({
-        title: "Are you sure to Delete followong Ingredient.?",
-        text: ob.ingredient_name,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "green",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Delete!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            //call Delete service
-            let deleteServerResponse = getHTTPServiceRequest('/ingredient/delete', "DELETE", ingredient);
-            if (deleteServerResponse == "OK") {
-                Swal.fire({
-                    title: "Deleted Successfully.!",
-                    text: "Ingredient has Deleted.",
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                //refresh table & Form
-                refreshIngredientForm();
-                refreshIngredienttable();
-                $('#modalIngredient').modal('hide');
-            } else {
-                Swal.fire({
-                    title: "Failed to Delete.!",
-                    text: deleteResponse,
-                    icon: "error"
-                });
-            }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire({
-                title: "Cancelled",
-                text: "Your data is safe!",
-                icon: "error"
-            });
-        }
-    }); */
 }
 
 //define function for clear/reset button
@@ -407,6 +330,8 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshIngredientForm();
             $('#modalIngredient').modal('hide');
+            //call refresh Table
+            refreshIngredienttable();
         }
     });
 }

@@ -1,74 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIT Project 2024 | Dashboard </title>
-    <!-- link image -->
-    <link rel="icon" href="images/Bando.png">
-    <!-- link css -->
-    <link rel="stylesheet" href="css/dashboard.css">
-    <!-- link bs5 css -->
-    <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
-    <!-- link bs5 js files -->
-    <script src="bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
-    <!-- link jquery file-->
-    <script src="jquery-3.7.1.min.js"></script>
-    <!-- link icon files -->
-    <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css">
-</head>
+<head th:replace="~{header :: headerFragment}"></head>
 
 <body>
     <div class="container-fluid p-0">
         <img src="images/rest1.webp" class="bodyimg">
-
-        <!-- Start navbar  -->
-        <!-- <nav class="navbar bg-light fixed-top">
-        <div class="container-fluid">
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Administration</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav> -->
-        <!-- End navbar  -->
 
         <!-- Start Dashboard head -->
         <div class="wrapper">
@@ -78,10 +15,10 @@
             <!--Start Dashboard body -->
             <div class="main" id="dashboardItems">
                 <!-- ORDER UI START -->
-                <h3>Bando offers</h3>
-                <p class="pagecontent">The Best Tasting Experience</p>
+                <h3 class="mb-0">Bando offers</h3>
+                <p class="pagecontent mb-0">The Best Tasting Experience</p>
 
-                <div class="justify-content-md-center d-flex mb-4">
+                <div class="justify-content-md-center d-flex mb-3">
                     <h4 class="text-center d-grid txtorder">Make a Order</h4>
                 </div>
 
@@ -110,42 +47,93 @@
                 <!-- ORDER UI END -->
 
                 <!-- START DASHBOARD VIEW -->
-                <div class="row d-flex d-flex justify-content-evenly mt-5">
-                    <!-- d-grid : to collapse by clicking anywhere in the button -->
-                    <!-- <div class="d-grid text-center col-2 viewDashboard" id="btncustomer">
-                        <a class="btn btn-outline btn-lg" href="/customer" type="button" role="button">
-                            CUSTOMER
-                        </a>
+                <div class="row d-flex justify-content-evenly mt-3 p-3">
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <div class="row">
+                                    <p class="col card-text"> Sales Summary </p>
+                                    <span class="col-1 text-end"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                                </div>
+                                <h4 class="card-title" id="txtSaleSummary"></h4>
+                                <p class="card-text text-end"><small>Weekly</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/supplier" type="button" role="button">
-                            SUPLLIER
-                        </a>
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <div class="row">
+                                    <p class="col card-text">Number of Orders</p>
+                                    <span class="col-1 text-end"><i class="fa-solid fa-dolly"></i></span>
+                                </div>
+                                <h4 class="card-title" id="txtOrderSummary"></h4>
+                                <p class="card-text text-end"><small>Weekly</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/submenu" type="button" role="button">
-                            SUBMENU
-                        </a>
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <div class="row">
+                                    <p class="col card-text">Supplier Payment</p>
+                                    <span class="col-1 text-end"><i class="fa-solid fa-money-bill-transfer"></i></span>
+                                </div>
+                                <h4 class="card-title" id="txtSupplierPayments"></h4>
+                                <p class="card-text text-end"><small>Monthly</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/menuitems" type="button" role="button">
-                            MENU ITEMS
-                        </a>
+                    <div class="col justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body ms-3 me-3">
+                                <div class="row">
+                                    <p class="col card-text">New Customer Registrations</p>
+                                    <span class="col-1 text-end"><i class="fa-solid fa-crown"></i></span>
+                                </div>
+                                <h4 class="card-title" id="txtCustomerRegister"></h4>
+                                <p class="card-text text-end"><small>Annual</small></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-grid text-center col-2 viewDashboard">
-                        <a class="btn btn-outline btn-lg" href="/ingredient" type="button" role="button">
-                            INGREDIENT
-                        </a>
-                    </div> -->
                 </div>
+                <!-- End Dashboard View -->
+
+                <!-- Start Chart View -->
+                <div class="row p-3 ">
+                    <div class="col-6 justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 justify-content-md-center">
+                        <div class="card viewDashboard">
+                            <div class="card-body">
+                                <canvas id="doughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Chart View -->
+
             </div>
-            <!-- End Dashboard body -->
-
+            <!-- End Dashboard head  -->
         </div>
-        <!-- End Dashboard head  -->
-    </div>
 
-    <script src="uIControllers/dashboard.js"></script>
+        <script>
+            window.addEventListener("load", () => {
+                moduleList = getServiceRequest("/modulewithoutuserprivi");
+                for (const module of moduleList) {
+                    $(`.${module.name}`).css("display", "none");
+                }
+                $(`.${viewDashboard}`).css("display", "none");
+
+            })
+        </script>
+        <script src="uIControllers/dashboard.js"></script>
+        <script src="scripts/common.js"></script>
 </body>
 
 </html>

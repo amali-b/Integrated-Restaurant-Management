@@ -40,7 +40,7 @@
                     <!-- buttons display wenne nathi kranna d-none danne -->
                     <div id="divModifybtn" class="d-none">
                         <button class="button me-2 fw-bold" id="btnedit" type="button"
-                            onclick="employeeFormRefill(window['editob'], window['editrowno'])"><i
+                            onclick="employeeFormRefill(window['editob'], window['editrowno']); document.getElementById('formEmp').scrollIntoView({ behavior: 'smooth' });"><i
                                 class="fa-solid fa-angles-down icon"></i><br> Edit </button>
                         <button class="button me-2 fw-bold" id="btnprint" type="button" data-bs-toggle="modal"
                             data-bs-target="#modalEmployeePrint"
@@ -129,6 +129,28 @@
                         <div class="card-body crdbdy">
                             <!-- form eke default submit eka disable kranna one -->
                             <form id="formEmp" onsubmit="return false">
+                                <!-- Start Employee Photo -->
+                                <div class="row justify-content-center mt-2">
+                                    <div class="col-auto">
+                                        <!-- hidden input -->
+                                        <input type="file" id="imgEmployee" accept="image/*" style="display: none;"
+                                            onchange="fileValidator(this, 'employee', 'employeeimage',document.getElementById('imgPreview'), document.getElementById('clearBtn'), document.getElementById('imgContainer'))">
+                                        <div class="position-relative d-inline-block" id="imgContainer">
+                                            <!-- Clickable image -->
+                                            <img src="images/userimage.png" id="imgPreview" alt="Upload here"
+                                                class="img-thumbnail" style="cursor: pointer; max-width: 130px;"
+                                                onclick="document.getElementById('imgEmployee').click();">
+                                            <!-- clear button -->
+                                            <button type=" button" id="clearBtn"
+                                                class="btn btn-sm btn-danger position-absolute bottom-0 start-50 m-1"
+                                                style="display: none;">
+                                                Clear <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Employee Photo -->
+
                                 <!-- Start Name -->
                                 <div class="row mt-3">
                                     <!-- Start Full Name -->
@@ -136,7 +158,7 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <label for="txtfullName"
-                                                    class="input-group-text form-lable col-2 fw-bold">Full
+                                                    class="input-group-text form-label col-2 fw-bold">Full
                                                     Name : <span class="text-danger">*</span></label>
                                                 <div class="col">
                                                     <input type="text" id="txtfullName" class="form-control"
@@ -155,7 +177,7 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <label for="txtcName"
-                                                    class="input-group-text form-lable col-3 fw-bold">Calling
+                                                    class="input-group-text form-label col-3 fw-bold">Calling
                                                     Name : <span class="text-danger">*</span></label>
                                                 <div class="col">
                                                     <input type="text" id="txtcName" class="form-control"
@@ -184,7 +206,7 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <label for="txtNic"
-                                                    class="input-group-text form-lable col-2 fw-bold">NIC :
+                                                    class="input-group-text form-label col-2 fw-bold">NIC :
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col">
                                                     <input type="text" class="form-control" id="txtNic"
@@ -204,12 +226,12 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <label for="txtEmail"
-                                                    class="input-group-text form-lable col-3 fw-bold">Email :
+                                                    class="input-group-text form-label col-3 fw-bold">Email :
                                                     <span class="text-danger">*</span></label>
                                                 <div class="col">
                                                     <input type="email" class="form-control col" id="txtEmail"
                                                         placeholder="Enter your Email " required
-                                                        onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{6,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'employee', 'email')">
+                                                        onkeyup="txtValidator(this,'^[a-zA-Z0-9\\%]{3,20}[@][a-z]{4,10}[.][a-z]{2,3}$', 'employee', 'email')">
                                                 </div>
                                             </div>
                                             <div class="form-text text-end">Enter valid Email (Ex: abc@gmail.com)
@@ -227,7 +249,7 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <label for="txtNumber"
-                                                    class="input-group-text form-lable col-2 fw-bold">
+                                                    class="input-group-text form-label col-2 fw-bold">
                                                     Contact No : <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col">
@@ -248,7 +270,7 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <span onclick="dateDOB.focus()"
-                                                    class="input-group-text form-lable col-3 fw-bold">Date of Birth
+                                                    class="input-group-text form-label col-3 fw-bold">Date of Birth
                                                     :
                                                     <span class="text-danger">*</span>
                                                 </span>
@@ -270,18 +292,18 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable class="input-group-text form-lable col-2 fw-bold">Gender :
+                                                <label class="input-group-text form-label col-2 fw-bold">Gender :
                                                     <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="form-check col-2">
                                                     <input type="radio" class="form-check-input" id="radioMale"
                                                         name="gender" required>
-                                                    <label for="radioMale" class="form-lable"> Male </label>
+                                                    <label for="radioMale" class="form-label"> Male </label>
                                                 </div>
                                                 <div class="form-check col">
                                                     <input type="radio" class="form-check-input" id="radioFemale"
                                                         name="gender" required>
-                                                    <label for="radioFemale" class="form-lable"> Female </label>
+                                                    <label for="radioFemale" class="form-label"> Female </label>
                                                 </div>
                                             </div>
                                         </div>
@@ -292,11 +314,11 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable for="civilStatus"
-                                                    class="input-group-text form-lable col-3 fw-bold">
+                                                <label for="civilStatus"
+                                                    class="input-group-text form-label col-3 fw-bold">
                                                     Civil
                                                     Status : <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="col">
                                                     <select id="civilStatus" class="form-select"
                                                         onchange="selectDynamicElementValidator(this, 'employee', 'civilstatus_id')">
@@ -320,10 +342,10 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable for="selectDesignation"
-                                                    class="input-group-text form-lable col-2 fw-bold">Designation :
+                                                <label for="selectDesignation"
+                                                    class="input-group-text form-label col-2 fw-bold">Designation :
                                                     <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="col">
                                                     <select id="selectDesignation" class="form-select"
                                                         onchange="selectDynamicElementValidator(this, 'employee', 'designation_id')">
@@ -346,10 +368,10 @@
                                     <div class="col">
                                         <div class="row">
                                             <div class="input-group">
-                                                <lable for="empStatus"
-                                                    class="input-group-text form-lable col-3 fw-bold">
+                                                <label for="empStatus"
+                                                    class="input-group-text form-label col-3 fw-bold">
                                                     Employee Status : <span class="text-danger">*</span>
-                                                </lable>
+                                                </label>
                                                 <div class="col">
                                                     <select id="empStatus" class="form-select"
                                                         onchange="selectDynamicElementValidator(this, 'employee', 'employeestatus_id')">
@@ -368,16 +390,16 @@
                                 <!-- Start address/note-->
                                 <div class="row mt-3">
                                     <!-- Start Address -->
-                                    <div class="col">
+                                    <div class="col-6">
                                         <!-- <div class="row form-floating">
                                     <textarea class="form-control" id="txtAdres" required placeholder="Enter Address"
                                         onchange="employee.address = this.value; this.style.border = 'solid 2px green'">
                                         </textarea>
-                                    <label for="txtAdres" class="form-lable fw-bold"> Address : <span
+                                    <label for="txtAdres" class="form-label fw-bold"> Address : <span
                                             class="text-danger">*</span></label>
                                 </div> -->
                                         <div class="row">
-                                            <label for="txtAdres" class="form-lable fw-bold col-2">Address : <span
+                                            <label for="txtAdres" class="form-label fw-bold col-2">Address : <span
                                                     class="text-danger">*</span></label>
                                             <div class="col">
                                                 <textarea id="txtAdres" class="form-control" required
@@ -389,14 +411,14 @@
                                     <!-- End Address -->
 
                                     <!-- Start Note -->
-                                    <div class="col">
+                                    <!--  <div class="col">
                                         <div class="form-floating">
                                             <textarea id="txtNote" class="form-control" placeholder="Enter Notes"
                                                 onkeyup="employee.note = this.value; this.style.border = 'solid 2px green'"></textarea>
-                                            <label for="txtNote" class="form-lable fw-bold">Note : <span
+                                            <label for="txtNote" class="form-label fw-bold">Note : <span
                                                     class="text-danger"></span></label>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- End Note -->
                                 </div>
                                 <!-- End address/note-->
@@ -481,8 +503,8 @@
         </div>
     </div>
 
-</body>
+    <div th:replace="~{footer :: footerFragment}"></div>
 
-<body th:replace="~{footer :: footerFragment}"></body>
+</body>
 
 </html>

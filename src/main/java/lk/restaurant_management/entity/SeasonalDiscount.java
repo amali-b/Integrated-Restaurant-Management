@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,4 +39,8 @@ public class SeasonalDiscount {
 
     @NotNull
     private BigDecimal discountedprice;
+
+    @ManyToOne // seasonaldiscount and menuitems has many to one relationship
+    @JoinColumn(name = "menuitems_id", referencedColumnName = "id")
+    private MenuItem menuitems_id;
 }

@@ -30,7 +30,7 @@ public class OrderHasSubmenu {
     private BigDecimal price;
 
     @NotNull
-    private String quantity;
+    private BigDecimal quantity;
 
     @NotNull
     private BigDecimal lineprice;

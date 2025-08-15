@@ -43,10 +43,17 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView userView = new ModelAndView();
         userView.setViewName("User.html");
-        userView.addObject("loggedusername", auth.getName());
         userView.addObject("title", "BIT Project 2024 | Manage User ");
 
+        // user object ekak gennagnnewa
         User user = userDao.getByUsername(auth.getName());
+
+        // log wela inna user ge username eka set krenewa
+        userView.addObject("loggedusername", auth.getName());
+
+        // log wela inna user ge photo ekak thyewanm eka display krenw
+        userView.addObject("loggeduserphoto", user.getUserphoto());
+
         if (user.getEmployee_id() != null) {
             userView.addObject("loggedempname", user.getEmployee_id().getCallingname());
         } else {

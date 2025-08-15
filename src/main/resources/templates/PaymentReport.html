@@ -3,11 +3,6 @@
 
 <head th:replace="~{header :: headerFragment}"></head>
 
-<head>
-    <script src="chart/chart.js"></script>
-
-</head>
-
 <body>
     <div class="wrapper">
 
@@ -18,7 +13,7 @@
         <div class="main">
             <div class="row justify-content-center">
                 <div class="col text-center">
-                    <div id="pageTitle"> Payment Report </div>
+                    <div id="pageTitle"> Supplier Payment Report </div>
                 </div>
             </div>
 
@@ -28,19 +23,19 @@
                     <div class="row">
                         <div class="col-3">
                             <div class="row">
-                                <label class="col-4 form-lable" for="dateStartDate">Start Date</label>
+                                <label class="col-4 fw-bold form-label" for="dateStartDate">Start Date</label>
                                 <input type="date" class="col form-control" id="dateStartDate">
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="row">
-                                <label class="col-4 form-lable" for="dateEndDate">End Date</label>
+                                <label class="col-4 fw-bold form-label" for="dateEndDate">End Date</label>
                                 <input type="date" class="form-control col" id="dateEndDate">
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="row">
-                                <label class="col-3 form-lable" for="selectType">Type</label>
+                                <label class="col-3 fw-bold form-label" for="selectType">Type</label>
                                 <select class="form-select col" id="selectType">
                                     <option value="" disabled selected>Select Type</option>
                                     <option value="Weekly">Weekly</option>
@@ -49,10 +44,10 @@
                             </div>
                         </div>
                         <div class="col-3 text-end">
-                            <button class="btn me-2" type="button" id="btnModal" onclick="generateReport();">
+                            <button class="btn me-1" type="button" id="btnModal" onclick="generateReport();">
                                 Generate</button>
-                            <button class="btn" type="button" id="btnModal" onclick="printChart()">
-                                Print Chart</button>
+                            <button class="btn me-3" type="button" id="btnModal" onclick="printChart()">
+                                Print Report</button>
                         </div>
                     </div>
                 </div>
@@ -62,35 +57,20 @@
             <div class="row mt-3">
                 <div class="col-1"></div>
                 <div class="col-5">
-                    <table class="table tablet" id="tablePaymentReport">
-                        <thead>
-                            <tr>
+                    <table class="tablet table-bordered" id="tablePaymentReport">
+                        <thead id="tHeadPaymentReport">
+                            <!-- <tr>
                                 <th>No</th>
                                 <th>Month Name</th>
                                 <th>Amount</th>
-                            </tr>
+                            </tr> -->
                         </thead>
-                        <tbody id="tBodyPaymentReport">
-                            <tr>
+                        <tbody class="table-group-divider" id="tBodyPaymentReport">
+                            <!-- <tr>
                                 <td>1</td>
                                 <td>March</td>
                                 <td>3900.00</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>April</td>
-                                <td>14000.00</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>May</td>
-                                <td>6500.00</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>June</td>
-                                <td>7300.00</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
@@ -103,8 +83,8 @@
         </div>
     </div>
     <script src="uIControllers/reportPayment.js"></script>
-</body>
 
-<body th:replace="~{footer :: footerFragment}"></body>
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
 
 </html>

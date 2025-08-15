@@ -52,10 +52,6 @@ public class MenuItem {
     private LocalDateTime deletedatetime;
 
     @ManyToOne
-    @JoinColumn(name = "seasonaldiscount_id", referencedColumnName = "id")
-    private SeasonalDiscount seasonaldiscount_id;
-
-    @ManyToOne
     @JoinColumn(name = "menustatus_id", referencedColumnName = "id")
     private MenuStatus menustatus_id;
 

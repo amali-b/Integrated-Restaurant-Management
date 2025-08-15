@@ -15,17 +15,19 @@ const refreshForm = () => {
     btnsubmit.style.display = "inline";
     btnupdate.style.display = "none";
     SelectSupplier.disabled = "";
+    supplyorderStatus.disabled = true;
     //define new object
     supplierorder = new Object();
     supplierorder.supplierorderHasIngredientList = new Array();
 
     const suppliers = getServiceRequest("/supplier/alldata");
     fillDropdown(SelectSupplier, "Select Supplier.!", suppliers, "supplier_name");
+    // fillDropdownTwo(SelectSupplier, "Select Supplier.!", suppliers, "supplier_name", "supplier_id.supplier_name")
 
     const supplierOrderStatuses = getServiceRequest("/supplyOrderStatus/alldata");
     fillDropdown(supplyorderStatus, "Select Status.!", supplierOrderStatuses, "status");
 
-    setDefault([SelectSupplier, dateRequired, txtTotalAmount, supplyorderStatus, txtNote]);
+    setDefault([SelectSupplier, dateRequired, txtTotalAmount, supplyorderStatus]);
 
     // status eka form eka open weddima active wdyt select wenna
     //select value eka string wenna one nisa object eka string baweta convert krenw
@@ -63,6 +65,7 @@ const refreshForm = () => {
 /* ############################## INNER FORM FUNCTIONS ################################# */
 
 // define function for check ingredients existance
+// exit check krena welawedima thama selected item eke unit price ekth set kranne
 const checkIngredientExt = () => {
     //dropdown eken select krena value eka aregnnewa object ekak lesa convert krela 
     let Selectedingredient = JSON.parse(SelectIngredints.value);
@@ -86,6 +89,9 @@ const filteringredientsbySupplier = () => {
     let ingredients = getServiceRequest("/ingredient/listbysupplier?supplierid=" + JSON.parse(SelectSupplier.value).id);
     fillDropdownTwo(SelectIngredints, "Select Ingredients", ingredients, "ingredient_name", "unittype_id.name");
     SelectIngredints.disabled = false;
+    SelectIngredints.style.border = "2px solid #ced4da";
+    txtPrice.value = "";
+    txtPrice.style.border = "2px solid #ced4da";
 }
 
 //define function for refresh inner form
@@ -147,7 +153,7 @@ const refreshInnerFormandTable = () => {
     }
 
     let column = [{ property: "lineprice", dataType: "decimal" }];
-    fillInnerTableFooter(tfootSupplyOrderhasIngredient, supplierorder.supplierorderHasIngredientList, column);
+    fillInnerTableFooter(tfootSupplyOrderhasIngredient, supplierorder.supplierorderHasIngredientList, column, columns.length);//columns.length -->colspan wennone column length eka
 }
 
 const getIngredientName = (ob) => {
@@ -243,14 +249,14 @@ const buttonSupplierOrderIngredientSubmit = () => {
             confirmButtonText: "Yes, Submit!"
         }).then((result) => {
             if (result.isConfirmed) {
+                // main eke thyena list ekta inner object eka push krenewa
+                supplierorder.supplierorderHasIngredientList.push(supplierorderHasIngredient);
                 Swal.fire({
                     title: "Saved Successfully..!",
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1800
                 });
-                // main eke thyena list ekta inner object eka push krenewa
-                supplierorder.supplierorderHasIngredientList.push(supplierorderHasIngredient);
                 refreshInnerFormandTable();
             }
         });
@@ -261,7 +267,6 @@ const buttonSupplierOrderIngredientSubmit = () => {
             icon: "error"
         });
     }
-    //refreshInnerFormandTable();
 }
 
 const buttonSupplierOrderIngredientUpdate = () => {
@@ -296,7 +301,6 @@ const buttonSupplierOrderIngredientUpdate = () => {
             timer: 1500
         });
     }
-    // refreshInnerFormandTable();
 }
 
 /* ############################## MAIN FORM FUNCTIONS ################################# */
@@ -313,7 +317,6 @@ const refreshSupplierOrderTable = () => {
         { property: "ordercode", dataType: "string" },
         { property: getSupplierName, dataType: "function" },
         { property: "daterequired", dataType: "string" },
-        { property: getIngredients, dataType: "function" },
         { property: "totalamount", dataType: "decimal" },
         { property: getSupplyOrderStatus, dataType: "function" }
     ];
@@ -325,19 +328,19 @@ const refreshSupplierOrderTable = () => {
 
 //define function for get supplier order status
 const getSupplyOrderStatus = (dataOb) => {
-    if (dataOb.supplyorderstatus_id.status == "Completed") {
-        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
-    }
-    if (dataOb.supplyorderstatus_id.status == "Received") {
-        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
-    }
-    if (dataOb.supplyorderstatus_id.status == "Pending") {
+    if (dataOb.supplyorderstatus_id.id == 1) {
         return "<p class='btn btn-outline-warning text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
     }
-    if (dataOb.supplyorderstatus_id.status == "Canceled") {
-        return "<p class='btn btn-outline-warning text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
+    if (dataOb.supplyorderstatus_id.id == 2) {
+        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
     }
-    if (dataOb.supplyorderstatus_id.status == "Removed") {
+    if (dataOb.supplyorderstatus_id.id == 3) {
+        return "<p class='btn btn-outline-success text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
+    }
+    if (dataOb.supplyorderstatus_id.id == 4) {
+        return "<p class='btn btn-outline-danger text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
+    }
+    if (dataOb.supplyorderstatus_id.id == 5) {
         return "<p class='btn btn-outline-danger text-center'>" + dataOb.supplyorderstatus_id.status + "</p>";
     }
     return dataOb.supplyorderstatus_id.status;
@@ -346,11 +349,6 @@ const getSupplyOrderStatus = (dataOb) => {
 //define function for get supplier name
 const getSupplierName = (dataOb) => {
     return dataOb.supplier_id.supplier_name;
-}
-
-//define function for get Ingredients list
-const getIngredients = (dataOb) => {
-    return "Items";
 }
 
 //define Form edit function
@@ -363,15 +361,20 @@ const supplierOrderFormRefill = (ob, rowIndex) => {
     oldsupplierorder = JSON.parse(JSON.stringify(ob));
 
     SelectSupplier.disabled = "disabled";
-    SelectSupplier.value = JSON.stringify(supplierorder.supplier_id);
+    SelectSupplier.value = JSON.stringify(ob.supplier_id);
     dateRequired.value = ob.daterequired;
     supplyorderStatus.value = JSON.stringify(ob.supplyorderstatus_id);
+    supplyorderStatus.disabled = false;
+    txtTotalAmount.disabled = true;
 
-    if (ob.note == undefined) {
-        txtNote.value = "";
+    if (ob.supplyorderstatus_id.id == 1) {
+        btndelete.style.display = "inline";
+        btnupdate.style.display = "inline";
     } else {
-        txtNote.value = ob.note;
+        btndelete.style.display = "none";
+        btnupdate.style.display = "none";
     }
+    // innerform eke date tika fill kregnna one nisa
     refreshInnerFormandTable();
 }
 
@@ -405,9 +408,9 @@ const checkFormUpdate = () => {
     let updates = "";
 
     if (supplierorder != null && oldsupplierorder != null) {
-        if (supplierorder.supplier_id.supplier_name != oldsupplierorder.supplier_id.supplier_name) {
-            updates = updates + "Supplier name has updated from " + oldsupplierorder.supplier_id.supplier_name + " \n";
-        }
+        /*  if (supplierorder.supplier_id.supplier_name != oldsupplierorder.supplier_id.supplier_name) {
+             updates = updates + "Supplier name has updated from " + oldsupplierorder.supplier_id.supplier_name + " \n";
+         } */
         if (supplierorder.daterequired != oldsupplierorder.daterequired) {
             updates = updates + "Required Date has updated from " + oldsupplierorder.daterequired + " \n";
         }
@@ -417,9 +420,37 @@ const checkFormUpdate = () => {
         if (supplierorder.supplyorderstatus_id.status != oldsupplierorder.supplyorderstatus_id.status) {
             updates = updates + "Status has updated from " + oldsupplierorder.supplyorderstatus_id.status + " \n";
         }
-        if (supplierorder.supplierorderHasIngredientList.length != oldsupplier.supplierorderHasIngredientList.length) {
+        // list wela length eka wenas welanm update ekk wela
+        if (supplierorder.supplierorderHasIngredientList.length != oldsupplierorder.supplierorderHasIngredientList.length) {
             updates = updates + "Supplier Ingredients has updated \n";
+        } else {
+            let equalCount = 0;
+            // old list eke item ekin eka read krnewa
+            for (const oldsoitem of oldsupplierorder.supplierorderHasIngredientList) {
+                for (const newsoitem of supplierorder.supplierorderHasIngredientList) {
+                    // old & new item wela id samanainm
+                    if (oldsoitem.ingredient_id.id == newsoitem.ingredient_id.id) {
+                        equalCount = +1;
+                    }
+                }
+            }
+
+            if (equalCount != supplierorder.supplierorderHasIngredientList) {
+                updates = updates + "Supplier Ingredients has updated \n";
+            } else {
+                // old list eke item ekin eka read krnewa
+                for (const oldsoitem of oldsupplierorder.supplierorderHasIngredientList) {
+                    for (const newsoitem of supplierorder.supplierorderHasIngredientList) {
+                        // old & new item wela id samanai & quantity asemana wita
+                        if (oldsoitem.ingredient_id.id == newsoitem.ingredient_id.id && oldsoitem.quantity != newsoitem.quantity) {
+                            updates = updates + "Supplier Ingredient Quantity has updated \n";
+                            break;
+                        }
+                    }
+                }
+            }
         }
+
     }
     return updates;
 }
@@ -433,7 +464,7 @@ const buttonSupplierOrderSubmit = () => {
     text = "Supplier : " + supplierorder.supplier_id.supplier_name
         + ", Required Date : " + supplierorder.daterequired
         + ", Total Amount : " + supplierorder.totalamount;
-    let submitResponse = getHTTPServiceRequest('/supplierorder/insert', "POST", supplierorder);
+    let submitResponse = ['/supplierorder/insert', "POST", supplierorder];
     swalSubmit(errors, title, obName, text, submitResponse, modalSupplierOrder);
 
     /* //check errors
@@ -490,7 +521,7 @@ const buttonSupplierOrderUpdate = () => {
 
         let title = "Are you sure you want to update following changes.?";
         let text = updates;
-        let updateResponse = getHTTPServiceRequest('/supplierorder/update', "PUT", supplierorder);
+        let updateResponse = ['/supplierorder/update', "PUT", supplierorder];
         swalUpdate(updates, title, text, updateResponse, modalSupplierOrder);
 
         /* if (updates == "") {
@@ -549,7 +580,7 @@ const supplierOrderDelete = (ob, rowIndex) => {
     text = "Supplier : " + supplierorder.supplier_id.supplier_name
         + ", Required Date : " + supplierorder.daterequired
         + ", Total Amount : " + supplierorder.totalamount;
-    let deleteResponse = getHTTPServiceRequest('/supplierorder/delete', "DELETE", supplierorder);
+    let deleteResponse = ['/supplierorder/delete', "DELETE", supplierorder];
     message = "Purchase Order has Deleted.";
     swalDelete(title, obName, text, deleteResponse, modalSupplierOrder, message);
 }
@@ -569,6 +600,7 @@ const buttonSupplierOrderClear = () => {
         }
     });
 }
+
 //define function for clear Inner form
 const buttonInnerFormClear = () => {
     Swal.fire({
@@ -598,13 +630,15 @@ const buttonModalClose = () => {
         if (result.isConfirmed) {
             refreshForm();
             $('#modalSupplierOrder').modal('hide');
+            //call refresh table function
+            refreshSupplierOrderTable();
         }
     });
 }
 
 
 //function define for print Supplier Order record
-const supplierOrderPrint = (ob, rowIndex) => {
+/* const supplierOrderPrint = (ob, rowIndex) => {
     console.log("Print", ob, rowIndex);
     activeTableRow(tBodySupplierOrder, rowIndex, "White");
 
@@ -613,7 +647,7 @@ const supplierOrderPrint = (ob, rowIndex) => {
     const printView = `
         <html>
         <head>
-            <title>Submenu Management | 2025</title>
+            <title>Purchase Order Management | 2025</title>
             <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
             <style>
                 body {
@@ -707,4 +741,149 @@ const supplierOrderPrint = (ob, rowIndex) => {
         newWindow.print();
         newWindow.close();
     }, 300);
-}
+} */
+
+
+//function define for print Order record
+const supplierOrderPrint = (ob, rowIndex) => {
+    console.log("Printing order:", ob, rowIndex);
+
+    // table eke row eka click kalama color eka change wenw
+    activeTableRow(tBodySupplierOrder, rowIndex, "White");
+
+    // Print eke content eka generate krena function eka cll krenewa
+    const printContent = generateSupplyOrderPrintHTML(ob);
+
+    // Create and configure the print window
+    const printWindow = window.open();
+
+    // Write content and handle printing
+    printWindow.document.writeln(printContent);
+    printWindow.document.close();
+
+    // Wait for content to load, then print
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 300);
+    };
+};
+// Print eke content eka generate krena function eka define krenewa
+// @param {Object} order - order object eke thama all order details thyenne
+const generateSupplyOrderPrintHTML = (ob) => {
+    ob = supplierorder;
+    const currentDateTime = new Date().toLocaleString();
+
+    //  @returns {string} - print window eke display wenna one html eka return krnw
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- link bs5 -->
+        <link rel="stylesheet" href="bootstrap-5.2.3/css/bootstrap.min.css">
+        <!-- link css -->
+        <link rel="stylesheet" href="css/print.css">
+
+        <title> Purchase Order Management - BIT 2025</title>
+    </head>
+    <body>
+        <div class="header">
+                <img src="images/bando1.png" alt="Logo">
+                <h1>Purchase Order Receipt</h1>
+                <div class="date-time">Printed on: ${currentDateTime}</div>
+        </div>
+
+        <div class="order-info">
+            <table>
+                <tr>
+                    <th>Purcahse Order ID</th>
+                    <td>${ob.ordercode}</td>
+                </tr>
+                <tr>
+                    <th> Supplier Name</th>
+                    <td>${ob.supplier_id.supplier_name}</td>
+                </tr>
+                <tr>
+                    <th> Required Date </th>
+                    <td>${ob.daterequired}</td></tr>
+                <tr>
+                    <th> Status </th>
+                    <td>${ob.supplyorderstatus_id.status}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="items-section">
+            <h3> Order Ingredients </h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ingredient Name</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${generateItemRows(ob)}
+                </tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="4">Total</td>
+                        <td>Rs.  ${formatCurrency(ob.totalamount)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your business! </p>
+            &copy; 2025 BIT Project. All rights reserved.
+            <p>Generated on ${currentDateTime}</p>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
+//@param {Array} items - Array of order items
+//@returns {string} - HTML string for table rows
+const generateItemRows = (supplierorder) => {
+    // Extract items from the correct association names
+    const items = supplierorder.supplierorderHasIngredientList || [];
+
+    return items.map((item, index) => {
+        // Handle different possible database structures
+        const itemName = item.ingredient_id?.ingredient_name || "";
+
+        const unitPrice = item.price;
+
+        const quantity = item.quantity;
+
+        const lineTotal = item.lineprice;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${itemName}</td>
+                <td>Rs. ${formatCurrency(unitPrice)}</td>
+                <td>${quantity}</td>
+                <td>Rs. ${formatCurrency(lineTotal)}</td>
+            </tr>
+        `;
+    }).join('');
+};
+
+//  @param {number} amount - The amount to format
+//  @returns {string} - Formatted currency string
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount || 0);
+};

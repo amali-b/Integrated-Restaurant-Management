@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="wrapper">
+
+        <!-- Navbar & Sidebar Start -->
+        <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+        <!-- Navbar & sidebar End -->
+
+        <div class="main">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div id="pageTitle"> Inventory Stock Report </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-1"></div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row">
+                                <label class="col-4 fw-bold form-label" for="dateStartDate">Start Date</label>
+                                <input type="date" class="col form-control" id="dateStartDate">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <label class="col-4 fw-bold form-label" for="dateEndDate">End Date</label>
+                                <input type="date" class="form-control col" id="dateEndDate">
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <button class="btn me-1" type="button" id="btnModal" onclick="generateReport();">
+                                Generate</button>
+                            <button class="btn me-3" type="button" id="btnModal" onclick="printTable()">
+                                Print Table</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+            <div class="row table mt-3">
+                <div class="col-1"></div>
+                <div class="col">
+                    <table class="tablet table-bordered" id="tableInventoryReport">
+                        <thead id="tHeadInventoryReport">
+                            <!--  <tr>
+                                <th>Inventory NO</th>
+                                <th>Ingredient Name</th>
+                                <th>Unit </th>
+                                <th>Avl Qty</th>
+                                <th>ROP</th>
+                                <th>Status</th>
+                            </tr> -->
+                        </thead>
+                        <tbody class="table-group-divider" id="tBodyInventoryReport">
+                            <tr>
+                                <!-- <td>001256</td>
+                                <td>2025-03-01</td>
+                                <td>Nimal</td>
+                                <td>12</td>
+                                <td>3900.00</td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="uIControllers/inventoryReport.js"></script>
+
+    <div th:replace="~{footer :: footerFragment}"></div>
+</body>
+
+</html>

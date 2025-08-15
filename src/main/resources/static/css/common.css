@@ -197,3 +197,7 @@ h4{
 .nav-link:focus{
     color: aliceblue !important;
 }
+
+#supplierTypes {
+    border-color: #fde8a3 !important;
+}

@@ -11,16 +11,11 @@ const refreshInventorytable = () => {
 
     // Format date fields to remove the time part
     //forEach() eken inventories array eke hama item ehektm ynewa
-    inventories.forEach(item => {
+    /* inventories.forEach(item => {
         //call formatDate function and return date like "25-Apr-2025" else return empty string.
         item.expiredate = formatDate(item.expiredate, "dd-mmm-yyyy");       // or "mmm-d-yyyy"
         item.manufacturedate = formatDate(item.manufacturedate, "dd-mmm-yyyy"); // or "mmm-d-yyyy"
-    });
-    /* inventories = inventories.map(item => ({
-        ...item,
-        expiredate: formatDate(item.expiredate, "dd-mmm-yyyy"),   // or "mmm-d-yyyy"
-        manufacturedate: formatDate(item.manufacturedate, "dd-mmm-yyyy") // or "mmm-d-yyyy"
-    })); */
+    }); */
 
     let columns = [
         { property: getInventoryName, dataType: "function" },
